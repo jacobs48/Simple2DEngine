@@ -22,6 +22,7 @@ public class Simple2DEngine {
     private int sizeX;
     private int sizeY;
     private int FPS;
+    private boolean fullscreen;
     private String title;
     private Simple2DUpdater updater;
     
@@ -34,6 +35,7 @@ public class Simple2DEngine {
         sizeY = b.buildY;
         FPS = b.buildFPS;
         title = b.title;
+        fullscreen = b.fullscreen;
         updater = b.updater;
     }
     
@@ -41,11 +43,12 @@ public class Simple2DEngine {
         GLProfile gp = GLProfile.getDefault();
         GLCapabilities caps = new GLCapabilities(gp);
         GLWindow window = GLWindow.create(caps);
-        window.addGLEventListener(new Simple2DScene(updater));
+        window.addGLEventListener(new Simple2DScene(updater, this));
         
         FPSAnimator animator = new FPSAnimator(window, FPS);
         
         window.setSize(sizeX, sizeY);
+        window.setFullscreen(fullscreen);
         window.setTitle(title);
         window.setVisible(true);
         
@@ -63,6 +66,7 @@ public class Simple2DEngine {
         private int buildY = 600;
         private int buildFPS = 60;
         private String title = "";
+        private boolean fullscreen = false;
         private Simple2DUpdater updater;
         
         public Builder(Simple2DUpdater s){
@@ -72,6 +76,11 @@ public class Simple2DEngine {
         public Builder size(int x, int y) {
             buildX = x;
             buildY = y;
+            return this;
+        }
+        
+        public Builder fullscreen(boolean f) {
+            fullscreen = f;
             return this;
         }
         

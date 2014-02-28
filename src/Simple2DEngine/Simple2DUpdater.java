@@ -9,6 +9,6 @@ package Simple2DEngine;
 
 public interface Simple2DUpdater {
     
-    public void update();
+    public void update(Simple2DEngine e);
     
 }

@@ -14,13 +14,15 @@ import javax.media.opengl.GLEventListener;
 public class Simple2DScene implements GLEventListener {
     
     Simple2DUpdater updater;
+    Simple2DEngine engine;
     
     private Simple2DScene() {
         
     }
     
-    protected Simple2DScene(Simple2DUpdater s) {
+    protected Simple2DScene(Simple2DUpdater s, Simple2DEngine e) {
         updater = s;
+        engine = e;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class Simple2DScene implements GLEventListener {
 
     @Override
     public void display(GLAutoDrawable drawable) {
-        updater.update();
+        updater.update(engine);
         render(drawable);
     }
 
