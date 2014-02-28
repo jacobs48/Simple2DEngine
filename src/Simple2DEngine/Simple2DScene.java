@@ -10,10 +10,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
-/**
- *
- * @author michael.jacobs.adm
- */
+
 public class Simple2DScene implements GLEventListener {
     
     Simple2DUpdater updater;

@@ -6,10 +6,7 @@
 
 package Simple2DEngine;
 
-/**
- *
- * @author michael.jacobs.adm
- */
+
 public interface Simple2DUpdater {
     
     public void update();
