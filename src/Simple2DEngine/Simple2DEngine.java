@@ -47,7 +47,13 @@ public class Simple2DEngine {
         
         window.setSize(sizeX, sizeY);
         window.setTitle(title);
-        window.setVisible(true);    
+        window.setVisible(true);
+        
+        window.addWindowListener(new WindowAdapter() {
+            public void windowDestroyNotify(WindowEvent arg0) {
+                System.exit(sizeX);
+            };
+        });
         
         animator.start();
     }
