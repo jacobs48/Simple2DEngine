@@ -6,9 +6,8 @@
 
 package Simple2DEngine;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
+import javax.media.opengl.*;
+import javax.media.opengl.glu.*;
 
 
 public class Simple2DScene implements GLEventListener {
@@ -27,6 +26,13 @@ public class Simple2DScene implements GLEventListener {
 
     @Override
     public void init(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
+        GLU glu = new GLU();
+        
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+        glu.gluOrtho2D(0.0, engine.getXSize(), 0.0, engine.getYSize());
+        
         
     }
 
@@ -44,10 +50,25 @@ public class Simple2DScene implements GLEventListener {
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         
+        GL2 gl = drawable.getGL().getGL2();
+        GLU glu = new GLU();
+        
+        gl.glViewport(0, 0, width, height);
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+        glu.gluOrtho2D(0.0, width, 0.0, height);   
+        
+        
+        
     }
     
     private void render(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
+        
+        gl.glClearColor(0, 0, 0, 0);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+        
+        
     }
     
 }

@@ -61,6 +61,14 @@ public class Simple2DEngine {
         animator.start();
     }
     
+    public int getXSize() {
+        return sizeX;
+    }
+    
+    public int getYSize() {
+        return sizeY;
+    }
+    
     public static class Builder {
         private int buildX = 800;
         private int buildY = 600;
