@@ -1,4 +1,12 @@
-/*
+
+package Simple2DEngine;
+
+import javax.media.opengl.*;
+import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.newt.event.*;
+import com.jogamp.opengl.util.FPSAnimator;
+
+/**
  * Simple2DEngine
  * 
  * Simpl2DEngine provides interaction with 2D graphics engine.
@@ -10,21 +18,6 @@
  * Uses Simple2DInterface to provide methods for initializing
  * game state after engine initialiation and updating game state
  * at specified framerate.
- * 
- * Michael Jacobs
- * 
- * 3/8/2014
- * 
-*/
-
-package Simple2DEngine;
-
-import javax.media.opengl.*;
-import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.newt.event.*;
-import com.jogamp.opengl.util.FPSAnimator;
-
-/**
  *
  * @author Michael Jacobs
  */
