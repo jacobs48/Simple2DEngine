@@ -15,16 +15,21 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 public class Simple2DEngine {
     
+    
     GLProfile gp;
     GLCapabilities caps;
     GLWindow window;
+    private GraphicLoader gLoader = null;
+    
     
     private int sizeX;
     private int sizeY;
     private int FPS;
     private boolean fullscreen;
     private String title;
-    private Simple2DUpdater updater;
+    private Simple2DInterface updater;
+    private Graphic2DRenderer render;
+    private RenderMode renderMode;
     
     private Simple2DEngine() {
         
@@ -37,13 +42,14 @@ public class Simple2DEngine {
         title = b.title;
         fullscreen = b.fullscreen;
         updater = b.updater;
+        renderMode = b.mode;
     }
     
     public void runGame() {
         GLProfile gp = GLProfile.getDefault();
         GLCapabilities caps = new GLCapabilities(gp);
         GLWindow window = GLWindow.create(caps);
-        window.addGLEventListener(new Simple2DScene(updater, this));
+        window.addGLEventListener(new Simple2DScene(updater, this, renderMode));
         
         FPSAnimator animator = new FPSAnimator(window, FPS);
         
@@ -61,6 +67,14 @@ public class Simple2DEngine {
         animator.start();
     }
     
+    protected void initLoader(GraphicLoader l) {
+        gLoader = l;
+    }
+    
+    protected void initRenderer(Graphic2DRenderer r) {
+        render = r;
+    }
+    
     public int getXSize() {
         return sizeX;
     }
@@ -69,15 +83,26 @@ public class Simple2DEngine {
         return sizeY;
     }
     
+    public boolean loadGraphic(String path, String name) {
+        return gLoader.loadGraphic(path, name);
+    }
+    
+    public GraphicObject newGraphicObject(String n) {
+        Graphic2D g2D = gLoader.getGraphic2D(n);
+        GraphicObject gO = new GraphicObject(g2D, render);
+        return gO;
+    }
+    
     public static class Builder {
         private int buildX = 800;
         private int buildY = 600;
         private int buildFPS = 60;
         private String title = "";
         private boolean fullscreen = false;
-        private Simple2DUpdater updater;
+        private Simple2DInterface updater;
+        private RenderMode mode = RenderMode.IMMEDIATE;
         
-        public Builder(Simple2DUpdater s){
+        public Builder(Simple2DInterface s){
             updater = s;
         }
         
@@ -99,6 +124,11 @@ public class Simple2DEngine {
         
         public Builder title(String s) {
             title = s;
+            return this;
+        }
+        
+        public Builder renderMode(RenderMode r) {
+            mode = r;
             return this;
         }
         

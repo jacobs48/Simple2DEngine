@@ -7,7 +7,9 @@
 package Simple2DEngine;
 
 
-public interface Simple2DUpdater {
+public interface Simple2DInterface {
+    
+    public void init(Simple2DEngine e);
     
     public void update(Simple2DEngine e);
     

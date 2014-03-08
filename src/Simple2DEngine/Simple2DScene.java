@@ -16,24 +16,31 @@ import javax.media.opengl.glu.*;
 
 class Simple2DScene implements GLEventListener {
     
-    Simple2DUpdater updater;
+    Simple2DInterface updater;
     Simple2DEngine engine;
-    GraphicLoader loader = null;
-    Graphic2D testGraphic = null;
+    GraphicLoader gLoader = null;
+    Graphic2DRenderer render = null;
+    RenderMode mode;
     
     private Simple2DScene() {
         
     }
     
-    protected Simple2DScene(Simple2DUpdater s, Simple2DEngine e) {
+    protected Simple2DScene(Simple2DInterface s, Simple2DEngine e, RenderMode m) {
         updater = s;
         engine = e;
+        mode = m;
     }
 
     @Override
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         GLU glu = new GLU();
+        gLoader = new GraphicLoader(drawable.getGL().getGL2());
+        render = new Graphic2DRenderer(gl, mode);
+        engine.initLoader(gLoader);
+        engine.initRenderer(render);
+        updater.init(engine);
         
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
@@ -47,11 +54,16 @@ class Simple2DScene implements GLEventListener {
         gl.glEnable(GL.GL_TEXTURE_2D);
         gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_DECAL);
+        gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         
-        loader = new GraphicLoader(gl);
-        loader.loadGraphic("mario.png", "mario");
-        testGraphic = loader.getGraphic2D("mario").X(100).Y(100);
+        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+        gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
+        gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+        
+    }
+    
+    public GraphicLoader getLoader() {
+        return gLoader;
     }
 
     @Override
@@ -81,14 +93,7 @@ class Simple2DScene implements GLEventListener {
     
     private void render(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        
-        gl.glClearColor(0, 0, 0, 0);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-        
-        gl.glBegin(GL2.GL_QUADS);
-        testGraphic.draw();
-        gl.glEnd();
-        
+        render.draw();  
     }
     
 }

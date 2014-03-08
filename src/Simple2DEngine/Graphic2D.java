@@ -20,9 +20,10 @@ class Graphic2D {
     private float textX1 = 1;
     private float textY0 = 0;
     private float textY1 = 1;
-    private float r = 0;
-    private float g = 0;
-    private float b = 0;
+    private float r = 1;
+    private float g = 1;
+    private float b = 1;
+    private float a = 1;
     private float scale = 1;
     private GL2 gl = null;
     
@@ -52,9 +53,8 @@ class Graphic2D {
     }
     
     protected void draw() {
-        texture.enable(gl);
         texture.bind(gl);
-        gl.glColor3f(r, g, b);
+        gl.glColor4f(r, g, b, a);
         gl.glTexCoord2f(textX0, textY0);
         gl.glVertex3f(xPos, yPos, 0);
         gl.glTexCoord2f(textX0, textY1);
@@ -63,6 +63,36 @@ class Graphic2D {
         gl.glVertex3f(xPos + width * scale, yPos + height * scale, 0);
         gl.glTexCoord2f(textX1, textY0);
         gl.glVertex3f(xPos + width * scale, yPos, 0);
+    }
+    
+    protected float[] getVArr() {
+        float [] v = new float [] {
+            xPos, yPos, 0,
+            xPos, yPos + height * scale, 0,
+            xPos + width * scale, yPos + height * scale, 0,
+            xPos + width * scale, yPos, 0 
+        };
+        return v;  
+    }
+    
+    protected float[] getCArr() {
+        float [] c = new float [] {
+            r, g, b, a,
+            r, g, b, a,
+            r, g, b, a,
+            r, g, b, a,
+        };      
+        return c;
+    }
+    
+    protected float[] getTArr() {
+        float [] t = new float [] {
+            textX0, textY0,
+            textX0, textY1,
+            textX1, textY1,
+            textX1, textY0  
+        }; 
+        return t;
     }
     
 }
