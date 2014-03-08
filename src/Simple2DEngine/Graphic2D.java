@@ -6,8 +6,7 @@
 
 package Simple2DEngine;
 
-import com.jogamp.opengl.util.texture.Texture;
-import java.nio.IntBuffer;
+import com.jogamp.opengl.util.texture.Texture;;
 import javax.media.opengl.*;
 
 class Graphic2D {

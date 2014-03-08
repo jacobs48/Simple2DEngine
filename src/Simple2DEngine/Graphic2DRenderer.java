@@ -7,7 +7,6 @@
 package Simple2DEngine;
 
 import GenericLinkedList.*;
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.GLBuffers;
 import java.nio.FloatBuffer;
 import javax.media.opengl.*;

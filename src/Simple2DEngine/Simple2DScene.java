@@ -6,10 +6,6 @@
 
 package Simple2DEngine;
 
-import GenericBinarySearchTree.*;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
-import java.io.File;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 

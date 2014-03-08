@@ -24,10 +24,11 @@ import com.jogamp.opengl.util.FPSAnimator;
 public class Simple2DEngine {
     
     
-    GLProfile gp;
-    GLCapabilities caps;
-    GLWindow window;
+    private GLProfile profile;
+    private GLCapabilities capabilities;
+    private GLWindow window;
     private GraphicLoader gLoader = null;
+    private FPSAnimator animator;
     
     
     private int sizeX;
@@ -60,12 +61,12 @@ public class Simple2DEngine {
      * update(Simple2DEngine e) runs at specified framerate.
      */
     public void runGame() {
-        GLProfile gp = GLProfile.getDefault();
-        GLCapabilities caps = new GLCapabilities(gp);
-        GLWindow window = GLWindow.create(caps);
+        profile = GLProfile.getDefault();
+        capabilities = new GLCapabilities(profile);
+        window = GLWindow.create(capabilities);
         window.addGLEventListener(new Simple2DScene(updater, this, renderMode));
         
-        FPSAnimator animator = new FPSAnimator(window, FPS);
+        animator = new FPSAnimator(window, FPS);
         
         window.setSize(sizeX, sizeY);
         window.setFullscreen(fullscreen);
@@ -73,6 +74,7 @@ public class Simple2DEngine {
         window.setVisible(true);
         
         window.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowDestroyNotify(WindowEvent arg0) {
                 System.exit(sizeX);
             };
