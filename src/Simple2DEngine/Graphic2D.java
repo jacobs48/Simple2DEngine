@@ -7,6 +7,7 @@
 package Simple2DEngine;
 
 import com.jogamp.opengl.util.texture.Texture;
+import java.nio.IntBuffer;
 import javax.media.opengl.*;
 
 class Graphic2D {
@@ -54,6 +55,7 @@ class Graphic2D {
     
     protected void draw() {
         texture.bind(gl);
+        gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
         gl.glTexCoord2f(textX0, textY0);
         gl.glVertex3f(xPos, yPos, 0);
@@ -63,6 +65,7 @@ class Graphic2D {
         gl.glVertex3f(xPos + width * scale, yPos + height * scale, 0);
         gl.glTexCoord2f(textX1, textY0);
         gl.glVertex3f(xPos + width * scale, yPos, 0);
+        gl.glEnd();
     }
     
     protected float[] getVArr() {

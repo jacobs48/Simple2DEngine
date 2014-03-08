@@ -57,11 +57,9 @@ public class Graphic2DRenderer {
         
         gl.glClearColor(0, 0, 0, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-        gl.glBegin(GL2.GL_QUADS);
         for (int i = 0; i < size; i++) {
             graphicList.getAt(i).draw();
         }
-        gl.glEnd();
     }
     
     protected void generateArrays() {

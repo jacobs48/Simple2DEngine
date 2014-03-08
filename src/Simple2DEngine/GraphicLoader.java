@@ -25,8 +25,8 @@ class GraphicLoader {
     
     protected boolean loadGraphic(String path, String name) {
         try {
-            Texture newText = TextureIO.newTexture(new File(path), false);
             if (textureTree.get(name) == null) {
+                Texture newText = TextureIO.newTexture(new File(path), false);
                 textureTree.set(name, newText);
                 return true;
             }

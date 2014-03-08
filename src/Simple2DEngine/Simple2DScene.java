@@ -56,10 +56,6 @@ class Simple2DScene implements GLEventListener {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         
-        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
-        gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-        
     }
     
     public GraphicLoader getLoader() {
@@ -92,7 +88,6 @@ class Simple2DScene implements GLEventListener {
     }
     
     private void render(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
         render.draw();  
     }
     
