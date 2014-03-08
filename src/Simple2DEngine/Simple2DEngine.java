@@ -1,18 +1,33 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ * Simple2DEngine
+ * 
+ * Simpl2DEngine provides interaction with 2D graphics engine.
+ * Creates window through NEWT and configures window, engine,
+ * and rendering options based on user specifications and
+ * provides methods for creating and modifying 2D graphic 
+ * objects within engine.
+ * 
+ * Uses Simple2DInterface to provide methods for initializing
+ * game state after engine initialiation and updating game state
+ * at specified framerate.
+ * 
+ * Michael Jacobs
+ * 
+ * 3/8/2014
+ * 
+*/
 
 package Simple2DEngine;
 
 import javax.media.opengl.*;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.*;
-import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
 
-
+/**
+ *
+ * @author Michael Jacobs
+ */
 public class Simple2DEngine {
     
     
@@ -45,6 +60,12 @@ public class Simple2DEngine {
         renderMode = b.mode;
     }
     
+    /**
+     * Initializes engine and begins execution of game.
+     * Specified Simple2DInterface method init(Simple2DEngine e)
+     * will run after engine initializes and then 
+     * update(Simple2DEngine e) runs at specified framerate.
+     */
     public void runGame() {
         GLProfile gp = GLProfile.getDefault();
         GLCapabilities caps = new GLCapabilities(gp);
@@ -67,32 +88,82 @@ public class Simple2DEngine {
         animator.start();
     }
     
-    protected void initLoader(GraphicLoader l) {
-        gLoader = l;
+    /**
+     * Method used by Simple2DScene to provide
+     * GraphicLoader instance to Simple2DEngine
+     * 
+     * @param loader GraphicLoader to be provided to engine
+     */
+    protected void initLoader(GraphicLoader loader) {
+        gLoader = loader;
     }
     
-    protected void initRenderer(Graphic2DRenderer r) {
-        render = r;
+    /**
+     * Method used by Simple2DScene to provide
+     * Graphic2DRenderer instance to Simple2DEngine
+     * 
+     * @param renderer Graphic2DRenderer to be provided to engine
+     */
+    protected void initRenderer(Graphic2DRenderer renderer) {
+        render = renderer;
     }
     
+    /**
+     * Returns X dimension of the engine window
+     * 
+     * @return X dimension of engine window
+     */
     public int getXSize() {
         return sizeX;
     }
     
+    /**
+     * Returns Y dimension of the engine window
+     * 
+     * @return Y dimension of engine window
+     */
     public int getYSize() {
         return sizeY;
     }
     
+    /**
+     * Loads specified image file into current GraphicLoader
+     * and assigns it with provided key name.
+     * 
+     * @param path Path of file to be loaded
+     * @param name Key name used to access loaded image
+     * @return Returns true if successful, false if file fails to load
+     */
     public boolean loadGraphic(String path, String name) {
         return gLoader.loadGraphic(path, name);
     }
     
-    public GraphicObject newGraphicObject(String n) {
-        Graphic2D g2D = gLoader.getGraphic2D(n);
+    /**
+     * Provides new instance of GraphicObject from specified texture
+     *
+     * @param name Key name of texture to be used by GraphicObject
+     * @return GraphicObject created using specified texture
+     */
+    public GraphicObject newGraphicObject(String name) {
+        Graphic2D g2D = gLoader.getGraphic2D(name);
         GraphicObject gO = new GraphicObject(g2D, render);
         return gO;
     }
     
+    /**
+     * Builder class used to create instance of Simple2DEngine object
+     * 
+     * Begin build with Builder(Simple2DInterface s) 
+     * Terminate with Build()
+     * 
+     * Potential Attributes:
+     *      size(int x, int y) - Size of window in pixels
+     *      fullscreen(boolean f) - Specifies if fullscreen enabled
+     *      fps(int f) - Engine framerate
+     *      title(String s) - Window title
+     *      renderMode(RenderMode r) - Render mode to be used by engine
+     *      
+     */
     public static class Builder {
         private int buildX = 800;
         private int buildY = 600;
@@ -102,36 +173,79 @@ public class Simple2DEngine {
         private Simple2DInterface updater;
         private RenderMode mode = RenderMode.IMMEDIATE;
         
+        /**
+         * Initializes builder using specified Simple2DInterface
+         *
+         * @param s Simple2DInterface to be used by engine
+         */
         public Builder(Simple2DInterface s){
             updater = s;
         }
         
+        /**
+         * Sets size attribute of engine
+         *
+         * @param x X dimension of window in pixels
+         * @param y Y dimension of window in pixels
+         * @return Builder object
+         */
         public Builder size(int x, int y) {
             buildX = x;
             buildY = y;
             return this;
         }
         
+        /**
+         * Sets fullscreen mode of engine
+         *
+         * @param f True if fullscreen, false if windowed
+         * @return Builder object
+         */
         public Builder fullscreen(boolean f) {
             fullscreen = f;
             return this;
         }
         
+        /**
+         * Sets framerate of engine
+         *
+         * @param f Framerate to be used
+         * @return Builder object
+         */
         public Builder fps(int f) {
             buildFPS = f;
             return this;
         }
         
+        /**
+         * Sets title of engine window
+         *
+         * @param s Title of window
+         * @return Builder object
+         */
         public Builder title(String s) {
             title = s;
             return this;
         }
         
+        /**
+         * Sets render mode of engine
+         * Available modes:
+         * RenderMode.IMMEDIATE - Uses immediate rendering
+         *
+         * @param r Render mode
+         * @return Builder object
+         */
         public Builder renderMode(RenderMode r) {
             mode = r;
             return this;
         }
         
+        /**
+         * Completes build of Simple2DEngine
+         *
+         * @return Simple2DEngine with specified build parameters
+         */
         public Simple2DEngine build() {
             return new Simple2DEngine(this);
         }
