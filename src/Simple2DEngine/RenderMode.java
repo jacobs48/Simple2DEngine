@@ -11,19 +11,16 @@ public enum RenderMode {
 
     /**
      * Immediate rendering mode
-     *
      */
     IMMEDIATE,
     
     /**
-     * Render through vertex arrays
-     *
+     * Vertex array rendering mode
      */
     VERTEX_ARRAY,
     
     /**
-     * Render using vertex buffer object
-     *
+     * Vertex buffer object rendering mode
      */
     VERTEX_BUFFER_OBJECT
 }
