@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package Simple2DEngine;
 
@@ -17,9 +13,9 @@ class GraphicLoader {
     GL2 gl = null;   
     GenericBinarySearchTree<String, Texture> textureTree = null;
     
-    protected GraphicLoader(GL2 gl2) {
+    protected GraphicLoader() {
         textureTree = new GenericBinarySearchTree<>();
-        gl = gl2;
+        gl = Simple2DEngine.gl;
     }
     
     protected boolean loadGraphic(String path, String name) {
@@ -39,7 +35,7 @@ class GraphicLoader {
    protected Graphic2D getGraphic2D(String name) {
        Texture tempText = textureTree.get(name);
        if (tempText == null) return null;
-       else return new Graphic2D(tempText, gl);
+       else return new Graphic2D(tempText);
    }
    
    protected Graphic2D getGraphic2D(String path, String name) {

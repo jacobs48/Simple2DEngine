@@ -1,16 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package Simple2DEngine;
 
-
+/**
+ * Simple2DInterface provides an interface to Simple2DEngine for initializing
+ * and updating game-state
+ *
+ * @author Michael Jacobs
+ */
 public interface Simple2DInterface {
     
-    public void init(Simple2DEngine e);
+    /**
+     * Initialization method that runs after engine and graphics initialization
+     *
+     * @param engine Engine parameter provides reference for game engine object
+     */
+    public void init(Simple2DEngine engine);
     
-    public void update(Simple2DEngine e);
+    /**
+     * Update method runs prior to rendering each frame at specified framerate
+     *
+     * @param engine Engine parameter provides reference for game engine object
+     */
+    public void update(Simple2DEngine engine);
     
 }

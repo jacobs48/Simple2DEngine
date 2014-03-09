@@ -10,7 +10,7 @@ import com.jogamp.opengl.util.FPSAnimator;
  * Simple2DEngine
  * 
  * Simpl2DEngine provides interaction with 2D graphics engine.
- * Creates window through NEWT and configures window, engine,
+ * Creates a window through NEWT and configures window, engine,
  * and rendering options based on user specifications and
  * provides methods for creating and modifying 2D graphic 
  * objects within engine.
@@ -40,6 +40,8 @@ public class Simple2DEngine {
     private Graphic2DRenderer render;
     private RenderMode renderMode;
     
+    protected static GL2 gl;
+    
     private Simple2DEngine() {
         
     }
@@ -64,7 +66,7 @@ public class Simple2DEngine {
         profile = GLProfile.getDefault();
         capabilities = new GLCapabilities(profile);
         window = GLWindow.create(capabilities);
-        window.addGLEventListener(new Simple2DScene(updater, this, renderMode));
+        window.addGLEventListener(new SimpleGLInterface(updater, this, renderMode));
         
         animator = new FPSAnimator(window, FPS);
         
@@ -101,6 +103,15 @@ public class Simple2DEngine {
      */
     protected void initRenderer(Graphic2DRenderer renderer) {
         render = renderer;
+    }
+    
+    /**
+     * Method used by SimplGLInterface to provide GL2 object to engine
+     * 
+     * @param gl2 GL2 instance
+     */
+    protected void bindGL(GL2 gl2) {
+        gl = gl2;
     }
     
     /**

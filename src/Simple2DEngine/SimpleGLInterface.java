@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package Simple2DEngine;
 
@@ -10,7 +6,7 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 
-class Simple2DScene implements GLEventListener {
+class SimpleGLInterface implements GLEventListener {
     
     Simple2DInterface updater;
     Simple2DEngine engine;
@@ -18,11 +14,11 @@ class Simple2DScene implements GLEventListener {
     Graphic2DRenderer render = null;
     RenderMode mode;
     
-    private Simple2DScene() {
+    private SimpleGLInterface() {
         
     }
     
-    protected Simple2DScene(Simple2DInterface s, Simple2DEngine e, RenderMode m) {
+    protected SimpleGLInterface(Simple2DInterface s, Simple2DEngine e, RenderMode m) {
         updater = s;
         engine = e;
         mode = m;
@@ -32,8 +28,9 @@ class Simple2DScene implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         GLU glu = new GLU();
-        gLoader = new GraphicLoader(drawable.getGL().getGL2());
-        render = new Graphic2DRenderer(gl, mode);
+        engine.bindGL(gl);
+        gLoader = new GraphicLoader();
+        render = new Graphic2DRenderer(mode);
         engine.initLoader(gLoader);
         engine.initRenderer(render);
         updater.init(engine);

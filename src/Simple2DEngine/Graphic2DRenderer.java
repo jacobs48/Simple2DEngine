@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package Simple2DEngine;
 
@@ -11,7 +7,12 @@ import com.jogamp.opengl.util.GLBuffers;
 import java.nio.FloatBuffer;
 import javax.media.opengl.*;
 
-public class Graphic2DRenderer {
+/*
+ * Graphic2DRenderer handles the internal rendering for Simple2DEngine.
+ * Contains all Graphic2D objects and renders them using rendering
+ * mode selected at initalization
+ */
+class Graphic2DRenderer {
     
     private GenericLinkedList<Graphic2D> graphicList = null;  
     private GL2 gl;
@@ -22,21 +23,35 @@ public class Graphic2DRenderer {
     private FloatBuffer colorBuf = null;
     private FloatBuffer texBuf = null;
     private RenderMode mode;
+    private int keyCount = 0;
     
     
-    protected Graphic2DRenderer(GL2 gl2, RenderMode m) {
-        gl = gl2;
+    protected Graphic2DRenderer(RenderMode m) {
+        gl = Simple2DEngine.gl;
         graphicList = new GenericLinkedList<>();
         mode = m;
     }
     
+    //Add Graphic2D object to list, returns key value for object destruction
     protected int addGraphic(Graphic2D g2) {
-        graphicList.add(g2);
-        return graphicList.getSize() - 1;
+        graphicList.add(g2.key(keyCount));
+        keyCount++;
+        return keyCount - 1;
     }
     
+    //Removes Graphic2D object from renderer by key
     protected void removeGraphic(int n) {
-        graphicList.remove(n);
+        boolean keyFound = false;
+        int i = 0;
+        int listSize = graphicList.getSize();
+        
+        while (!keyFound && i < listSize) {
+            if (graphicList.getAt(i).key == n) {
+                graphicList.remove(n);
+                keyFound = true;
+            }
+            i++;
+        }
     }
     
     protected void draw() {
