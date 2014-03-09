@@ -106,7 +106,7 @@ public class Simple2DEngine {
         render = renderer;
     }
     
-    //SimpleGLInterface uses to provice GL2 instance
+    //SimpleGLInterface uses to provide GL2 instance
     protected void bindGL(GL2 gl2) {
         gl = gl2;
     }
