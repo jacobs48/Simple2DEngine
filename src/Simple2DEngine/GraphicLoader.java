@@ -2,10 +2,10 @@
 
 package Simple2DEngine;
 
-import GenericBinarySearchTree.*;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import java.io.File;
+import java.util.TreeMap;
 import javax.media.opengl.*;
 
 /*
@@ -16,10 +16,10 @@ import javax.media.opengl.*;
 class GraphicLoader {
     
     GL2 gl = null;   
-    GenericBinarySearchTree<String, Texture> textureTree = null;
+    TreeMap<String, Texture> textureTree = null;
     
     protected GraphicLoader() {
-        textureTree = new GenericBinarySearchTree<>();
+        textureTree = new TreeMap<>();
         gl = Simple2DEngine.gl;
     }
     
@@ -32,7 +32,7 @@ class GraphicLoader {
         try {
             if (textureTree.get(key) == null) {
                 Texture newText = TextureIO.newTexture(new File(path), false);
-                textureTree.set(key, newText);
+                textureTree.put(key, newText);
                 return true;
             }
             else return false;
@@ -46,6 +46,13 @@ class GraphicLoader {
    protected Graphic2D getGraphic2D(String key) {
        Texture tempText = textureTree.get(key);
        if (tempText == null) return null;
-       else return new Graphic2D(tempText);
-   }    
+       else {
+           return new Graphic2D(tempText).key(key);
+       }
+   } 
+   
+   //Unloads texture specified by key from memory
+   protected void unloadGraphic(String key) {
+       textureTree.get(key).destroy(gl);
+   }
 }

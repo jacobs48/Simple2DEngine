@@ -131,14 +131,35 @@ public class Simple2DEngine {
     
     /**
      * Loads specified image file into current GraphicLoader
-     * and assigns it with provided key name.
+     * and assigns it with provided key name. Returns false if 
+     * specified key is already in use.
      * 
      * @param path Path of file to be loaded
      * @param name Key name used to access loaded image
      * @return Returns true if successful, false if file fails to load
      */
-    public boolean loadGraphic(String path, String name) {
+    public boolean loadTexture(String path, String name) {
         return gLoader.loadGraphic(path, name);
+    }
+
+    /**
+     * Unloads texture from memory using specified key
+     *
+     * @param key Key value of texture to be unloaded
+     */
+    public void unloadTexture(String key) {
+        gLoader.unloadGraphic(key);
+    }
+    
+    /**
+     * Unloads texture and removes all graphics using
+     * specified texture from renderer
+     * 
+     * @param key Key value of texture to be unloaded
+     */
+    public void safeUnloadTexture(String key) {
+        gLoader.unloadGraphic(key);
+        render.removeTexList(key);
     }
     
     /**

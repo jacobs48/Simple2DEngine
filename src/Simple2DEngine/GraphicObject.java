@@ -13,7 +13,7 @@ public class GraphicObject {
     private Graphic2D g2D;
     float xPos = 0;
     float yPos = 0;
-    int key;
+    String texKey;
     
     /**
      * Used by Simple2DEngine.newGraphicObject() to instantiate
@@ -23,7 +23,7 @@ public class GraphicObject {
      */
     protected GraphicObject(Graphic2D g) {
         g2D = g;
-        key = Simple2DEngine.render.addGraphic(g2D);
+        Simple2DEngine.render.addGraphic(g2D.texKey(), g2D);
     }
     
     /**
@@ -51,7 +51,7 @@ public class GraphicObject {
      *
      */
     public void destroy() {
-        Simple2DEngine.render.removeGraphic(key);
+        Simple2DEngine.render.removeGraphic(g2D);
     }
     
 }

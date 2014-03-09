@@ -26,7 +26,8 @@ class Graphic2D {
     private float a = 1;
     private float scale = 1;
     private GL2 gl = null;
-    protected int key;
+    
+    protected String textureKey;
     
     protected Graphic2D(Texture t) {
         texture = t;
@@ -45,10 +46,14 @@ class Graphic2D {
         return this;
     }
     
-    protected Graphic2D key(int k) {
-        key = k;
+    protected Graphic2D key(String k) {
+        textureKey = k;
         return this;
     }
+    
+    protected String texKey() {
+        return textureKey;
+    } 
     
     protected Graphic2D textureMap(float x0, float y0, float x1, float y1) {
         texX0 = x0;
