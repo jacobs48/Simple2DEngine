@@ -12,7 +12,7 @@ import java.util.Map;
 /*
  * Graphic2DRenderer handles the internal rendering for Simple2DEngine.
  * Contains all Graphic2D objects and renders them using rendering
- * mode selected at initalization
+ * mode selected at initialization
  */
 class Graphic2DRenderer {
     
