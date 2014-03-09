@@ -5,7 +5,11 @@ package Simple2DEngine;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
-
+/*
+ * SimpleGLInterface implements OpenGL events, initializes OpenGL settings,
+ * runs provided Simple2DInterface initialization, and runs Simple2DInterface
+ * update and renders at specified framerate
+ */
 class SimpleGLInterface implements GLEventListener {
     
     Simple2DInterface updater;
@@ -14,6 +18,7 @@ class SimpleGLInterface implements GLEventListener {
     Graphic2DRenderer render = null;
     RenderMode mode;
     
+    //Prevents instantiation without proper parameters
     private SimpleGLInterface() {
         
     }
@@ -31,9 +36,8 @@ class SimpleGLInterface implements GLEventListener {
         engine.bindGL(gl);
         gLoader = new GraphicLoader();
         render = new Graphic2DRenderer(mode);
-        engine.initLoader(gLoader);
-        engine.initRenderer(render);
-        updater.init(engine);
+        engine.initLoader(gLoader); //Provides initialized GraphicLoader to engine
+        engine.initRenderer(render); //Provides initialized Graphic2DRenderer to engine
         
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
@@ -49,10 +53,8 @@ class SimpleGLInterface implements GLEventListener {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         
-    }
-    
-    public GraphicLoader getLoader() {
-        return gLoader;
+        updater.init(engine); //Runs Simple2DInterface initalization
+        
     }
 
     @Override
@@ -60,10 +62,11 @@ class SimpleGLInterface implements GLEventListener {
         
     }
 
+    //Display function is called at specified framerate
     @Override
     public void display(GLAutoDrawable drawable) {
-        updater.update(engine);
-        render(drawable);
+        updater.update(engine); //Runs Simple2DInterface update method
+        render.draw();
     }
 
     @Override
@@ -78,10 +81,6 @@ class SimpleGLInterface implements GLEventListener {
         glu.gluOrtho2D(0.0, width, 0.0, height);   
         
         
-    }
-    
-    private void render(GLAutoDrawable drawable) {
-        render.draw();  
     }
     
 }

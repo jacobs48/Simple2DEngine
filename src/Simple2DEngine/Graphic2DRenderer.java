@@ -76,6 +76,7 @@ class Graphic2DRenderer {
         }
     }
     
+    //Generates vertex, color, and texture coordinate arrays, buffers and binds them to GL
     protected void generateArrays() {
         int quadCount = graphicList.getSize();
         Graphic2D cur2D = null;

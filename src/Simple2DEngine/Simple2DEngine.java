@@ -27,7 +27,6 @@ public class Simple2DEngine {
     private GLProfile profile;
     private GLCapabilities capabilities;
     private GLWindow window;
-    private GraphicLoader gLoader = null;
     private FPSAnimator animator;
     
     
@@ -37,10 +36,22 @@ public class Simple2DEngine {
     private boolean fullscreen;
     private String title;
     private Simple2DInterface updater;
-    private Graphic2DRenderer render;
     private RenderMode renderMode;
     
+    /**
+     * Provides static reference for the engine's GL2 object
+     */
     protected static GL2 gl;
+    
+    /**
+     * Provides static reference for the engine's Graphic2DRenderer
+     */
+    protected static Graphic2DRenderer render;
+    
+    /**
+     * Provides static reference for the engine's GraphicLoader
+     */
+    private GraphicLoader gLoader = null;
     
     private Simple2DEngine() {
         
@@ -152,7 +163,7 @@ public class Simple2DEngine {
      */
     public GraphicObject newGraphicObject(String name) {
         Graphic2D g2D = gLoader.getGraphic2D(name);
-        GraphicObject gO = new GraphicObject(g2D, render);
+        GraphicObject gO = new GraphicObject(g2D);
         return gO;
     }
     

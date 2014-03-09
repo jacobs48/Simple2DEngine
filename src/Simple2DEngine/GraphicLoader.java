@@ -8,6 +8,11 @@ import com.jogamp.opengl.util.texture.TextureIO;
 import java.io.File;
 import javax.media.opengl.*;
 
+/*
+ * GraphicLoader loads textures from image files, stores textures,
+ * generates Graphic2D objects from texture keys, and removes textures
+ * 
+ */
 class GraphicLoader {
     
     GL2 gl = null;   
@@ -18,11 +23,16 @@ class GraphicLoader {
         gl = Simple2DEngine.gl;
     }
     
-    protected boolean loadGraphic(String path, String name) {
+    /*
+     * Loads texture from provided file path and stores it using specified key
+     * Returns true if successfully loaded, false if unable to open file or
+     * key name already exists
+     */
+    protected boolean loadGraphic(String path, String key) {
         try {
-            if (textureTree.get(name) == null) {
+            if (textureTree.get(key) == null) {
                 Texture newText = TextureIO.newTexture(new File(path), false);
-                textureTree.set(name, newText);
+                textureTree.set(key, newText);
                 return true;
             }
             else return false;
@@ -32,22 +42,10 @@ class GraphicLoader {
         }
     }
     
-   protected Graphic2D getGraphic2D(String name) {
-       Texture tempText = textureTree.get(name);
+   //Creates Graphic2D object from specified key
+   protected Graphic2D getGraphic2D(String key) {
+       Texture tempText = textureTree.get(key);
        if (tempText == null) return null;
        else return new Graphic2D(tempText);
-   }
-   
-   protected Graphic2D getGraphic2D(String path, String name) {
-       if (textureTree.get(name) != null) {
-           return this.getGraphic2D(name);
-       }
-       else if (this.loadGraphic(path, name)) {
-           return getGraphic2D(name);
-       } 
-       else {
-           return null;
-       }
-   }
-    
+   }    
 }

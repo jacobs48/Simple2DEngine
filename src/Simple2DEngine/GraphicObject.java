@@ -1,33 +1,45 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package Simple2DEngine;
 
 /**
+ * Basic 2D graphic object to be used with Simple2DEngine
+ * Instantiate through Simple2DEngine.newGraphicObject();
  *
- * @author Mike
+ * @author Michael Jacobs
  */
 public class GraphicObject {
     
     private Graphic2D g2D;
     float xPos = 0;
     float yPos = 0;
-    Graphic2DRenderer render;
     
-    protected GraphicObject(Graphic2D g, Graphic2DRenderer r) {
+    /**
+     * Used by Simple2DEngine.newGraphicObject() to instantiate
+     * GraphicObject
+     *
+     * @param g Graphic2D object to be rendered
+     */
+    protected GraphicObject(Graphic2D g) {
         g2D = g;
-        render = r;
-        r.addGraphic(g2D);
+        Simple2DEngine.render.addGraphic(g2D);
     }
     
+    /**
+     * Sets X position of GraphicObject
+     *
+     * @param x X value
+     */
     public void x(float x) {
         xPos = x;
         g2D.X(x);
     }
     
+    /**
+     * Sets Y position of GraphicObject
+     *
+     * @param y Y value
+     */
     public void y(float y) {
         yPos = y;
         g2D.Y(y);
