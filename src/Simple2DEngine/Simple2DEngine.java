@@ -9,11 +9,11 @@ import com.jogamp.opengl.util.FPSAnimator;
 /**
  * Simple2DEngine
  * 
- * Simpl2DEngine provides interaction with 2D graphics engine.
- * Creates a window through NEWT and configures window, engine,
- * and rendering options based on user specifications and
- * provides methods for creating and modifying 2D graphic 
- * objects within engine.
+ * Simple2DEngine acts as the primary API for the 2D graphics engine.
+ * Creates a window through NEWT and configures window, engine, 
+ * and rendering options based on user specifications and provides
+ * methods for creating and modifying 2D graphic objects within the
+ * engine.
  * 
  * Uses Simple2DInterface to provide methods for initializing
  * game state after engine initialiation and updating game state
