@@ -96,31 +96,17 @@ public class Simple2DEngine {
         animator.start();
     }
     
-    /**
-     * Method used by Simple2DScene to provide
-     * GraphicLoader instance to Simple2DEngine
-     * 
-     * @param loader GraphicLoader to be provided to engine
-     */
+    //SimpleGLInterface uses to provide loader
     protected void initLoader(GraphicLoader loader) {
         gLoader = loader;
     }
     
-    /**
-     * Method used by Simple2DScene to provide
-     * Graphic2DRenderer instance to Simple2DEngine
-     * 
-     * @param renderer Graphic2DRenderer to be provided to engine
-     */
+    //SimpleGLInterface uses to provide renderer
     protected void initRenderer(Graphic2DRenderer renderer) {
         render = renderer;
     }
     
-    /**
-     * Method used by SimplGLInterface to provide GL2 object to engine
-     * 
-     * @param gl2 GL2 instance
-     */
+    //SimpleGLInterface uses to provice GL2 instance
     protected void bindGL(GL2 gl2) {
         gl = gl2;
     }
