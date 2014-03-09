@@ -16,7 +16,7 @@ import com.jogamp.opengl.util.FPSAnimator;
  * engine.
  * 
  * Uses Simple2DInterface to provide methods for initializing
- * game state after engine initialiation and updating game state
+ * game state after engine initialization and updating game state
  * at specified framerate.
  *
  * @author Michael Jacobs
