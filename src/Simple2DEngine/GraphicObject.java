@@ -13,6 +13,7 @@ public class GraphicObject {
     private Graphic2D g2D;
     float xPos = 0;
     float yPos = 0;
+    float depth = 0;
     String texKey;
     
     /**
@@ -23,7 +24,7 @@ public class GraphicObject {
      */
     protected GraphicObject(Graphic2D g) {
         g2D = g;
-        Simple2DEngine.render.addGraphic(g2D.texKey(), g2D);
+        Simple2DEngine.render.addGraphic(g2D.textureKey(), g2D);
     }
     
     /**
@@ -44,6 +45,16 @@ public class GraphicObject {
     public void y(float y) {
         yPos = y;
         g2D.Y(y);
+    }
+    
+    /**
+     * Sets depth value of GraphicObject
+     * 
+     * @param d Depth value
+     */
+    public void depth(float d) {
+        depth = d;
+        g2D.depth(d);
     }
     
     /**

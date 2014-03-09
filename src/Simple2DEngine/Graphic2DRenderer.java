@@ -73,12 +73,15 @@ class Graphic2DRenderer {
         LinkedList<Graphic2D> curList;
         
         gl.glClearColor(0, 0, 0, 0);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         for (Map.Entry<String, LinkedList<Graphic2D>> entry : graphicTree.entrySet()) {
             curList = entry.getValue();
             for(Graphic2D graphic : curList) {
+                Simple2DEngine.gLoader.bindTexture(entry.getKey());
+                gl.glBegin(GL2.GL_QUADS);
                 graphic.draw();
+                gl.glEnd();
             }
         }
     }

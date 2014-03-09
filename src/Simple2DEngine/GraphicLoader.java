@@ -43,16 +43,23 @@ class GraphicLoader {
     }
     
    //Creates Graphic2D object from specified key
-   protected Graphic2D getGraphic2D(String key) {
-       Texture tempText = textureTree.get(key);
-       if (tempText == null) return null;
+   protected Graphic2D newGraphic2D(String key) {
+       if (!(textureTree.containsKey(key))) return null;
        else {
-           return new Graphic2D(tempText).key(key);
+           return new Graphic2D(key);
        }
    } 
+   
+   protected Texture getTexture(String key) {
+       return textureTree.get(key);
+   }
    
    //Unloads texture specified by key from memory
    protected void unloadGraphic(String key) {
        textureTree.get(key).destroy(gl);
+   }
+   
+   protected void bindTexture(String key) {
+       textureTree.get(key).bind(gl);
    }
 }

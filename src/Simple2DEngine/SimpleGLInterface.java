@@ -50,6 +50,7 @@ class SimpleGLInterface implements GLEventListener {
         
         gl.glEnable(GL.GL_TEXTURE_2D);
         gl.glEnable(GL.GL_BLEND);
+        gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         

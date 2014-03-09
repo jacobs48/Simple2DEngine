@@ -14,6 +14,7 @@ class Graphic2D {
     private Texture texture = null;
     private float xPos = 0;
     private float yPos = 0;
+    private float depth = 0;
     private float width = 0;
     private float height = 0;
     private float texX0 = 0; 
@@ -29,8 +30,9 @@ class Graphic2D {
     
     protected String textureKey;
     
-    protected Graphic2D(Texture t) {
-        texture = t;
+    protected Graphic2D(String key) {
+        texture = Simple2DEngine.gLoader.getTexture(key);
+        textureKey = key;
         gl = Simple2DEngine.gl;
         width = texture.getWidth();
         height = texture.getHeight();
@@ -46,12 +48,12 @@ class Graphic2D {
         return this;
     }
     
-    protected Graphic2D key(String k) {
-        textureKey = k;
+    protected Graphic2D depth(float d) {
+        depth = d;
         return this;
     }
     
-    protected String texKey() {
+    protected String textureKey() {
         return textureKey;
     } 
     
@@ -64,18 +66,15 @@ class Graphic2D {
     }
     
     protected void draw() {
-        texture.bind(gl);
-        gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
         gl.glTexCoord2f(texX0, texY0);
-        gl.glVertex3f(xPos, yPos, 0);
+        gl.glVertex3f(xPos, yPos, depth);
         gl.glTexCoord2f(texX0, texY1);
-        gl.glVertex3f(xPos, yPos + height * scale, 0);
+        gl.glVertex3f(xPos, yPos + height * scale, depth);
         gl.glTexCoord2f(texX1, texY1);
-        gl.glVertex3f(xPos + width * scale, yPos + height * scale, 0);
+        gl.glVertex3f(xPos + width * scale, yPos + height * scale, depth);
         gl.glTexCoord2f(texX1, texY0);
-        gl.glVertex3f(xPos + width * scale, yPos, 0);
-        gl.glEnd();
+        gl.glVertex3f(xPos + width * scale, yPos, depth);
     }
     
     /*
@@ -83,10 +82,10 @@ class Graphic2D {
      */
     protected float[] getVArr() {
         float [] v = new float [] {
-            xPos, yPos, 0,
-            xPos, yPos + height * scale, 0,
-            xPos + width * scale, yPos + height * scale, 0,
-            xPos + width * scale, yPos, 0 
+            xPos, yPos, depth,
+            xPos, yPos + height * scale, depth,
+            xPos + width * scale, yPos + height * scale, depth,
+            xPos + width * scale, yPos, depth 
         };
         return v;  
     }

@@ -51,7 +51,7 @@ public class Simple2DEngine {
     /**
      * Provides static reference for the engine's GraphicLoader
      */
-    private GraphicLoader gLoader = null;
+    protected static GraphicLoader gLoader = null;
     
     private Simple2DEngine() {
         
@@ -163,13 +163,15 @@ public class Simple2DEngine {
     }
     
     /**
-     * Provides new instance of GraphicObject from specified texture
+     * Provides new instance of GraphicObject from specified texture.
+     * Returns null if texture doesn't exist
      *
      * @param name Key name of texture to be used by GraphicObject
      * @return GraphicObject created using specified texture
      */
     public GraphicObject newGraphicObject(String name) {
-        Graphic2D g2D = gLoader.getGraphic2D(name);
+        Graphic2D g2D = gLoader.newGraphic2D(name);
+        if (g2D == null) return null;
         GraphicObject gO = new GraphicObject(g2D);
         return gO;
     }
