@@ -67,6 +67,7 @@ class SimpleGLInterface implements GLEventListener {
     @Override
     public void display(GLAutoDrawable drawable) {
         updater.update(engine); //Runs Simple2DInterface update method
+        engine.update();
         render.draw();
     }
 

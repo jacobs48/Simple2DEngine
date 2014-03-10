@@ -5,6 +5,8 @@ import javax.media.opengl.*;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.*;
 import com.jogamp.opengl.util.FPSAnimator;
+import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * Simple2DEngine
@@ -37,6 +39,7 @@ public class Simple2DEngine {
     private String title;
     private Simple2DInterface updater;
     private RenderMode renderMode;
+    private Simple2DLayer defaultLayer;
     
     /**
      * Provides static reference for the engine's GL2 object
@@ -51,7 +54,12 @@ public class Simple2DEngine {
     /**
      * Provides static reference for the engine's GraphicLoader
      */
-    protected static GraphicLoader gLoader = null;
+    protected static GraphicLoader gLoader;
+    
+    /**
+     * Provides static reference for the engines Simple2DLayer list
+     */
+    protected static LinkedList<Simple2DLayer> layerList = new LinkedList<>();
     
     private Simple2DEngine() {
         
@@ -65,6 +73,8 @@ public class Simple2DEngine {
         fullscreen = b.fullscreen;
         updater = b.updater;
         renderMode = b.mode;
+        defaultLayer = new Simple2DLayer(-1, SortMode.NONE);
+        layerList.add(defaultLayer);
     }
     
     /**
@@ -94,6 +104,12 @@ public class Simple2DEngine {
         });
         
         animator.start();
+    }
+    
+    protected void update() {
+        for (Simple2DLayer layer : layerList) {
+            layer.updateG2Ds();
+        }
     }
     
     //SimpleGLInterface uses to provide loader
@@ -128,6 +144,21 @@ public class Simple2DEngine {
     public int getYSize() {
         return sizeY;
     }
+    
+    /**
+     * Generates a new Simple2DLayer
+     * 
+     * @param depth Specifies depth of layer
+     * @param m Specifies how GraphicObjects in layer should be sorted
+     * @return Newly generated layer
+     */
+    public Simple2DLayer newLayer(float depth, SortMode m) {
+        Simple2DLayer tempLayer = new Simple2DLayer(depth, m);
+        layerList.add(tempLayer);
+        Collections.sort(layerList);
+        return tempLayer;
+    }
+    
     
     /**
      * Loads specified image file into current GraphicLoader
@@ -172,7 +203,7 @@ public class Simple2DEngine {
     public GraphicObject newGraphicObject(String name) {
         Graphic2D g2D = gLoader.newGraphic2D(name);
         if (g2D == null) return null;
-        GraphicObject gO = new GraphicObject(g2D);
+        GraphicObject gO = new GraphicObject(g2D, defaultLayer);
         return gO;
     }
     
