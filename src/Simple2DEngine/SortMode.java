@@ -22,9 +22,4 @@ public enum SortMode {
      * Sorts items bottom-up by Y position
      */
     Y_POSITION,
-    
-    /**
-     * Items are not sorted, provided depth value is used
-     */
-    NONE
 }

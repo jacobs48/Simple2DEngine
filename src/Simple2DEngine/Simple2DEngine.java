@@ -41,6 +41,8 @@ public class Simple2DEngine {
     private RenderMode renderMode;
     private Simple2DLayer defaultLayer;
     
+    protected static Simple2DEngine engine;
+    
     /**
      * Provides static reference for the engine's GL2 object
      */
@@ -62,7 +64,7 @@ public class Simple2DEngine {
     protected static LinkedList<Simple2DLayer> layerList = new LinkedList<>();
     
     private Simple2DEngine() {
-        
+
     }
 
     private Simple2DEngine(Builder b) {
@@ -73,8 +75,9 @@ public class Simple2DEngine {
         fullscreen = b.fullscreen;
         updater = b.updater;
         renderMode = b.mode;
-        defaultLayer = new Simple2DLayer(-1, SortMode.NONE);
+        defaultLayer = new Simple2DLayer(-1, SortMode.DEPTH_SORTED);
         layerList.add(defaultLayer);
+        engine = this;
     }
     
     /**
@@ -108,7 +111,7 @@ public class Simple2DEngine {
     
     protected void update() {
         for (Simple2DLayer layer : layerList) {
-            layer.updateG2Ds();
+            layer.updateZ();
         }
     }
     

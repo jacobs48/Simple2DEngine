@@ -21,11 +21,15 @@ class Graphic2D {
     private float texX1 = 1;
     private float texY0 = 0;
     private float texY1 = 1;
+    private float rotation = 0;
+    private float rotXOffset;
+    private float rotYOffset;
     private float r = 1;
     private float g = 1;
     private float b = 1;
     private float a = 1;
     private float scale = 1;
+    protected boolean hidden = false;
     private GL2 gl = null;
     
     protected String textureKey;
@@ -36,6 +40,8 @@ class Graphic2D {
         gl = Simple2DEngine.gl;
         width = texture.getWidth();
         height = texture.getHeight();
+        rotXOffset = width / 2;
+        rotYOffset = height / 2;
     }
     
     protected Graphic2D X(float x) {
@@ -52,6 +58,54 @@ class Graphic2D {
         depth = d;
         return this;
     }
+
+    protected float getWidth() {
+        return width;
+    }
+
+    public float getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
+
+    public float getRotXOffset() {
+        return rotXOffset;
+    }
+
+    public void setRotXOffset(float rotXOffset) {
+        this.rotXOffset = rotXOffset;
+    }
+
+    public float getRotYOffset() {
+        return rotYOffset;
+    }
+
+    public void setRotYOffset(float rotYOffset) {
+        this.rotYOffset = rotYOffset;
+    }
+    
+    protected void setWidth(float width) {
+        this.width = width;
+    }
+
+    protected float getHeight() {
+        return height;
+    }
+
+    protected void setHeight(float height) {
+        this.height = height;
+    }
+
+    protected float getScale() {
+        return scale;
+    }
+
+    protected void setScale(float scale) {
+        this.scale = scale;
+    }
     
     protected String textureKey() {
         return textureKey;
@@ -66,6 +120,12 @@ class Graphic2D {
     }
     
     protected void draw() {
+        
+        gl.glLoadIdentity();
+        gl.glTranslatef(-(xPos + (width / 2)), -(yPos + (height / 2)), 0);
+        gl.glRotatef(rotation, 0, 0, 1);
+        gl.glTranslatef(xPos + (width / 2), yPos + (height / 2), 0);
+        gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
         gl.glTexCoord2f(texX0, texY0);
         gl.glVertex3f(xPos, yPos, depth);
@@ -75,6 +135,7 @@ class Graphic2D {
         gl.glVertex3f(xPos + width * scale, yPos + height * scale, depth);
         gl.glTexCoord2f(texX1, texY0);
         gl.glVertex3f(xPos + width * scale, yPos, depth);
+        gl.glEnd();
     }
     
     /*
