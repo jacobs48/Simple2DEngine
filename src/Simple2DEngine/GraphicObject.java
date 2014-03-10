@@ -16,7 +16,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
     private Simple2DLayer layer;
     private float xPos = 0;
     private float yPos = 0;
-    private float depth = 0;
+    private float zPos = 0;
     private String texKey;
     
     /**
@@ -38,6 +38,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
      */
     public void X(float x) {
         xPos = x;
+        g2D.X(xPos * layer.getCoordMapX());
     }
     
     /**
@@ -47,12 +48,17 @@ public class GraphicObject implements Comparable<GraphicObject>{
      */
     public void Y(float y) {
         yPos = y;
+        g2D.Y(yPos * layer.getCoordMapY());
     }
     
     public GraphicObject setLayer(Simple2DLayer l) {
         layer.remove(this);
         layer = l;
         layer.add(this);
+        
+        g2D.X(xPos * layer.getCoordMapX());
+        g2D.Y(yPos * layer.getCoordMapY());
+        
         return this;
     }
     
@@ -73,8 +79,8 @@ public class GraphicObject implements Comparable<GraphicObject>{
      * 
      * @param d Depth value
      */
-    public void depth(float d) {
-        depth = d;
+    public void Z(float d) {
+        zPos = d;
         g2D.depth(d);
     }
     
@@ -94,11 +100,11 @@ public class GraphicObject implements Comparable<GraphicObject>{
      */
     @Override
     public int compareTo(GraphicObject t) {
-        return Float.compare(depth, t.getDepth());
+        return Float.compare(zPos, t.getZ());
     }
     
-    protected float getDepth() {
-        return depth;
+    protected float getZ() {
+        return zPos;
     }
     
     static class ReverseYComparator implements Comparator<GraphicObject> {

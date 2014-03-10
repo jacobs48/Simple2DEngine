@@ -35,6 +35,14 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         xCoordMap = x;
         yCoordMap = y;
     }
+    
+    protected float getCoordMapX() {
+        return xCoordMap;
+    }
+    
+    protected float getCoordMapY() {
+        return yCoordMap;
+    }
 
     @Override
     public int compareTo(Simple2DLayer t) {
@@ -75,9 +83,6 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
             for (GraphicObject g : gObjects) {
                 g.getG2D().depth(baseDepth);
                 baseDepth += MIN_DEPTH_DIF;
-                
-                g.getG2D().X(g.getX() * xCoordMap);
-                g.getG2D().Y(g.getY() * yCoordMap);
             }
         }  
     }

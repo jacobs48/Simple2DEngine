@@ -32,7 +32,6 @@ class SimpleGLInterface implements GLEventListener {
     @Override
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        GLU glu = new GLU();
         engine.bindGL(gl);
         gLoader = new GraphicLoader();
         render = new Graphic2DRenderer(mode);
@@ -41,7 +40,7 @@ class SimpleGLInterface implements GLEventListener {
         
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluOrtho2D(0.0, engine.getXSize(), 0.0, engine.getYSize());
+        gl.glOrtho(0.0, engine.getXSize(), 0.0, engine.getYSize(), -1, 1);
         
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
