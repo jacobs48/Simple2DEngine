@@ -55,6 +55,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     
     protected void add(GraphicObject g) {
         gObjects.add(g);
+        this.updateGraphicObject(g);
     }
     
     protected void remove(GraphicObject g) {

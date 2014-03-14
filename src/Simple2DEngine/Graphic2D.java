@@ -121,10 +121,10 @@ class Graphic2D {
     
     protected void draw() {
         
-        gl.glLoadIdentity();
-        gl.glTranslatef(-(xPos + (width / 2)), -(yPos + (height / 2)), 0);
+        gl.glLoadIdentity(); 
+        gl.glTranslatef(xPos + rotXOffset, yPos + rotYOffset, 0);
         gl.glRotatef(rotation, 0, 0, 1);
-        gl.glTranslatef(xPos + (width / 2), yPos + (height / 2), 0);
+        gl.glTranslatef(-(xPos + rotXOffset), -(yPos + rotYOffset), 0);
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
         gl.glTexCoord2f(texX0, texY0);
