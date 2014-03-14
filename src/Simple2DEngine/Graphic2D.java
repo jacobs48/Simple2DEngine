@@ -27,7 +27,7 @@ class Graphic2D {
     private float r = 1;
     private float g = 1;
     private float b = 1;
-    private float a = 1;
+    private float a = 0;
     private float scale = 1;
     protected boolean hidden = false;
     private GL2 gl = null;
@@ -69,6 +69,14 @@ class Graphic2D {
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
+    }
+
+    public float getA() {
+        return a;
+    }
+
+    public void setA(float a) {
+        this.a = a;
     }
 
     public float getRotXOffset() {

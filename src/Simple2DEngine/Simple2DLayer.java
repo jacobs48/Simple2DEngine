@@ -98,6 +98,8 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         g.g2D.setRotYOffset(g.rotYOffset);
         g.g2D.setRotation(g.rotation);
         
+        g.g2D.setA((100 - g.transparency) / 100);
+        
         switch (g.alignment) {
             case LEFT_UPPER:
                 g.g2D.X(g.xOffset * xCoordMap);

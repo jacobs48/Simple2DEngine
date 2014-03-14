@@ -25,6 +25,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
     protected float rotation = 0;
     protected float rotXOffset;
     protected float rotYOffset;
+    protected float transparency = 0;
     protected WindowAlignment alignment = WindowAlignment.NONE;
     
     /**
@@ -84,6 +85,18 @@ public class GraphicObject implements Comparable<GraphicObject>{
         rotation = degrees;
         rotXOffset = g2D.getWidth() / 2;
         rotYOffset = g2D.getHeight() / 2;
+        layer.updateGraphicObject(this);
+    }
+    
+    public void rotate(float degrees, float xOff, float yOff) {
+        rotation = degrees;
+        rotXOffset = xOff;
+        rotYOffset = yOff;
+    }
+    
+    public void transparency(float a) {
+        transparency = a;
+        layer.updateGraphicObject(this);
     }
     
     public GraphicObject setLayer(Simple2DLayer l) {
