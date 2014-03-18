@@ -33,11 +33,12 @@ public class GraphicObject implements Comparable<GraphicObject>{
      * GraphicObject
      *
      * @param g Graphic2D object to be rendered
+     * @param l Layer to add to
      */
     protected GraphicObject(Graphic2D g, Simple2DLayer l) {
         layer = l;
         g2D = g;
-        Simple2DEngine.render.addGraphic(g2D.textureKey(), g2D);
+        Simple2DEngine.render.addGraphic(g2D);
     }
     
     
@@ -92,6 +93,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
         rotation = degrees;
         rotXOffset = xOff;
         rotYOffset = yOff;
+        layer.updateGraphicObject(this);
     }
     
     public void transparency(float a) {

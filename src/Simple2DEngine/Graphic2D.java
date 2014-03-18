@@ -9,12 +9,12 @@ import javax.media.opengl.*;
  * Graphic2D describes a 2D image as it is to be rendered by Graphic2DRenderer
  * 
  */
-class Graphic2D {
+class Graphic2D implements Comparable<Graphic2D> {
     
     private Texture texture = null;
     private float xPos = 0;
     private float yPos = 0;
-    private float depth = 0;
+    private float z = 0;
     private float width = 0;
     private float height = 0;
     private float texX0 = 0; 
@@ -29,10 +29,9 @@ class Graphic2D {
     private float b = 1;
     private float a = 0;
     private float scale = 1;
-    protected boolean hidden = false;
+    private boolean hidden = false;
     private GL2 gl = null;
-    
-    protected String textureKey;
+    private String textureKey;
     
     protected Graphic2D(String key) {
         texture = Simple2DEngine.gLoader.getTexture(key);
@@ -54,44 +53,69 @@ class Graphic2D {
         return this;
     }
     
-    protected Graphic2D depth(float d) {
-        depth = d;
+    protected Graphic2D Z(float d) {
+        z = d;
         return this;
+    }
+
+    protected float getZ() {
+        return z;
+    }
+
+    protected Texture getTexture() {
+        return texture;
+    }
+    
+    protected String getTextureKey() {
+        return textureKey;
+    }
+    
+    protected boolean isHidden() {
+        return hidden;
+    }
+    
+    protected void setHidden(boolean h) {
+        hidden = h;
+    }
+
+    protected void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
     protected float getWidth() {
         return width;
     }
 
-    public float getRotation() {
+    protected float getRotation() {
         return rotation;
     }
 
-    public void setRotation(float rotation) {
+    protected Graphic2D setRotation(float rotation) {
         this.rotation = rotation;
+        return this;
     }
 
-    public float getA() {
+    protected float getA() {
         return a;
     }
 
-    public void setA(float a) {
+    protected void setA(float a) {
         this.a = a;
     }
 
-    public float getRotXOffset() {
+    protected float getRotXOffset() {
         return rotXOffset;
     }
 
-    public void setRotXOffset(float rotXOffset) {
+    protected void setRotXOffset(float rotXOffset) {
         this.rotXOffset = rotXOffset;
     }
 
-    public float getRotYOffset() {
+    protected float getRotYOffset() {
         return rotYOffset;
     }
 
-    public void setRotYOffset(float rotYOffset) {
+    protected void setRotYOffset(float rotYOffset) {
         this.rotYOffset = rotYOffset;
     }
     
@@ -138,13 +162,13 @@ class Graphic2D {
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
         gl.glTexCoord2f(texX0, texY0);
-        gl.glVertex3f(xPos, yPos, depth);
+        gl.glVertex3f(xPos, yPos, z);
         gl.glTexCoord2f(texX0, texY1);
-        gl.glVertex3f(xPos, yPos + height * scale, depth);
+        gl.glVertex3f(xPos, yPos + height * scale, z);
         gl.glTexCoord2f(texX1, texY1);
-        gl.glVertex3f(xPos + width * scale, yPos + height * scale, depth);
+        gl.glVertex3f(xPos + width * scale, yPos + height * scale, z);
         gl.glTexCoord2f(texX1, texY0);
-        gl.glVertex3f(xPos + width * scale, yPos, depth);
+        gl.glVertex3f(xPos + width * scale, yPos, z);
         gl.glEnd();
     }
     
@@ -153,10 +177,10 @@ class Graphic2D {
      */
     protected float[] getVArr() {
         float [] v = new float [] {
-            xPos, yPos, depth,
-            xPos, yPos + height * scale, depth,
-            xPos + width * scale, yPos + height * scale, depth,
-            xPos + width * scale, yPos, depth 
+            xPos, yPos, z,
+            xPos, yPos + height * scale, z,
+            xPos + width * scale, yPos + height * scale, z,
+            xPos + width * scale, yPos, z 
         };
         return v;  
     }
@@ -185,6 +209,11 @@ class Graphic2D {
             texX1, texY0  
         }; 
         return t;
+    }
+
+    @Override
+    public int compareTo(Graphic2D g) {
+        return Float.compare(z, g.getZ());
     }
     
 }

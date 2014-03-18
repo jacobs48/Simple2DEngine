@@ -81,6 +81,9 @@ class SimpleGLInterface implements GLEventListener {
         gl.glLoadIdentity();
         glu.gluOrtho2D(0.0, width, 0.0, height);   
         
+        engine.updateSize(width, height);
+        engine.updateLayers();
+        
         
     }
     

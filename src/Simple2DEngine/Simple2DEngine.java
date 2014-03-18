@@ -4,6 +4,7 @@ package Simple2DEngine;
 import javax.media.opengl.*;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.*;
+import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -110,9 +111,7 @@ public class Simple2DEngine {
     }
     
     protected void update() {
-        for (Simple2DLayer layer : layerList) {
-            layer.updateZ();
-        }
+        
     }
     
     //SimpleGLInterface uses to provide loader
@@ -162,6 +161,12 @@ public class Simple2DEngine {
         return tempLayer;
     }
     
+    protected void removeLayer(Simple2DLayer layer) {
+        layerList.remove(layer);
+        Collections.sort(layerList);
+        this.updateLayersZ();
+    }
+    
     
     /**
      * Loads specified image file into current GraphicLoader
@@ -193,7 +198,7 @@ public class Simple2DEngine {
      */
     public void safeUnloadTexture(String key) {
         gLoader.unloadGraphic(key);
-        render.removeTexList(key);
+        render.removeAllTex(key);
     }
     
     /**
@@ -208,6 +213,27 @@ public class Simple2DEngine {
         if (g2D == null) return null;
         GraphicObject gO = new GraphicObject(g2D, defaultLayer);
         return gO;
+    }
+    
+    protected void updateLayers() {
+        for (int i = 0; i < layerList.size(); i++) {
+            layerList.get(i).updateZ(i);
+        }
+        for (Simple2DLayer layer : layerList) {
+            layer.updateAll();
+        }
+    }
+    
+    protected void updateLayersZ() {
+        Collections.sort(layerList);
+        for (int i = 0; i < layerList.size(); i++) {
+            layerList.get(i).updateZ(i);
+        }
+    }
+    
+    protected void updateSize(int x, int y) {
+        sizeX = x;
+        sizeY = y;
     }
     
     /**

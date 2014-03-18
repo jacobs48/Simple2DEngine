@@ -2,12 +2,11 @@
 
 package Simple2DEngine;
 
-import com.jogamp.opengl.util.GLBuffers;
+import com.jogamp.opengl.util.texture.Texture;
 import java.nio.FloatBuffer;
+import java.util.Collections;
 import java.util.LinkedList;
-import java.util.TreeMap;
 import javax.media.opengl.*;
-import java.util.Map;
 
 /*
  * Graphic2DRenderer handles the internal rendering for Simple2DEngine.
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 class Graphic2DRenderer {
     
-    private TreeMap<String, LinkedList<Graphic2D>> graphicTree = null;  
+    private LinkedList<Graphic2D> graphicList = null;
     private GL2 gl;
     private float [] vertices = null;
     private float [] colors = null;
@@ -25,36 +24,30 @@ class Graphic2DRenderer {
     private FloatBuffer colorBuf = null;
     private FloatBuffer texBuf = null;
     private RenderMode mode;
+    private Texture boundTexture = null;
     
     
     protected Graphic2DRenderer(RenderMode m) {
         gl = Simple2DEngine.gl;
-        graphicTree = new TreeMap<>();
+        graphicList = new LinkedList<>();
         mode = m;
     }
     
     //Add Graphic2D object LinkedList in treeMap with provided key value
-    protected void addGraphic(String key, Graphic2D g2) {
-        LinkedList<Graphic2D> tempList;
-        if (graphicTree.containsKey(key)) {
-            tempList = graphicTree.get(key);
-            tempList.add(g2);
-        }
-        else {
-            tempList = new LinkedList<>();
-            tempList.add(g2);
-            graphicTree.put(key, tempList);
-        }
+    protected void addGraphic(Graphic2D g2) {
+        graphicList.add(g2);
     }
     
     //Removes Graphic2D object from renderer by key
     protected void removeGraphic(Graphic2D g2) {
-        graphicTree.get(g2.textureKey).remove(g2);
+        graphicList.remove(g2);
     } 
     
     //Removes entire list of texture for safely unloading texture
-    protected void removeTexList(String key) {
-        graphicTree.remove(key);
+    protected void removeAllTex(String key) {
+        for(Graphic2D graphic : graphicList) {
+            if (graphic.getTextureKey().equals(key)) graphicList.remove(graphic);
+        }
     }
     
     protected void draw() {
@@ -69,20 +62,24 @@ class Graphic2DRenderer {
         }
     }
     
-    private void drawImmediate() {
-        LinkedList<Graphic2D> curList;
+    private void drawImmediate() {   
+        Collections.sort(graphicList);
         
         gl.glClearColor(0, 0, 0, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         
-        for (Map.Entry<String, LinkedList<Graphic2D>> entry : graphicTree.entrySet()) {
-            curList = entry.getValue();
-            for(Graphic2D graphic : curList) {
-                Simple2DEngine.gLoader.bindTexture(entry.getKey());
-                if (!(graphic.hidden)) graphic.draw();
+        for(Graphic2D graphic : graphicList) {
+            if (!(graphic.isHidden())) {
+                if (boundTexture != graphic.getTexture()) {
+                    boundTexture = graphic.getTexture();
+                    boundTexture.bind(gl);
+                }
+                
+                graphic.draw();
             }
+            
         }
     }
     
