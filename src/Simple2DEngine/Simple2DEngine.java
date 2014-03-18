@@ -4,7 +4,6 @@ package Simple2DEngine;
 import javax.media.opengl.*;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.*;
-import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -41,6 +40,10 @@ public class Simple2DEngine {
     private Simple2DInterface updater;
     private RenderMode renderMode;
     private Simple2DLayer defaultLayer;
+    
+    private float cameraX = 0;
+    private float cameraY = 0;
+    private float gameSpaceCoefficient = 1;
     
     protected static Simple2DEngine engine;
     
@@ -147,6 +150,22 @@ public class Simple2DEngine {
         return sizeY;
     }
     
+    public void setGameSpace(float g) {
+        gameSpaceCoefficient = 1/g;
+        for (Simple2DLayer layer : layerList) {
+            layer.updateGameSpace(gameSpaceCoefficient);
+            layer.updateAll();
+        }
+    }
+    
+    public void updateCamera(float x, float y) {
+        cameraX = x;
+        cameraY = y;
+        for (Simple2DLayer layer : layerList) {
+            layer.updateCamera(cameraX, cameraY);
+        }
+    }
+    
     /**
      * Generates a new Simple2DLayer
      * 
@@ -158,6 +177,14 @@ public class Simple2DEngine {
         Simple2DLayer tempLayer = new Simple2DLayer(depth, m);
         layerList.add(tempLayer);
         Collections.sort(layerList);
+        return tempLayer;
+    }
+    
+    public S2DGameLayer newS2DGameLayer(float depth, SortMode m) {
+        S2DGameLayer tempLayer = new S2DGameLayer(depth, m);
+        layerList.add(tempLayer);
+        Collections.sort(layerList);
+        tempLayer.updateGameSpace(gameSpaceCoefficient);
         return tempLayer;
     }
     

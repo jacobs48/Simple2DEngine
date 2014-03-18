@@ -11,18 +11,12 @@ import java.util.LinkedList;
  */
 public class Simple2DLayer implements Comparable<Simple2DLayer> {
     
-    private LinkedList<GraphicObject> gObjects;
-    private float depth = 0;
-    private final SortMode mode;
-    private float xCoordMap = 1;
-    private float yCoordMap = 1;
-    private float backgroundR = 1;
-    private float backgroundG = 1;
-    private float backgroundB = 1;
-    private boolean fillBackground = false;
+    protected LinkedList<GraphicObject> gObjects;
+    protected float depth = 0;
+    protected final SortMode mode;
     
-    private static final float MIN_DEPTH_DIF = 0.0000001f; //Minimum diffrence between depth values of Graphic2D objects
-    private static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
+    protected static final float MIN_DEPTH_DIF = 0.0000001f; //Minimum diffrence between depth values of Graphic2D objects
+    protected static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
 
     protected Simple2DLayer(float d, SortMode m) {
         gObjects = new LinkedList<>();
@@ -35,17 +29,12 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         Simple2DEngine.engine.updateLayersZ();
     }
     
-    public void setPixelSpace(float x, float y) {
-        xCoordMap = 1/x;
-        yCoordMap = 1/y;
+    protected void updateGameSpace(float x) {
+        
     }
     
-    protected float getPixelSpaceX() {
-        return xCoordMap;
-    }
-    
-    protected float getPixelSpaceY() {
-        return yCoordMap;
+    protected void updateCamera(float x, float y) {
+        
     }
 
     @Override
@@ -53,7 +42,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         return Float.compare(depth, t.getDepth());
     }
     
-    protected float getDepth() {
+    public float getDepth() {
         return depth;
     }
     
@@ -110,44 +99,44 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         
         switch (g.alignment) {
             case LEFT_UPPER:
-                g.g2D.X(g.xOffset * xCoordMap);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset * yCoordMap);
+                g.g2D.X(g.xOffset);
+                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset);
                 break;
             case LEFT_LOWER:
-                g.g2D.X(g.xOffset * xCoordMap);
-                g.g2D.Y(g.yOffset * yCoordMap);
+                g.g2D.X(g.xOffset);
+                g.g2D.Y(g.yOffset);
                 break;
             case LEFT_CENTERED:
-                g.g2D.X(g.xOffset * xCoordMap);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset * yCoordMap);
+                g.g2D.X(g.xOffset);
+                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset);
                 break;
             case RIGHT_UPPER:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset * xCoordMap);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset * yCoordMap);
+                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset);
+                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset);
                 break;
             case RIGHT_LOWER:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset * xCoordMap);
-                g.g2D.Y(g.yOffset * yCoordMap);
+                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset);
+                g.g2D.Y(g.yOffset);
                 break;
             case RIGHT_CENTERED:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset * xCoordMap);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset * yCoordMap);
+                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset);
+                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset);
                 break;
             case TOP_CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset * xCoordMap);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight()+ g.yOffset * yCoordMap);
+                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset);
+                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight()+ g.yOffset);
                 break;
             case BOTTOM_CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset * xCoordMap);
-                g.g2D.Y(g.yOffset * yCoordMap);
+                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset);
+                g.g2D.Y(g.yOffset);
                 break;
             case CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset * xCoordMap);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2)+ g.yOffset * yCoordMap);
+                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset);
+                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2)+ g.yOffset);
                 break;
             case NONE:
-                g.g2D.X((g.xPos + g.xOffset) * xCoordMap);
-                g.g2D.Y((g.yPos + g.yOffset) * yCoordMap);
+                g.g2D.X(g.xPos + g.xOffset);
+                g.g2D.Y(g.yPos + g.yOffset);
                 break;
             default:
                 break;
