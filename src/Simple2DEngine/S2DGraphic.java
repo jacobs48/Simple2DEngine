@@ -169,9 +169,9 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         g2D.setA((100 - transparency) / 100);
     }
     
-    public S2DGraphic setLayer(S2DLayer lyr) {
+    public S2DGraphic setLayer(S2DLayer l) {
         layer.remove(this);
-        layer = lyr;
+        layer = l;
         layer.add(this);
         this.updateGraphic();
         

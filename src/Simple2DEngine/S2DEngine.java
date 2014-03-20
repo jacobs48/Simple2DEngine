@@ -43,7 +43,7 @@ public class S2DEngine {
     
     private float cameraX = 0;
     private float cameraY = 0;
-    private float gameSpaceCoefficient = 1;
+    private float gameSpaceCoeff = 1;
     
     protected static S2DEngine engine;
     
@@ -118,17 +118,17 @@ public class S2DEngine {
     }
     
     //SimpleGLInterface uses to provide loader
-    protected void initLoader(S2DTextureLoader loader) {
+    protected void setLoader(S2DTextureLoader loader) {
         gLoader = loader;
     }
     
     //SimpleGLInterface uses to provide renderer
-    protected void initRenderer(S2DRenderer renderer) {
+    protected void setRenderer(S2DRenderer renderer) {
         render = renderer;
     }
     
     //SimpleGLInterface uses to provide GL2 instance
-    protected void bindGL(GL2 gl2) {
+    protected void setGL(GL2 gl2) {
         gl = gl2;
     }
     
@@ -137,7 +137,7 @@ public class S2DEngine {
      * 
      * @return X dimension of engine window
      */
-    public int getXSize() {
+    public int getWindowWidth() {
         return sizeX;
     }
     
@@ -146,14 +146,14 @@ public class S2DEngine {
      * 
      * @return Y dimension of engine window
      */
-    public int getYSize() {
+    public int getWindowHeight() {
         return sizeY;
     }
     
     public void setGameSpace(float g) {
-        gameSpaceCoefficient = 1/g;
+        gameSpaceCoeff = 1/g;
         for (S2DLayer layer : layerList) {
-            layer.updateGameSpace(gameSpaceCoefficient);
+            layer.updateGameSpace(gameSpaceCoeff);
             layer.updateAll();
         }
     }
@@ -177,14 +177,23 @@ public class S2DEngine {
         S2DLayer tempLayer = new S2DLayer(depth, m);
         layerList.add(tempLayer);
         Collections.sort(layerList);
+        this.updateLayersZ();
         return tempLayer;
     }
     
     public S2DGameLayer newS2DGameLayer(float depth, SortMode m) {
-        S2DGameLayer tempLayer = new S2DGameLayer(depth, m);
+        S2DGameLayer tempLayer = new S2DGameLayer(depth, m, cameraX, cameraY, gameSpaceCoeff);
         layerList.add(tempLayer);
         Collections.sort(layerList);
-        tempLayer.updateGameSpace(gameSpaceCoefficient);
+        this.updateLayersZ();
+        return tempLayer;
+    }
+    
+    public S2DWindowLayer newS2DWindowLayer(float d, SortMode m, float x, float y, float w, float h) {
+        S2DWindowLayer tempLayer = new S2DWindowLayer(d, m, x, y, w, h);
+        layerList.add(tempLayer);
+        Collections.sort(layerList);
+        this.updateLayersZ();
         return tempLayer;
     }
     
@@ -223,7 +232,7 @@ public class S2DEngine {
      * 
      * @param key Key value of texture to be unloaded
      */
-    public void safeUnloadTexture(String key) {
+    public void unloadTextureSafe(String key) {
         gLoader.unloadGraphic(key);
         render.removeAllTex(key);
     }
@@ -243,9 +252,7 @@ public class S2DEngine {
     }
     
     protected void updateLayers() {
-        for (int i = 0; i < layerList.size(); i++) {
-            layerList.get(i).updateZ(i);
-        }
+        this.updateLayersZ();
         for (S2DLayer layer : layerList) {
             layer.updateAll();
         }

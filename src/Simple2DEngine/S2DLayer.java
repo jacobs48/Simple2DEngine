@@ -43,7 +43,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
     }
     
     protected float getLayerX1() {
-        return S2DEngine.engine.getXSize();
+        return S2DEngine.engine.getWindowWidth();
     }
     
     protected float getLayerY0() {
@@ -51,15 +51,15 @@ public class S2DLayer implements Comparable<S2DLayer> {
     }
     
     protected float getLayerY1() {
-        return S2DEngine.engine.getYSize();
+        return S2DEngine.engine.getWindowHeight();
     }
     
     protected float getHeight() {
-        return S2DEngine.engine.getYSize();
+        return S2DEngine.engine.getWindowHeight();
     }
     
     protected float getWidth() {
-        return S2DEngine.engine.getXSize();
+        return S2DEngine.engine.getWindowWidth();
     }   
     
     protected float getScale() {

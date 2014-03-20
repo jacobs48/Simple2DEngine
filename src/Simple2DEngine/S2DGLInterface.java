@@ -32,15 +32,15 @@ class S2DGLInterface implements GLEventListener {
     @Override
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        engine.bindGL(gl);
+        engine.setGL(gl);
         gLoader = new S2DTextureLoader();
         render = new S2DRenderer(mode);
-        engine.initLoader(gLoader); //Provides initialized S2DTextureLoader to engine
-        engine.initRenderer(render); //Provides initialized Graphic2DRenderer to engine
+        engine.setLoader(gLoader); //Provides initialized S2DTextureLoader to engine
+        engine.setRenderer(render); //Provides initialized Graphic2DRenderer to engine
         
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        gl.glOrtho(0.0, engine.getXSize(), 0.0, engine.getYSize(), -1, 1);
+        gl.glOrtho(0.0, engine.getWindowWidth(), 0.0, engine.getWindowHeight(), -1, 1);
         
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
