@@ -120,9 +120,10 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     
     //Updates the depth value of all Graphic2D objects stored in GraphicObject list
     protected void updateZ(float i) {
-        float baseDepth = LAYER_DEPTH_DIF * i;
+        float baseDepth;
         
         baseZValue = i; 
+        baseDepth = LAYER_DEPTH_DIF * baseZValue;
         this.sort();
         
         for (GraphicObject g : gObjects) {
