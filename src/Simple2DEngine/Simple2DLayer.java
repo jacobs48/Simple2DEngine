@@ -14,6 +14,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     protected LinkedList<GraphicObject> gObjects;
     protected float depth = 0;
     protected final SortMode mode;
+    protected float baseZValue = 0;
     
     protected static final float MIN_DEPTH_DIF = 0.0000001f; //Minimum diffrence between depth values of Graphic2D objects
     protected static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
@@ -29,11 +30,51 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         Simple2DEngine.engine.updateLayersZ();
     }
     
+    protected float translateX(float x) {
+        return x;
+    }
+    
+    protected float translateY(float y) {
+        return y;
+    }
+    
+    protected float getLayerX0() {
+        return 0;
+    }
+    
+    protected float getLayerX1() {
+        return Simple2DEngine.engine.getXSize();
+    }
+    
+    protected float getLayerY0() {
+        return 0;
+    }
+    
+    protected float getLayerY1() {
+        return Simple2DEngine.engine.getYSize();
+    }
+    
+    protected float getHeight() {
+        return Simple2DEngine.engine.getYSize();
+    }
+    
+    protected float getWidth() {
+        return Simple2DEngine.engine.getXSize();
+    }   
+    
+    protected float getScale() {
+        return 1;
+    }
+    
     protected void updateGameSpace(float x) {
         
     }
     
     protected void updateCamera(float x, float y) {
+        
+    }
+    
+    public void setScale(float s) {
         
     }
 
@@ -48,7 +89,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     
     protected void add(GraphicObject g) {
         gObjects.add(g);
-        this.updateGraphicObject(g);
+        g.updateGraphic();
     }
     
     protected void remove(GraphicObject g) {
@@ -62,7 +103,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         this.updateZ(i);
         
         for(GraphicObject g : gObjects) {
-            this.updateGraphicObject(g);
+            g.updateGraphic();
         }
     }
     
@@ -79,68 +120,26 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     
     //Updates the depth value of all Graphic2D objects stored in GraphicObject list
     protected void updateZ(float i) {
+        float baseDepth = LAYER_DEPTH_DIF * i;
+        
+        baseZValue = i; 
         this.sort();
         
-        float baseDepth = LAYER_DEPTH_DIF * i;
-
         for (GraphicObject g : gObjects) {
             g.g2D.Z(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
     }
     
-    
-    protected void updateGraphicObject(GraphicObject g) {
-        g.g2D.setHidden(g.hidden);
-        g.g2D.setRotXOffset(g.rotXOffset);
-        g.g2D.setRotYOffset(g.rotYOffset);
-        g.g2D.setRotation(g.rotation);    
-        g.g2D.setA((100 - g.transparency) / 100);
+    protected void updateZ() {
+        float baseDepth = LAYER_DEPTH_DIF * baseZValue;
         
-        switch (g.alignment) {
-            case LEFT_UPPER:
-                g.g2D.X(g.xOffset);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset);
-                break;
-            case LEFT_LOWER:
-                g.g2D.X(g.xOffset);
-                g.g2D.Y(g.yOffset);
-                break;
-            case LEFT_CENTERED:
-                g.g2D.X(g.xOffset);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset);
-                break;
-            case RIGHT_UPPER:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset);
-                break;
-            case RIGHT_LOWER:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset);
-                g.g2D.Y(g.yOffset);
-                break;
-            case RIGHT_CENTERED:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset);
-                break;
-            case TOP_CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight()+ g.yOffset);
-                break;
-            case BOTTOM_CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset);
-                g.g2D.Y(g.yOffset);
-                break;
-            case CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2)+ g.yOffset);
-                break;
-            case NONE:
-                g.g2D.X(g.xPos + g.xOffset);
-                g.g2D.Y(g.yPos + g.yOffset);
-                break;
-            default:
-                break;
-        }
+        this.sort();
+        
+        for (GraphicObject g : gObjects) {
+            g.g2D.Z(baseDepth);
+            baseDepth += MIN_DEPTH_DIF;
+        } 
     }
     
     public void destroy() {

@@ -52,63 +52,58 @@ public class S2DGameLayer extends Simple2DLayer {
         this.updateZ(i);
         
         for(GraphicObject g : gObjects) {
-            this.updateGraphicObject(g);
+            g.updateGraphic();
         }
     }
     
     @Override
-    protected void updateGraphicObject(GraphicObject g) {
-        g.g2D.setHidden(g.hidden);
-        g.g2D.setRotXOffset(g.rotXOffset);
-        g.g2D.setRotYOffset(g.rotYOffset);
-        g.g2D.setRotation(g.rotation);    
-        g.g2D.setA((100 - g.transparency) / 100);
-        
-        switch (g.alignment) {
-            case LEFT_UPPER:
-                g.g2D.X(g.xOffset * gameSpaceCoeff);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset * gameSpaceCoeff);
-                break;
-            case LEFT_LOWER:
-                g.g2D.X(g.xOffset * gameSpaceCoeff);
-                g.g2D.Y(g.yOffset * gameSpaceCoeff);
-                break;
-            case LEFT_CENTERED:
-                g.g2D.X(g.xOffset * gameSpaceCoeff);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset * gameSpaceCoeff);
-                break;
-            case RIGHT_UPPER:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset * gameSpaceCoeff);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight() + g.yOffset * gameSpaceCoeff);
-                break;
-            case RIGHT_LOWER:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset * gameSpaceCoeff);
-                g.g2D.Y(g.yOffset * gameSpaceCoeff);
-                break;
-            case RIGHT_CENTERED:
-                g.g2D.X(Simple2DEngine.engine.getXSize() - g.g2D.getWidth() + g.xOffset * gameSpaceCoeff);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2) + g.yOffset * gameSpaceCoeff);
-                break;
-            case TOP_CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset * gameSpaceCoeff);
-                g.g2D.Y(Simple2DEngine.engine.getYSize() - g.g2D.getHeight()+ g.yOffset * gameSpaceCoeff);
-                break;
-            case BOTTOM_CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset * gameSpaceCoeff);
-                g.g2D.Y(g.yOffset * gameSpaceCoeff);
-                break;
-            case CENTERED:
-                g.g2D.X((Simple2DEngine.engine.getXSize() / 2) - (g.g2D.getWidth() / 2) + g.xOffset * gameSpaceCoeff);
-                g.g2D.Y((Simple2DEngine.engine.getYSize() / 2) - (g.g2D.getHeight() / 2)+ g.yOffset * gameSpaceCoeff);
-                break;
-            case NONE:
-                g.g2D.X((g.xPos + g.xOffset - cameraX - initialX) * gameSpaceCoeff * scale);
-                g.g2D.Y((g.yPos + g.yOffset - cameraY - initialY) * gameSpaceCoeff * scale);
-                g.g2D.setScale(scale);
-                break;
-            default:
-                break;
-        }
+    protected float translateX(float x) {
+        return ((x  - cameraX - initialX) * gameSpaceCoeff * scale);
+    }
+    
+    @Override
+    protected float translateY(float y) {
+        return ((y  - cameraY - initialY) * gameSpaceCoeff * scale);
+    }
+    
+    @Override
+    protected float getLayerX0() {
+        return 0;
+    }
+    
+    @Override
+    protected float getLayerX1() {
+        return Simple2DEngine.engine.getXSize();
+    }
+    
+    @Override
+    protected float getLayerY0() {
+        return 0;
+    }
+    
+    @Override
+    protected float getLayerY1() {
+        return Simple2DEngine.engine.getYSize();
+    }
+    
+    @Override
+    protected float getHeight() {
+        return Simple2DEngine.engine.getYSize();
+    }
+    
+    @Override
+    protected float getWidth() {
+        return Simple2DEngine.engine.getXSize();
+    }   
+    
+    @Override
+    protected float getScale() {
+        return scale;
+    }
+    
+    @Override
+    public void setScale(float s) {
+        scale = s;
     }
     
 }

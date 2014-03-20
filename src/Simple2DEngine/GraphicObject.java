@@ -41,6 +41,60 @@ public class GraphicObject implements Comparable<GraphicObject>{
         Simple2DEngine.render.addGraphic(g2D);
     }
     
+    protected void updateGraphic() {
+        g2D.setHidden(hidden);
+        g2D.setRotXOffset(rotXOffset);
+        g2D.setRotYOffset(rotYOffset);
+        g2D.setRotation(rotation);    
+        g2D.setA((100 - transparency) / 100);
+        g2D.setScale(layer.getScale());
+        
+        switch (alignment) {
+            case LEFT_UPPER:
+                g2D.X(layer.getLayerX0() + xOffset);
+                g2D.Y(layer.getLayerY1() - g2D.getHeight() + yOffset);
+                break;
+            case LEFT_LOWER:
+                g2D.X(layer.getLayerX0() + xOffset);
+                g2D.Y(layer.getLayerY0() + yOffset);
+                break;
+            case LEFT_CENTERED:
+                g2D.X(layer.getLayerX0() + xOffset);
+                g2D.Y(layer.getLayerY0() + (layer.getHeight() / 2) - (g2D.getHeight() / 2) + yOffset);
+                break;
+            case RIGHT_UPPER:
+                g2D.X(layer.getLayerX1() - g2D.getWidth() + xOffset);
+                g2D.Y(layer.getLayerY1() - g2D.getHeight() + yOffset);
+                break;
+            case RIGHT_LOWER:
+                g2D.X(layer.getLayerX1() - g2D.getWidth() + xOffset);
+                g2D.Y(layer.getLayerY0() + yOffset);
+                break;
+            case RIGHT_CENTERED:
+                g2D.X(layer.getLayerX1() - g2D.getWidth() + xOffset);
+                g2D.Y(layer.getLayerY0() + (layer.getHeight() / 2) - (g2D.getHeight() / 2) + yOffset);
+                break;
+            case TOP_CENTERED:
+                g2D.X(layer.getLayerX0() + (layer.getWidth() / 2) - (g2D.getWidth() / 2) + xOffset);
+                g2D.Y(layer.getLayerY1() - g2D.getHeight()+ yOffset);
+                break;
+            case BOTTOM_CENTERED:
+                g2D.X(layer.getLayerX0() + (layer.getWidth() / 2) - (g2D.getWidth() / 2) + xOffset);
+                g2D.Y(layer.getLayerY0() + yOffset);
+                break;
+            case CENTERED:
+                g2D.X(layer.getLayerX0() + (layer.getWidth() / 2) - (g2D.getWidth() / 2) + xOffset);
+                g2D.Y(layer.getLayerY0() + (layer.getHeight() / 2) - (g2D.getHeight() / 2) + yOffset);
+                break;
+            case NONE:
+                g2D.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
+                g2D.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
+                break;
+            default:
+                break;
+        }
+    }
+    
     
     /**
      * Sets X position of GraphicObject
@@ -49,7 +103,9 @@ public class GraphicObject implements Comparable<GraphicObject>{
      */
     public void X(float x) {
         xPos = x;
-        layer.updateGraphicObject(this);
+        if (alignment == WindowAlignment.NONE) {
+            g2D.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
+        }
     }
     
     /**
@@ -59,53 +115,65 @@ public class GraphicObject implements Comparable<GraphicObject>{
      */
     public void Y(float y) {
         yPos = y;
-        layer.updateGraphicObject(this);
+        if (alignment == WindowAlignment.NONE) {
+            g2D.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
+        }
     }
     
     public void hidden(boolean b) {
         hidden = b;
-        layer.updateGraphicObject(this);
+        g2D.setHidden(hidden);
     }
     
     public void xOffset(float x) {
         xOffset = x;
-        layer.updateGraphicObject(this);
+        if (alignment == WindowAlignment.NONE) {
+            g2D.X(layer.getLayerX0() + xPos + xOffset);
+        }
+        else this.updateGraphic();
     }
     
     public void yOffset(float y) {
         yOffset = y;
-        layer.updateGraphicObject(this);
+        if (alignment == WindowAlignment.NONE) {
+            g2D.Y(layer.getLayerY0() + yPos + yOffset);
+        }
+        else this.updateGraphic();
     }
     
     public void setAlignment(WindowAlignment align) {
         alignment = align;
-        layer.updateGraphicObject(this);
+        this.updateGraphic();
     }
     
     public void rotate(float degrees) {
         rotation = degrees;
-        rotXOffset = g2D.getWidth() / 2;
-        rotYOffset = g2D.getHeight() / 2;
-        layer.updateGraphicObject(this);
+        rotXOffset = g2D.getWidth() * layer.getScale() / 2;
+        rotYOffset = g2D.getHeight() * layer.getScale() / 2;
+        g2D.setRotXOffset(rotXOffset);
+        g2D.setRotYOffset(rotYOffset);
+        g2D.setRotation(rotation);
     }
     
     public void rotate(float degrees, float xOff, float yOff) {
         rotation = degrees;
-        rotXOffset = xOff;
-        rotYOffset = yOff;
-        layer.updateGraphicObject(this);
+        rotXOffset = xOff * layer.getScale();
+        rotYOffset = yOff * layer.getScale();
+        g2D.setRotXOffset(rotXOffset);
+        g2D.setRotYOffset(rotYOffset);
+        g2D.setRotation(rotation);
     }
     
     public void transparency(float a) {
         transparency = a;
-        layer.updateGraphicObject(this);
+        g2D.setA((100 - transparency) / 100);
     }
     
-    public GraphicObject setLayer(Simple2DLayer l) {
+    public GraphicObject setLayer(Simple2DLayer lyr) {
         layer.remove(this);
-        layer = l;
+        layer = lyr;
         layer.add(this);
-        layer.updateGraphicObject(this);
+        this.updateGraphic();
         
         return this;
     }
@@ -125,7 +193,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
      */
     public void Z(float d) {
         zPos = d;
-        layer.updateGraphicObject(this);
+        layer.updateZ();
     }
     
     /**
@@ -147,7 +215,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
         return Float.compare(zPos, t.getZ());
     }
     
-    protected float getZ() {
+    public float getZ() {
         return zPos;
     }
     
