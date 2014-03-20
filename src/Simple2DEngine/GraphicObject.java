@@ -14,19 +14,19 @@ public class GraphicObject implements Comparable<GraphicObject>{
     
     private Simple2DLayer layer;
     
-    protected Graphic2D g2D;
-    protected float xPos = 0;
-    protected float yPos = 0;
-    protected float zPos = 0;
-    protected float yOffset = 0;
-    protected float xOffset = 0;
-    protected float scale = 1;
-    protected boolean hidden = false;
-    protected float rotation = 0;
-    protected float rotXOffset;
-    protected float rotYOffset;
-    protected float transparency = 0;
-    protected WindowAlignment alignment = WindowAlignment.NONE;
+    private Graphic2D g2D;
+    private float xPos = 0;
+    private float yPos = 0;
+    private float zPos = 0;
+    private float yOffset = 0;
+    private float xOffset = 0;
+    private float scale = 1;
+    private boolean hidden = false;
+    private float rotation = 0;
+    private float rotXOffset;
+    private float rotYOffset;
+    private float transparency = 0;
+    private WindowAlignment alignment = WindowAlignment.NONE;
     
     /**
      * Used by Simple2DEngine.newGraphicObject() to instantiate
@@ -176,6 +176,10 @@ public class GraphicObject implements Comparable<GraphicObject>{
         this.updateGraphic();
         
         return this;
+    }
+    
+    public void updateG2DZ(float z) {
+        g2D.Z(z);
     }
     
     public float getY() {

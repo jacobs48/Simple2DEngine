@@ -126,7 +126,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         this.sort();
         
         for (GraphicObject g : gObjects) {
-            g.g2D.Z(baseDepth);
+            g.updateG2DZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
     }
@@ -137,7 +137,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         this.sort();
         
         for (GraphicObject g : gObjects) {
-            g.g2D.Z(baseDepth);
+            g.updateG2DZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
     }

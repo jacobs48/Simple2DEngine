@@ -67,36 +67,6 @@ public class S2DGameLayer extends Simple2DLayer {
     }
     
     @Override
-    protected float getLayerX0() {
-        return 0;
-    }
-    
-    @Override
-    protected float getLayerX1() {
-        return Simple2DEngine.engine.getXSize();
-    }
-    
-    @Override
-    protected float getLayerY0() {
-        return 0;
-    }
-    
-    @Override
-    protected float getLayerY1() {
-        return Simple2DEngine.engine.getYSize();
-    }
-    
-    @Override
-    protected float getHeight() {
-        return Simple2DEngine.engine.getYSize();
-    }
-    
-    @Override
-    protected float getWidth() {
-        return Simple2DEngine.engine.getXSize();
-    }   
-    
-    @Override
     protected float getScale() {
         return scale;
     }
