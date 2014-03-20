@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import javax.media.opengl.*;
 
 /*
- * Graphic2DRenderer handles the internal rendering for Simple2DEngine.
+ * Graphic2DRenderer handles the internal rendering for S2DEngine.
  * Contains all Graphic2D objects and renders them using rendering
  * mode selected at initialization
  */
-class Graphic2DRenderer {
+class S2DRenderer {
     
-    private LinkedList<Graphic2D> graphicList = null;
+    private LinkedList<S2DQuad> graphicList = null;
     private GL2 gl;
     private float [] vertices = null;
     private float [] colors = null;
@@ -27,25 +27,25 @@ class Graphic2DRenderer {
     private Texture boundTexture = null;
     
     
-    protected Graphic2DRenderer(RenderMode m) {
-        gl = Simple2DEngine.gl;
+    protected S2DRenderer(RenderMode m) {
+        gl = S2DEngine.gl;
         graphicList = new LinkedList<>();
         mode = m;
     }
     
     //Add Graphic2D object LinkedList in treeMap with provided key value
-    protected void addGraphic(Graphic2D g2) {
+    protected void addGraphic(S2DQuad g2) {
         graphicList.add(g2);
     }
     
     //Removes Graphic2D object from renderer by key
-    protected void removeGraphic(Graphic2D g2) {
+    protected void removeGraphic(S2DQuad g2) {
         graphicList.remove(g2);
     } 
     
     //Removes entire list of texture for safely unloading texture
     protected void removeAllTex(String key) {
-        for(Graphic2D graphic : graphicList) {
+        for(S2DQuad graphic : graphicList) {
             if (graphic.getTextureKey().equals(key)) graphicList.remove(graphic);
         }
     }
@@ -70,7 +70,7 @@ class Graphic2DRenderer {
         
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         
-        for(Graphic2D graphic : graphicList) {
+        for(S2DQuad graphic : graphicList) {
             if (!(graphic.isHidden())) {
                 if (boundTexture != graphic.getTexture()) {
                     boundTexture = graphic.getTexture();

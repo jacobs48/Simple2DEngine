@@ -9,21 +9,21 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 /**
- * Simple2DEngine
- * 
- * Simple2DEngine acts as the primary API for the 2D graphics engine.
+ * S2DEngine
+ 
+ S2DEngine acts as the primary API for the 2D graphics engine.
  * Creates a window through NEWT and configures window, engine, 
- * and rendering options based on user specifications and provides
- * methods for creating and modifying 2D graphic objects within the
- * engine.
- * 
- * Uses Simple2DInterface to provide methods for initializing
- * game state after engine initialization and updating game state
- * at specified framerate.
+ and rendering options based on user specifications and provides
+ methods for creating and modifying 2D graphic objects within the
+ engine.
+ 
+ Uses S2DInterface to provide methods for initializing
+ game state after engine initialization and updating game state
+ at specified framerate.
  *
  * @author Michael Jacobs
  */
-public class Simple2DEngine {
+public class S2DEngine {
     
     
     private GLProfile profile;
@@ -37,15 +37,15 @@ public class Simple2DEngine {
     private int FPS;
     private boolean fullscreen;
     private String title;
-    private Simple2DInterface updater;
+    private S2DInterface updater;
     private RenderMode renderMode;
-    private Simple2DLayer defaultLayer;
+    private S2DLayer defaultLayer;
     
     private float cameraX = 0;
     private float cameraY = 0;
     private float gameSpaceCoefficient = 1;
     
-    protected static Simple2DEngine engine;
+    protected static S2DEngine engine;
     
     /**
      * Provides static reference for the engine's GL2 object
@@ -55,23 +55,23 @@ public class Simple2DEngine {
     /**
      * Provides static reference for the engine's Graphic2DRenderer
      */
-    protected static Graphic2DRenderer render;
+    protected static S2DRenderer render;
     
     /**
-     * Provides static reference for the engine's GraphicLoader
+     * Provides static reference for the engine's S2DTextureLoader
      */
-    protected static GraphicLoader gLoader;
+    protected static S2DTextureLoader gLoader;
     
     /**
-     * Provides static reference for the engines Simple2DLayer list
+     * Provides static reference for the engines S2DLayer list
      */
-    protected static LinkedList<Simple2DLayer> layerList = new LinkedList<>();
+    protected static LinkedList<S2DLayer> layerList = new LinkedList<>();
     
-    private Simple2DEngine() {
+    private S2DEngine() {
 
     }
 
-    private Simple2DEngine(Builder b) {
+    private S2DEngine(Builder b) {
         sizeX = b.buildX;
         sizeY = b.buildY;
         FPS = b.buildFPS;
@@ -79,22 +79,22 @@ public class Simple2DEngine {
         fullscreen = b.fullscreen;
         updater = b.updater;
         renderMode = b.mode;
-        defaultLayer = new Simple2DLayer(-1, SortMode.DEPTH_SORTED);
+        defaultLayer = new S2DLayer(-1, SortMode.DEPTH_SORTED);
         layerList.add(defaultLayer);
         engine = this;
     }
     
     /**
      * Initializes engine and begins execution of game.
-     * Specified Simple2DInterface method init(Simple2DEngine e)
-     * will run after engine initializes and then 
-     * update(Simple2DEngine e) runs at specified framerate.
+     * Specified S2DInterface method init(S2DEngine e)
+ will run after engine initializes and then 
+ update(S2DEngine e) runs at specified framerate.
      */
     public void runGame() {
         profile = GLProfile.getDefault();
         capabilities = new GLCapabilities(profile);
         window = GLWindow.create(capabilities);
-        window.addGLEventListener(new SimpleGLInterface(updater, this, renderMode));
+        window.addGLEventListener(new S2DGLInterface(updater, this, renderMode));
         
         animator = new FPSAnimator(window, FPS);
         
@@ -118,12 +118,12 @@ public class Simple2DEngine {
     }
     
     //SimpleGLInterface uses to provide loader
-    protected void initLoader(GraphicLoader loader) {
+    protected void initLoader(S2DTextureLoader loader) {
         gLoader = loader;
     }
     
     //SimpleGLInterface uses to provide renderer
-    protected void initRenderer(Graphic2DRenderer renderer) {
+    protected void initRenderer(S2DRenderer renderer) {
         render = renderer;
     }
     
@@ -152,7 +152,7 @@ public class Simple2DEngine {
     
     public void setGameSpace(float g) {
         gameSpaceCoefficient = 1/g;
-        for (Simple2DLayer layer : layerList) {
+        for (S2DLayer layer : layerList) {
             layer.updateGameSpace(gameSpaceCoefficient);
             layer.updateAll();
         }
@@ -161,20 +161,20 @@ public class Simple2DEngine {
     public void updateCamera(float x, float y) {
         cameraX = x;
         cameraY = y;
-        for (Simple2DLayer layer : layerList) {
+        for (S2DLayer layer : layerList) {
             layer.updateCamera(cameraX, cameraY);
         }
     }
     
     /**
-     * Generates a new Simple2DLayer
+     * Generates a new S2DLayer
      * 
      * @param depth Specifies depth of layer
-     * @param m Specifies how GraphicObjects in layer should be sorted
+     * @param m Specifies how S2DGraphics in layer should be sorted
      * @return Newly generated layer
      */
-    public Simple2DLayer newLayer(float depth, SortMode m) {
-        Simple2DLayer tempLayer = new Simple2DLayer(depth, m);
+    public S2DLayer newS2DLayer(float depth, SortMode m) {
+        S2DLayer tempLayer = new S2DLayer(depth, m);
         layerList.add(tempLayer);
         Collections.sort(layerList);
         return tempLayer;
@@ -188,7 +188,7 @@ public class Simple2DEngine {
         return tempLayer;
     }
     
-    protected void removeLayer(Simple2DLayer layer) {
+    protected void removeLayer(S2DLayer layer) {
         layerList.remove(layer);
         Collections.sort(layerList);
         this.updateLayersZ();
@@ -196,8 +196,8 @@ public class Simple2DEngine {
     
     
     /**
-     * Loads specified image file into current GraphicLoader
-     * and assigns it with provided key name. Returns false if 
+     * Loads specified image file into current S2DTextureLoader
+ and assigns it with provided key name. Returns false if 
      * specified key is already in use.
      * 
      * @param path Path of file to be loaded
@@ -229,16 +229,16 @@ public class Simple2DEngine {
     }
     
     /**
-     * Provides new instance of GraphicObject from specified texture.
+     * Provides new instance of S2DGraphic from specified texture.
      * Returns null if texture doesn't exist
      *
-     * @param name Key name of texture to be used by GraphicObject
-     * @return GraphicObject created using specified texture
+     * @param name Key name of texture to be used by S2DGraphic
+     * @return S2DGraphic created using specified texture
      */
-    public GraphicObject newGraphicObject(String name) {
-        Graphic2D g2D = gLoader.newGraphic2D(name);
+    public S2DGraphic newS2DGraphic(String name) {
+        S2DQuad g2D = gLoader.newGraphic2D(name);
         if (g2D == null) return null;
-        GraphicObject gO = new GraphicObject(g2D, defaultLayer);
+        S2DGraphic gO = new S2DGraphic(g2D, defaultLayer);
         return gO;
     }
     
@@ -246,7 +246,7 @@ public class Simple2DEngine {
         for (int i = 0; i < layerList.size(); i++) {
             layerList.get(i).updateZ(i);
         }
-        for (Simple2DLayer layer : layerList) {
+        for (S2DLayer layer : layerList) {
             layer.updateAll();
         }
     }
@@ -264,17 +264,17 @@ public class Simple2DEngine {
     }
     
     /**
-     * Builder class used to create instance of Simple2DEngine object
-     * 
-     * Begin build with Builder(Simple2DInterface s) 
-     * Terminate with Build()
-     * 
-     * Potential Attributes:
-     *      size(int x, int y) - Size of window in pixels
-     *      fullscreen(boolean f) - Specifies if fullscreen enabled
-     *      fps(int f) - Engine framerate
-     *      title(String s) - Window title
-     *      renderMode(RenderMode r) - Render mode to be used by engine
+     * Builder class used to create instance of S2DEngine object
+ 
+ Begin build with Builder(S2DInterface s) 
+ Terminate with Build()
+ 
+ Potential Attributes:
+      size(int x, int y) - Size of window in pixels
+      fullscreen(boolean f) - Specifies if fullscreen enabled
+      fps(int f) - Engine framerate
+      title(String s) - Window title
+      renderMode(RenderMode r) - Render mode to be used by engine
      *      
      */
     public static class Builder {
@@ -283,15 +283,15 @@ public class Simple2DEngine {
         private int buildFPS = 60;
         private String title = "";
         private boolean fullscreen = false;
-        private Simple2DInterface updater;
+        private S2DInterface updater;
         private RenderMode mode = RenderMode.IMMEDIATE;
         
         /**
-         * Initializes builder using specified Simple2DInterface
+         * Initializes builder using specified S2DInterface
          *
-         * @param s Simple2DInterface to be used by engine
+         * @param s S2DInterface to be used by engine
          */
-        public Builder(Simple2DInterface s){
+        public Builder(S2DInterface s){
             updater = s;
         }
         
@@ -355,12 +355,12 @@ public class Simple2DEngine {
         }
         
         /**
-         * Completes build of Simple2DEngine
+         * Completes build of S2DEngine
          *
-         * @return Simple2DEngine with specified build parameters
+         * @return S2DEngine with specified build parameters
          */
-        public Simple2DEngine build() {
-            return new Simple2DEngine(this);
+        public S2DEngine build() {
+            return new S2DEngine(this);
         }
     }
 }

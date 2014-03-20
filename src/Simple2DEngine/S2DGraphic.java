@@ -5,16 +5,16 @@ package Simple2DEngine;
 import java.util.Comparator;
 
 /**
- * Basic 2D graphic object to be used with Simple2DEngine
- * Instantiate through Simple2DEngine.newGraphicObject();
+ * Basic 2D graphic object to be used with S2DEngine
+ Instantiate through S2DEngine.newS2DGraphic();
  *
  * @author Michael Jacobs
  */
-public class GraphicObject implements Comparable<GraphicObject>{
+public class S2DGraphic implements Comparable<S2DGraphic>{
     
-    private Simple2DLayer layer;
+    private S2DLayer layer;
     
-    private Graphic2D g2D;
+    private S2DQuad g2D;
     private float xPos = 0;
     private float yPos = 0;
     private float zPos = 0;
@@ -29,16 +29,16 @@ public class GraphicObject implements Comparable<GraphicObject>{
     private WindowAlignment alignment = WindowAlignment.NONE;
     
     /**
-     * Used by Simple2DEngine.newGraphicObject() to instantiate
-     * GraphicObject
+     * Used by S2DEngine.newGraphicObject() to instantiate
+ GraphicObject
      *
      * @param g Graphic2D object to be rendered
      * @param l Layer to add to
      */
-    protected GraphicObject(Graphic2D g, Simple2DLayer l) {
+    protected S2DGraphic(S2DQuad g, S2DLayer l) {
         layer = l;
         g2D = g;
-        Simple2DEngine.render.addGraphic(g2D);
+        S2DEngine.render.addGraphic(g2D);
     }
     
     protected void updateGraphic() {
@@ -97,7 +97,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
     
     
     /**
-     * Sets X position of GraphicObject
+     * Sets X position of S2DGraphic
      *
      * @param x X value
      */
@@ -109,7 +109,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
     }
     
     /**
-     * Sets Y position of GraphicObject
+     * Sets Y position of S2DGraphic
      *
      * @param y Y value
      */
@@ -169,7 +169,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
         g2D.setA((100 - transparency) / 100);
     }
     
-    public GraphicObject setLayer(Simple2DLayer lyr) {
+    public S2DGraphic setLayer(S2DLayer lyr) {
         layer.remove(this);
         layer = lyr;
         layer.add(this);
@@ -191,7 +191,7 @@ public class GraphicObject implements Comparable<GraphicObject>{
     }
     
     /**
-     * Sets depth value of GraphicObject
+     * Sets depth value of S2DGraphic
      * 
      * @param d Depth value
      */
@@ -201,21 +201,22 @@ public class GraphicObject implements Comparable<GraphicObject>{
     }
     
     /**
-     * Destroys GraphicObject
+     * Destroys S2DGraphic
      *
      */
     public void destroy() {
-        Simple2DEngine.render.removeGraphic(g2D);
+        S2DEngine.render.removeGraphic(g2D);
+        layer.remove(this);
     }
 
     /**
      * Implements Comparable method compareTo using depth value
      *
-     * @param t GraphicObject to compareTo
+     * @param t S2DGraphic to compareTo
      * @return 0 if equal, less than 0 if less than, greater than 0 if greater than
      */
     @Override
-    public int compareTo(GraphicObject t) {
+    public int compareTo(S2DGraphic t) {
         return Float.compare(zPos, t.getZ());
     }
     
@@ -223,10 +224,10 @@ public class GraphicObject implements Comparable<GraphicObject>{
         return zPos;
     }
     
-    static class ReverseYComparator implements Comparator<GraphicObject> {
+    static class ReverseYComparator implements Comparator<S2DGraphic> {
 
         @Override
-        public int compare(GraphicObject t, GraphicObject t1) {
+        public int compare(S2DGraphic t, S2DGraphic t1) {
             return -1 * Float.compare(t.getY(), t1.getY());
         }
    

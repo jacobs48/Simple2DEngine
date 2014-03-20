@@ -10,7 +10,7 @@ package Simple2DEngine;
  *
  * @author michael.jacobs.adm
  */
-public class S2DGameLayer extends Simple2DLayer {
+public class S2DGameLayer extends S2DLayer {
     
     protected float initialX = 0;
     protected float initialY = 0;
@@ -48,10 +48,10 @@ public class S2DGameLayer extends Simple2DLayer {
     protected void updateAll(){
         int i;
         
-        i = Simple2DEngine.layerList.indexOf(this);
+        i = S2DEngine.layerList.indexOf(this);
         this.updateZ(i);
         
-        for(GraphicObject g : gObjects) {
+        for(S2DGraphic g : gObjects) {
             g.updateGraphic();
         }
     }

@@ -9,18 +9,18 @@ import java.util.TreeMap;
 import javax.media.opengl.*;
 
 /*
- * GraphicLoader loads textures from image files, stores textures,
+ * S2DTextureLoader loads textures from image files, stores textures,
  * generates Graphic2D objects from texture keys, and removes textures
  * 
  */
-class GraphicLoader {
+class S2DTextureLoader {
     
     GL2 gl = null;   
     TreeMap<String, Texture> textureTree = null;
     
-    protected GraphicLoader() {
+    protected S2DTextureLoader() {
         textureTree = new TreeMap<>();
-        gl = Simple2DEngine.gl;
+        gl = S2DEngine.gl;
     }
     
     /*
@@ -43,10 +43,10 @@ class GraphicLoader {
     }
     
    //Creates Graphic2D object from specified key
-   protected Graphic2D newGraphic2D(String key) {
+   protected S2DQuad newGraphic2D(String key) {
        if (!(textureTree.containsKey(key))) return null;
        else {
-           return new Graphic2D(key);
+           return new S2DQuad(key);
        }
    } 
    

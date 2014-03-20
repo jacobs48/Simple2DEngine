@@ -6,24 +6,24 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 /*
- * SimpleGLInterface implements OpenGL events, initializes OpenGL settings,
- * runs provided Simple2DInterface initialization, and runs Simple2DInterface
+ * S2DGLInterface implements OpenGL events, initializes OpenGL settings,
+ * runs provided S2DInterface initialization, and runs S2DInterface
  * update and renders at specified framerate
  */
-class SimpleGLInterface implements GLEventListener {
+class S2DGLInterface implements GLEventListener {
     
-    Simple2DInterface updater;
-    Simple2DEngine engine;
-    GraphicLoader gLoader = null;
-    Graphic2DRenderer render = null;
+    S2DInterface updater;
+    S2DEngine engine;
+    S2DTextureLoader gLoader = null;
+    S2DRenderer render = null;
     RenderMode mode;
     
     //Prevents instantiation without proper parameters
-    private SimpleGLInterface() {
+    private S2DGLInterface() {
         
     }
     
-    protected SimpleGLInterface(Simple2DInterface s, Simple2DEngine e, RenderMode m) {
+    protected S2DGLInterface(S2DInterface s, S2DEngine e, RenderMode m) {
         updater = s;
         engine = e;
         mode = m;
@@ -33,9 +33,9 @@ class SimpleGLInterface implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         engine.bindGL(gl);
-        gLoader = new GraphicLoader();
-        render = new Graphic2DRenderer(mode);
-        engine.initLoader(gLoader); //Provides initialized GraphicLoader to engine
+        gLoader = new S2DTextureLoader();
+        render = new S2DRenderer(mode);
+        engine.initLoader(gLoader); //Provides initialized S2DTextureLoader to engine
         engine.initRenderer(render); //Provides initialized Graphic2DRenderer to engine
         
         gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -52,7 +52,7 @@ class SimpleGLInterface implements GLEventListener {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         
-        updater.init(engine); //Runs Simple2DInterface initalization
+        updater.init(engine); //Runs S2DInterface initalization
         
     }
 
@@ -64,7 +64,7 @@ class SimpleGLInterface implements GLEventListener {
     //Display function is called at specified framerate
     @Override
     public void display(GLAutoDrawable drawable) {
-        updater.update(engine); //Runs Simple2DInterface update method
+        updater.update(engine); //Runs S2DInterface update method
         engine.update();
         render.draw();
     }

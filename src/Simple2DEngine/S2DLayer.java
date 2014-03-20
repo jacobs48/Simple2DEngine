@@ -9,9 +9,9 @@ import java.util.LinkedList;
  *
  * @author Michael Jacobs
  */
-public class Simple2DLayer implements Comparable<Simple2DLayer> {
+public class S2DLayer implements Comparable<S2DLayer> {
     
-    protected LinkedList<GraphicObject> gObjects;
+    protected LinkedList<S2DGraphic> gObjects;
     protected float depth = 0;
     protected final SortMode mode;
     protected float baseZValue = 0;
@@ -19,7 +19,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     protected static final float MIN_DEPTH_DIF = 0.0000001f; //Minimum diffrence between depth values of Graphic2D objects
     protected static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
 
-    protected Simple2DLayer(float d, SortMode m) {
+    protected S2DLayer(float d, SortMode m) {
         gObjects = new LinkedList<>();
         depth = d;
         mode = m;
@@ -27,7 +27,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     
     public void setDepth(float d) {
         depth = d;
-        Simple2DEngine.engine.updateLayersZ();
+        S2DEngine.engine.updateLayersZ();
     }
     
     protected float translateX(float x) {
@@ -43,7 +43,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     }
     
     protected float getLayerX1() {
-        return Simple2DEngine.engine.getXSize();
+        return S2DEngine.engine.getXSize();
     }
     
     protected float getLayerY0() {
@@ -51,15 +51,15 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     }
     
     protected float getLayerY1() {
-        return Simple2DEngine.engine.getYSize();
+        return S2DEngine.engine.getYSize();
     }
     
     protected float getHeight() {
-        return Simple2DEngine.engine.getYSize();
+        return S2DEngine.engine.getYSize();
     }
     
     protected float getWidth() {
-        return Simple2DEngine.engine.getXSize();
+        return S2DEngine.engine.getXSize();
     }   
     
     protected float getScale() {
@@ -79,7 +79,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
     }
 
     @Override
-    public int compareTo(Simple2DLayer t) {
+    public int compareTo(S2DLayer t) {
         return Float.compare(depth, t.getDepth());
     }
     
@@ -87,22 +87,22 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         return depth;
     }
     
-    protected void add(GraphicObject g) {
+    protected void add(S2DGraphic g) {
         gObjects.add(g);
         g.updateGraphic();
     }
     
-    protected void remove(GraphicObject g) {
+    protected void remove(S2DGraphic g) {
         gObjects.remove(g);
     }
     
     protected void updateAll(){
         int i;
         
-        i = Simple2DEngine.layerList.indexOf(this);
+        i = S2DEngine.layerList.indexOf(this);
         this.updateZ(i);
         
-        for(GraphicObject g : gObjects) {
+        for(S2DGraphic g : gObjects) {
             g.updateGraphic();
         }
     }
@@ -113,12 +113,12 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
                 Collections.sort(gObjects);
                 break;
             case Y_POSITION: 
-                Collections.sort(gObjects, new GraphicObject.ReverseYComparator());
+                Collections.sort(gObjects, new S2DGraphic.ReverseYComparator());
                 break;
         }
     }
     
-    //Updates the depth value of all Graphic2D objects stored in GraphicObject list
+    //Updates the depth value of all Graphic2D objects stored in S2DGraphic list
     protected void updateZ(float i) {
         float baseDepth;
         
@@ -126,7 +126,7 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         baseDepth = LAYER_DEPTH_DIF * baseZValue;
         this.sort();
         
-        for (GraphicObject g : gObjects) {
+        for (S2DGraphic g : gObjects) {
             g.updateG2DZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
@@ -137,17 +137,17 @@ public class Simple2DLayer implements Comparable<Simple2DLayer> {
         
         this.sort();
         
-        for (GraphicObject g : gObjects) {
+        for (S2DGraphic g : gObjects) {
             g.updateG2DZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
     }
     
     public void destroy() {
-        for(GraphicObject graphic : gObjects) {
+        for(S2DGraphic graphic : gObjects) {
             graphic.destroy();
         }
-        Simple2DEngine.engine.removeLayer(this);
+        S2DEngine.engine.removeLayer(this);
     }
     
     

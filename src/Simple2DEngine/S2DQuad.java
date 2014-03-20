@@ -9,7 +9,7 @@ import javax.media.opengl.*;
  * Graphic2D describes a 2D image as it is to be rendered by Graphic2DRenderer
  * 
  */
-class Graphic2D implements Comparable<Graphic2D> {
+class S2DQuad implements Comparable<S2DQuad> {
     
     private Texture texture = null;
     private float xPos = 0;
@@ -33,27 +33,27 @@ class Graphic2D implements Comparable<Graphic2D> {
     private GL2 gl = null;
     private String textureKey;
     
-    protected Graphic2D(String key) {
-        texture = Simple2DEngine.gLoader.getTexture(key);
+    protected S2DQuad(String key) {
+        texture = S2DEngine.gLoader.getTexture(key);
         textureKey = key;
-        gl = Simple2DEngine.gl;
+        gl = S2DEngine.gl;
         width = texture.getWidth();
         height = texture.getHeight();
         rotXOffset = width / 2;
         rotYOffset = height / 2;
     }
     
-    protected Graphic2D X(float x) {
+    protected S2DQuad X(float x) {
         xPos = x;
         return this;
     }
     
-    protected Graphic2D Y(float y) {
+    protected S2DQuad Y(float y) {
         yPos = y;
         return this;
     }
     
-    protected Graphic2D Z(float d) {
+    protected S2DQuad Z(float d) {
         z = d;
         return this;
     }
@@ -90,7 +90,7 @@ class Graphic2D implements Comparable<Graphic2D> {
         return rotation;
     }
 
-    protected Graphic2D setRotation(float rotation) {
+    protected S2DQuad setRotation(float rotation) {
         this.rotation = rotation;
         return this;
     }
@@ -143,7 +143,7 @@ class Graphic2D implements Comparable<Graphic2D> {
         return textureKey;
     } 
     
-    protected Graphic2D textureMap(float x0, float y0, float x1, float y1) {
+    protected S2DQuad textureMap(float x0, float y0, float x1, float y1) {
         texX0 = x0;
         texX1 = x1;
         texY0 = y0;
@@ -212,7 +212,7 @@ class Graphic2D implements Comparable<Graphic2D> {
     }
 
     @Override
-    public int compareTo(Graphic2D g) {
+    public int compareTo(S2DQuad g) {
         return Float.compare(z, g.getZ());
     }
     
