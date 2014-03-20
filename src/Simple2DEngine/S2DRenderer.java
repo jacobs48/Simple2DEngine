@@ -25,12 +25,21 @@ class S2DRenderer {
     private FloatBuffer texBuf = null;
     private RenderMode mode;
     private Texture boundTexture = null;
+    private float backgroundR = 0;
+    private float backgroundG = 0;
+    private float backgroundB = 0;
     
     
     protected S2DRenderer(RenderMode m) {
         gl = S2DEngine.gl;
         graphicList = new LinkedList<>();
         mode = m;
+    }
+    
+    protected void setBackgroundColor(float r, float g, float b) {
+        backgroundR = r;
+        backgroundG = g;
+        backgroundB = b;
     }
     
     //Add Graphic2D object LinkedList in treeMap with provided key value
@@ -65,7 +74,7 @@ class S2DRenderer {
     private void drawImmediate() {   
         Collections.sort(graphicList);
         
-        gl.glClearColor(0, 0, 0, 0);
+        gl.glClearColor(backgroundR, backgroundG, backgroundB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         gl.glMatrixMode(GL2.GL_MODELVIEW);

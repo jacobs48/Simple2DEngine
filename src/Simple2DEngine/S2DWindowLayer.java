@@ -17,6 +17,7 @@ public class S2DWindowLayer extends S2DLayer {
     float width;
     float height;
     float scale = 1;
+    boolean background = false;
 
     protected S2DWindowLayer(float d, SortMode m, float x, float y, float w, float h) {
         super(d, m);

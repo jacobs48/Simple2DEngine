@@ -158,6 +158,10 @@ public class S2DEngine {
         }
     }
     
+    public void setBGColor(float r, float g, float b) {
+        render.setBackgroundColor(r, g, b);
+    }
+    
     public void updateCamera(float x, float y) {
         cameraX = x;
         cameraY = y;

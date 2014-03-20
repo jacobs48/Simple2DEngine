@@ -29,8 +29,7 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
     private WindowAlignment alignment = WindowAlignment.NONE;
     
     /**
-     * Used by S2DEngine.newGraphicObject() to instantiate
- GraphicObject
+     * Used by S2DEngine.newGraphicObject() to instantiate S2DGraphic
      *
      * @param g Graphic2D object to be rendered
      * @param l Layer to add to
@@ -86,6 +85,11 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
                 g2D.X(layer.getLayerX0() + (layer.getWidth() / 2) - (g2D.getWidth() / 2) + xOffset);
                 g2D.Y(layer.getLayerY0() + (layer.getHeight() / 2) - (g2D.getHeight() / 2) + yOffset);
                 break;
+            case FILL_STRETCHED:
+                g2D.X(layer.getLayerX0());
+                g2D.Y(layer.getLayerY0());
+                g2D.setHeight(layer.getHeight());
+                g2D.setWidth(layer.getWidth());
             case NONE:
                 g2D.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
                 g2D.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
