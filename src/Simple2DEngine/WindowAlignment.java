@@ -32,6 +32,14 @@ public enum WindowAlignment {
     
     CENTERED,
     
-    FILL_STRETCHED
+    FILL_STRETCHED,
+    
+    LEFT_STRETCHED,
+    
+    RIGHT_STRETCHED,
+    
+    TOP_STRETCHED,
+    
+    BOTTOM_STRETCHED
     
 }

@@ -44,7 +44,7 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         g2D.setHidden(hidden);
         g2D.setRotXOffset(rotXOffset);
         g2D.setRotYOffset(rotYOffset);
-        g2D.setRotation(rotation);    
+        g2D.setRotation(rotation);   
         g2D.setA((100 - transparency) / 100);
         g2D.setScale(layer.getScale());
         
@@ -90,6 +90,27 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
                 g2D.Y(layer.getLayerY0());
                 g2D.setHeight(layer.getHeight());
                 g2D.setWidth(layer.getWidth());
+                break;
+            case LEFT_STRETCHED:
+                g2D.X(layer.getLayerX0());
+                g2D.Y(layer.getLayerY0());
+                g2D.setHeight(layer.getHeight());
+                break;
+            case RIGHT_STRETCHED:
+                g2D.X(layer.getLayerX1() - g2D.getWidth());
+                g2D.Y(layer.getLayerY0());
+                g2D.setHeight(layer.getHeight());
+                break;
+            case TOP_STRETCHED:
+                g2D.X(layer.getLayerX0());
+                g2D.Y(layer.getLayerY0());
+                g2D.setWidth(layer.getWidth());
+                break;
+            case BOTTOM_STRETCHED:
+                g2D.X(layer.getLayerX0());
+                g2D.Y(layer.getLayerY1() - g2D.getHeight());
+                g2D.setWidth(layer.getWidth());
+                break;
             case NONE:
                 g2D.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
                 g2D.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
@@ -105,11 +126,12 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
      *
      * @param x X value
      */
-    public void X(float x) {
+    public S2DGraphic X(float x) {
         xPos = x;
         if (alignment == WindowAlignment.NONE) {
             g2D.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
         }
+        return this;
     }
     
     /**
@@ -117,11 +139,13 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
      *
      * @param y Y value
      */
-    public void Y(float y) {
+    public S2DGraphic Y(float y) {
         yPos = y;
         if (alignment == WindowAlignment.NONE) {
             g2D.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
         }
+        
+        return this;
     }
     
     public void hidden(boolean b) {
@@ -129,34 +153,42 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         g2D.setHidden(hidden);
     }
     
-    public void xOffset(float x) {
+    public S2DGraphic xOffset(float x) {
         xOffset = x;
         if (alignment == WindowAlignment.NONE) {
             g2D.X(layer.getLayerX0() + xPos + xOffset);
         }
         else this.updateGraphic();
+        
+        return this;
     }
     
-    public void yOffset(float y) {
+    public S2DGraphic yOffset(float y) {
         yOffset = y;
         if (alignment == WindowAlignment.NONE) {
             g2D.Y(layer.getLayerY0() + yPos + yOffset);
         }
         else this.updateGraphic();
+        
+        return this;
     }
     
-    public void setAlignment(WindowAlignment align) {
+    public S2DGraphic setAlignment(WindowAlignment align) {
         alignment = align;
         this.updateGraphic();
+        
+        return this;
     }
     
-    public void rotate(float degrees) {
+    public S2DGraphic rotate(float degrees) {
         rotation = degrees;
         rotXOffset = g2D.getWidth() * layer.getScale() / 2;
         rotYOffset = g2D.getHeight() * layer.getScale() / 2;
         g2D.setRotXOffset(rotXOffset);
         g2D.setRotYOffset(rotYOffset);
         g2D.setRotation(rotation);
+        
+        return this;
     }
     
     public void rotate(float degrees, float xOff, float yOff) {
