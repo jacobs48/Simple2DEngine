@@ -43,10 +43,10 @@ class S2DTextureLoader {
     }
     
    //Creates Graphic2D object from specified key
-   protected S2DQuad newGraphic2D(String key) {
+   protected S2DTexturedQuad newS2DTexturedQuad(String key) {
        if (!(textureTree.containsKey(key))) return null;
        else {
-           return new S2DQuad(key);
+           return new S2DTexturedQuad(key);
        }
    } 
    

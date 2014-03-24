@@ -11,45 +11,27 @@ import javax.media.opengl.*;
  */
 class S2DQuad implements Comparable<S2DQuad> {
     
-    private Texture texture = null;
-    private float xPos = 0;
-    private float yPos = 0;
-    private float z = 0;
-    private float width = 0;
-    private float height = 0;
-    private float texX0 = 0; 
-    private float texX1 = 1;
-    private float texY0 = 0;
-    private float texY1 = 1;
-    private float rotation = 0;
-    private float rotXOffset;
-    private float rotYOffset;
-    private float r = 1;
-    private float g = 1;
-    private float b = 1;
-    private float a = 0;
-    private float scale = 1;
-    private boolean textured = true;
-    private boolean hidden = false;
-    private GL2 gl = null;
-    private String textureKey;
-    
-    protected S2DQuad(String key) {
-        texture = S2DEngine.gLoader.getTexture(key);
-        textureKey = key;
-        gl = S2DEngine.gl;
-        width = texture.getWidth();
-        height = texture.getHeight();
-        rotXOffset = width / 2;
-        rotYOffset = height / 2;
-    }
+    protected float xPos = 0;
+    protected float yPos = 0;
+    protected float z = 0;
+    protected float width = 0;
+    protected float height = 0;
+    protected float rotation = 0;
+    protected float rotXOffset;
+    protected float rotYOffset;
+    protected float r = 1;
+    protected float g = 1;
+    protected float b = 1;
+    protected float a = 0;
+    protected float scale = 1;
+    protected boolean hidden = false;
+    protected GL2 gl = null;
     
     protected S2DQuad(float w, float h) {
         width = w;
         height = h;
         rotXOffset = width / 2;
         rotYOffset = height / 2;
-        textured = false;
     }
     
     protected S2DQuad X(float x) {
@@ -72,11 +54,11 @@ class S2DQuad implements Comparable<S2DQuad> {
     }
 
     protected Texture getTexture() {
-        return texture;
+        return null;
     }
     
     protected String getTextureKey() {
-        return textureKey;
+        return "";
     }
     
     protected boolean isHidden() {
@@ -85,10 +67,6 @@ class S2DQuad implements Comparable<S2DQuad> {
     
     protected void setHidden(boolean h) {
         hidden = h;
-    }
-
-    protected void setTexture(Texture texture) {
-        this.texture = texture;
     }
 
     protected float getWidth() {
@@ -155,24 +133,12 @@ class S2DQuad implements Comparable<S2DQuad> {
     }
     
     protected boolean isTextured() {
-        return textured;
-    }
-    
-    protected String textureKey() {
-        return textureKey;
-    } 
-    
-    protected S2DQuad textureMap(float x0, float y0, float x1, float y1) {
-        texX0 = x0;
-        texX1 = x1;
-        texY0 = y0;
-        texY1 = y1;
-        return this;
+        return false;
     }
     
     protected void draw() {
         
-        if(!(textured)) gl.glDisable(GL.GL_TEXTURE_2D);
+        gl.glDisable(GL.GL_TEXTURE_2D);
         gl.glLoadIdentity(); 
         if (rotation != 0) {
             gl.glTranslatef(xPos + rotXOffset, yPos + rotYOffset, 0);
@@ -181,17 +147,13 @@ class S2DQuad implements Comparable<S2DQuad> {
         }
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
-        gl.glTexCoord2f(texX0, texY0);
         gl.glVertex3f(xPos, yPos, z);
-        gl.glTexCoord2f(texX0, texY1);
         gl.glVertex3f(xPos, yPos + height * scale, z);
-        gl.glTexCoord2f(texX1, texY1);
         gl.glVertex3f(xPos + width * scale, yPos + height * scale, z);
-        gl.glTexCoord2f(texX1, texY0);
         gl.glVertex3f(xPos + width * scale, yPos, z);
         gl.glEnd();
         
-        if(!(textured)) gl.glEnable(GL.GL_TEXTURE_2D);
+        gl.glEnable(GL.GL_TEXTURE_2D);
     }
     
     /*
@@ -218,19 +180,6 @@ class S2DQuad implements Comparable<S2DQuad> {
             r, g, b, a,
         };      
         return c;
-    }
-    
-    /*
-     * Returns float[8] containing texture coordinates for Graphic2D quad
-     */
-    protected float[] getTArr() {
-        float [] t = new float [] {
-            texX0, texY0,
-            texX0, texY1,
-            texX1, texY1,
-            texX1, texY0  
-        }; 
-        return t;
     }
 
     @Override

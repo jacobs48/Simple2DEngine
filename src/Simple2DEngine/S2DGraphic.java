@@ -14,7 +14,7 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
     
     private S2DLayer layer;
     
-    private S2DQuad g2D;
+    private S2DTexturedQuad g2D;
     private float xPos = 0;
     private float yPos = 0;
     private float zPos = 0;
@@ -34,7 +34,7 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
      * @param g Graphic2D object to be rendered
      * @param l Layer to add to
      */
-    protected S2DGraphic(S2DQuad g, S2DLayer l) {
+    protected S2DGraphic(S2DTexturedQuad g, S2DLayer l) {
         layer = l;
         g2D = g;
         S2DEngine.render.addGraphic(g2D);

@@ -30,7 +30,7 @@ public class S2DWindowLayer extends S2DLayer {
         r = 0;
         g = 0;
         b = 0;
-        //bgQuad = new S2DQuad(w, h);
+        //bgQuaS2DTexturedQuad S2DQuad(w, h);
         //bgQuad.setHidden(true);
     }
     

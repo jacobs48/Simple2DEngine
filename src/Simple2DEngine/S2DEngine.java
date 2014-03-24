@@ -249,7 +249,7 @@ public class S2DEngine {
      * @return S2DGraphic created using specified texture
      */
     public S2DGraphic newS2DGraphic(String name) {
-        S2DQuad g2D = gLoader.newGraphic2D(name);
+        S2DTexturedQuad g2D = gLoader.newS2DTexturedQuad(name);
         if (g2D == null) return null;
         S2DGraphic gO = new S2DGraphic(g2D, defaultLayer);
         return gO;
