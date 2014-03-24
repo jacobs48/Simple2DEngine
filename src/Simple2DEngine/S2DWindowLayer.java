@@ -18,6 +18,8 @@ public class S2DWindowLayer extends S2DLayer {
     float height;
     float scale = 1;
     boolean background = false;
+    S2DQuad bgQuad;
+    float r, g, b;
 
     protected S2DWindowLayer(float d, SortMode m, float x, float y, float w, float h) {
         super(d, m);
@@ -25,6 +27,11 @@ public class S2DWindowLayer extends S2DLayer {
         yPos = y;
         width = w;
         height = h;
+        r = 0;
+        g = 0;
+        b = 0;
+        //bgQuad = new S2DQuad(w, h);
+        //bgQuad.setHidden(true);
     }
     
     protected float translateX(float x) {
@@ -61,6 +68,10 @@ public class S2DWindowLayer extends S2DLayer {
     
     protected float getScale() {
         return scale;
+    }
+    
+    public void backgroundEnabled(boolean b) {
+        
     }
     
     public void addStaticGraphic(S2DGraphic g) {

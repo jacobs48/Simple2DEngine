@@ -81,7 +81,7 @@ class S2DRenderer {
         
         for(S2DQuad graphic : graphicList) {
             if (!(graphic.isHidden())) {
-                if (boundTexture != graphic.getTexture()) {
+                if (boundTexture != graphic.getTexture() && graphic.isTextured()) {
                     boundTexture = graphic.getTexture();
                     boundTexture.bind(gl);
                 }

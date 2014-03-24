@@ -29,6 +29,7 @@ class S2DQuad implements Comparable<S2DQuad> {
     private float b = 1;
     private float a = 0;
     private float scale = 1;
+    private boolean textured = true;
     private boolean hidden = false;
     private GL2 gl = null;
     private String textureKey;
@@ -41,6 +42,14 @@ class S2DQuad implements Comparable<S2DQuad> {
         height = texture.getHeight();
         rotXOffset = width / 2;
         rotYOffset = height / 2;
+    }
+    
+    protected S2DQuad(float w, float h) {
+        width = w;
+        height = h;
+        rotXOffset = width / 2;
+        rotYOffset = height / 2;
+        textured = false;
     }
     
     protected S2DQuad X(float x) {
@@ -102,6 +111,12 @@ class S2DQuad implements Comparable<S2DQuad> {
     protected void setA(float a) {
         this.a = a;
     }
+    
+    protected void setColor(float r, float g, float b) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
 
     protected float getRotXOffset() {
         return rotXOffset;
@@ -139,6 +154,10 @@ class S2DQuad implements Comparable<S2DQuad> {
         this.scale = scale;
     }
     
+    protected boolean isTextured() {
+        return textured;
+    }
+    
     protected String textureKey() {
         return textureKey;
     } 
@@ -153,6 +172,7 @@ class S2DQuad implements Comparable<S2DQuad> {
     
     protected void draw() {
         
+        if(!(textured)) gl.glDisable(GL.GL_TEXTURE_2D);
         gl.glLoadIdentity(); 
         if (rotation != 0) {
             gl.glTranslatef(xPos + rotXOffset, yPos + rotYOffset, 0);
@@ -170,6 +190,8 @@ class S2DQuad implements Comparable<S2DQuad> {
         gl.glTexCoord2f(texX1, texY0);
         gl.glVertex3f(xPos + width * scale, yPos, z);
         gl.glEnd();
+        
+        if(!(textured)) gl.glEnable(GL.GL_TEXTURE_2D);
     }
     
     /*
