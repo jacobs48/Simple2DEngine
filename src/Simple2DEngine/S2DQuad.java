@@ -22,7 +22,7 @@ class S2DQuad implements Comparable<S2DQuad> {
     protected float r = 1;
     protected float g = 1;
     protected float b = 1;
-    protected float a = 0;
+    protected float a = 1;
     protected float scale = 1;
     protected boolean hidden = false;
     protected GL2 gl = null;
@@ -32,6 +32,7 @@ class S2DQuad implements Comparable<S2DQuad> {
         height = h;
         rotXOffset = width / 2;
         rotYOffset = height / 2;
+        gl = S2DEngine.gl;
     }
     
     protected S2DQuad X(float x) {

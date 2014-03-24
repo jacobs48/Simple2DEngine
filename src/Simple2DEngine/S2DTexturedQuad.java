@@ -24,7 +24,6 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         super(0, 0);
         texture = S2DEngine.gLoader.getTexture(key);
         textureKey = key;
-        gl = S2DEngine.gl;
         width = texture.getWidth();
         height = texture.getHeight();
         rotXOffset = width / 2;
