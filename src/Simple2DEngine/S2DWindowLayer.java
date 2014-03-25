@@ -87,8 +87,8 @@ public class S2DWindowLayer extends S2DLayer {
         bgQuad.setColor(r, g, b);
     }
     
-    public void addStaticGraphic(S2DGraphic g) {
-        g.setLayer(this);
+    public void addStaticGraphic(S2DDrawable drawable) {
+        drawable.setLayer(this);
     }
     
     public void updatePosition(float x, float y) {
@@ -113,8 +113,8 @@ public class S2DWindowLayer extends S2DLayer {
         i = S2DEngine.layerList.indexOf(this);
         this.updateZ(i);
         
-        for(S2DGraphic g : gObjects) {
-            g.updateGraphic();
+        for(S2DDrawable drawable : gObjects) {
+            drawable.updateDrawable();
         }
     }
     

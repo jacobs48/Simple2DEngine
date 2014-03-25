@@ -11,7 +11,7 @@ import java.util.LinkedList;
  */
 public class S2DLayer implements Comparable<S2DLayer> {
     
-    protected LinkedList<S2DGraphic> gObjects;
+    protected LinkedList<S2DDrawable> gObjects;
     protected float depth = 0;
     protected final SortMode mode;
     protected float baseZValue = 0;
@@ -87,12 +87,12 @@ public class S2DLayer implements Comparable<S2DLayer> {
         return depth;
     }
     
-    protected void add(S2DGraphic g) {
+    protected void add(S2DDrawable g) {
         gObjects.add(g);
-        g.updateGraphic();
+        g.updateDrawable();
     }
     
-    protected void remove(S2DGraphic g) {
+    protected void remove(S2DDrawable g) {
         gObjects.remove(g);
     }
     
@@ -102,8 +102,8 @@ public class S2DLayer implements Comparable<S2DLayer> {
         i = S2DEngine.layerList.indexOf(this);
         this.updateZ(i);
         
-        for(S2DGraphic g : gObjects) {
-            g.updateGraphic();
+        for(S2DDrawable g : gObjects) {
+            g.updateDrawable();
         }
     }
     
@@ -113,7 +113,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
                 Collections.sort(gObjects);
                 break;
             case Y_POSITION: 
-                Collections.sort(gObjects, new S2DGraphic.ReverseYComparator());
+                Collections.sort(gObjects, new S2DDrawable.ReverseYComparator());
                 break;
         }
     }
@@ -126,8 +126,8 @@ public class S2DLayer implements Comparable<S2DLayer> {
         baseDepth = LAYER_DEPTH_DIF * baseZValue;
         this.sort();
         
-        for (S2DGraphic g : gObjects) {
-            g.updateG2DZ(baseDepth);
+        for (S2DDrawable d : gObjects) {
+            d.updatePolyZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
     }
@@ -137,14 +137,14 @@ public class S2DLayer implements Comparable<S2DLayer> {
         
         this.sort();
         
-        for (S2DGraphic g : gObjects) {
-            g.updateG2DZ(baseDepth);
+        for (S2DDrawable d : gObjects) {
+            d.updatePolyZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
     }
     
     public void destroy() {
-        for(S2DGraphic graphic : gObjects) {
+        for(S2DDrawable graphic : gObjects) {
             graphic.destroy();
         }
         S2DEngine.engine.removeLayer(this);

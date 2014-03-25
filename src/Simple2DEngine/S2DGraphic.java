@@ -10,7 +10,7 @@ import java.util.Comparator;
  *
  * @author Michael Jacobs
  */
-public class S2DGraphic implements Comparable<S2DGraphic>{
+public class S2DGraphic extends S2DDrawable implements Comparable<S2DDrawable>{
     
     private S2DLayer layer;
     
@@ -40,7 +40,7 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         S2DEngine.render.addGraphic(g2D);
     }
     
-    protected void updateGraphic() {
+    protected void updateDrawable() {
         g2D.setHidden(hidden);
         g2D.setRotXOffset(rotXOffset);
         g2D.setRotYOffset(rotYOffset);
@@ -158,7 +158,7 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         if (alignment == WindowAlignment.NONE) {
             g2D.X(layer.getLayerX0() + xPos + xOffset);
         }
-        else this.updateGraphic();
+        else this.updateDrawable();
         
         return this;
     }
@@ -168,14 +168,14 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         if (alignment == WindowAlignment.NONE) {
             g2D.Y(layer.getLayerY0() + yPos + yOffset);
         }
-        else this.updateGraphic();
+        else this.updateDrawable();
         
         return this;
     }
     
     public S2DGraphic setAlignment(WindowAlignment align) {
         alignment = align;
-        this.updateGraphic();
+        this.updateDrawable();
         
         return this;
     }
@@ -209,12 +209,12 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         layer.remove(this);
         layer = l;
         layer.add(this);
-        this.updateGraphic();
+        this.updateDrawable();
         
         return this;
     }
     
-    public void updateG2DZ(float z) {
+    protected void updatePolyZ(float z) {
         g2D.Z(z);
     }
     
@@ -236,6 +236,10 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
         layer.updateZ();
     }
     
+    public float getZ() {
+        return zPos;
+    }
+    
     /**
      * Destroys S2DGraphic
      *
@@ -243,30 +247,5 @@ public class S2DGraphic implements Comparable<S2DGraphic>{
     public void destroy() {
         S2DEngine.render.removeGraphic(g2D);
         layer.remove(this);
-    }
-
-    /**
-     * Implements Comparable method compareTo using depth value
-     *
-     * @param t S2DGraphic to compareTo
-     * @return 0 if equal, less than 0 if less than, greater than 0 if greater than
-     */
-    @Override
-    public int compareTo(S2DGraphic t) {
-        return Float.compare(zPos, t.getZ());
-    }
-    
-    public float getZ() {
-        return zPos;
-    }
-    
-    static class ReverseYComparator implements Comparator<S2DGraphic> {
-
-        @Override
-        public int compare(S2DGraphic t, S2DGraphic t1) {
-            return -1 * Float.compare(t.getY(), t1.getY());
-        }
-   
-    }
-    
+    }   
 }
