@@ -33,7 +33,7 @@ public class S2DWindowLayer extends S2DLayer {
         r = 0;
         g = 0;
         b = 0;
-        bgRect = new S2DRectangle(width, height, this);
+        bgRect = S2DEngine.engine.newS2DRectangle(width, height);
         bgRect.setLayer(this);
         bgRect.setAlignment(WindowAlignment.FILL_STRETCHED);
     }

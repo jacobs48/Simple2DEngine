@@ -30,24 +30,6 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         rotYOffset = height / 2;   
     }
     
-    protected S2DTexturedQuad X(float x) {
-        xPos = x;
-        return this;
-    }
-    
-    protected S2DTexturedQuad Y(float y) {
-        yPos = y;
-        return this;
-    }
-    
-    protected S2DTexturedQuad Z(float d) {
-        z = d;
-        return this;
-    }
-
-    protected float getZ() {
-        return z;
-    }
 
     protected Texture getTexture() {
         return texture;

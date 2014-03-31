@@ -174,7 +174,7 @@ public class S2DEngine {
      * Generates a new S2DLayer
      * 
      * @param depth Specifies depth of layer
-     * @param m Specifies how S2DGraphics in layer should be sorted
+     * @param m Specifies how S2DRectangles in layer should be sorted
      * @return Newly generated layer
      */
     public S2DLayer newS2DLayer(float depth, SortMode m) {
@@ -242,17 +242,23 @@ public class S2DEngine {
     }
     
     /**
-     * Provides new instance of S2DGraphic from specified texture.
+     * Provides new instance of S2DRectangle from specified texture.
      * Returns null if texture doesn't exist
      *
-     * @param name Key name of texture to be used by S2DGraphic
-     * @return S2DGraphic created using specified texture
+     * @param name Key name of texture to be used by S2DRectangle
+     * @return S2DRectangle created using specified texture
      */
+    public S2DRectangle newS2DRectangle(float w, float h) {
+        S2DQuad quad = new S2DQuad(w, h);
+        S2DRectangle rect = new S2DRectangle(quad, defaultLayer);
+        return rect;
+    }
+    
     public S2DGraphic newS2DGraphic(String name) {
-        S2DTexturedQuad g2D = gLoader.newS2DTexturedQuad(name);
-        if (g2D == null) return null;
-        S2DGraphic gO = new S2DGraphic(g2D, defaultLayer);
-        return gO;
+        S2DTexturedQuad tQuad = gLoader.newS2DTexturedQuad(name);
+        if (tQuad == null) return null;
+        S2DGraphic g = new S2DGraphic(tQuad, defaultLayer);
+        return g;
     }
     
     protected void updateLayers() {

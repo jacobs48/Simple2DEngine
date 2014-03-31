@@ -1,45 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package Simple2DEngine;
 
+import java.util.Comparator;
+
 /**
+ * Basic 2D graphic object to be used with S2DEngine
+ Instantiate through S2DEngine.newS2DRectangle();
  *
  * @author Michael Jacobs
  */
-public class S2DRectangle extends S2DDrawable {
+public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>{
     
     protected S2DQuad quad;
-    protected float r = 1;
-    protected float g = 1;
-    protected float b = 1;
+    float r, g, b;
     
-    protected S2DRectangle (float w, float h, S2DLayer l) {
+    /**
+     * Used by S2DEngine.newGraphicObject() to instantiate S2DGraphic
+     *
+     * @param g Graphic2D object to be rendered
+     * @param l Layer to add to
+     */
+    protected S2DRectangle(S2DQuad q, S2DLayer l) {
         super();
-        
-        width = w;
-        height = h;
+        r = 1;
+        g = 1;
+        b = 1;
         layer = l;
-        
-        quad = new S2DQuad(width, height);
-        
+        quad = q;
+        width = quad.getWidth();
+        height = quad.getHeight();
         S2DEngine.render.addGraphic(quad);
     }
-
-    @Override
-    protected float getY() {
-       return yPos;
-    }
-
-    @Override
-    protected float getZ() {
-        return zPos;
-    }
-
-    @Override
+    
     protected void updateDrawable() {
         quad.setHidden(hidden);
         quad.setRotXOffset(rotXOffset);
@@ -119,66 +112,81 @@ public class S2DRectangle extends S2DDrawable {
                 break;
         }
     }
-
-    @Override
-    protected void updatePolyZ(float z) {
-        quad.Z(z);
-    }
-
-    @Override
-    public S2DDrawable setLayer(S2DLayer l) {
-        layer.remove(this);
-        l.add(this);
-        return this;
-    }
-
-    @Override
-    public void destroy() {
-        layer.remove(this);
-        S2DEngine.render.removeGraphic(quad);
-    }
-
-    @Override
-    public S2DDrawable X(float x) {
+    
+    
+    /**
+     * Sets X position of S2DRectangle
+     *
+     * @param x X value
+     */
+    public S2DRectangle X(float x) {
         xPos = x;
         if (alignment == WindowAlignment.NONE) {
             quad.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
         }
         return this;
     }
-
-    @Override
-    public S2DDrawable Y(float y) {
+    
+    /**
+     * Sets Y position of S2DRectangle
+     *
+     * @param y Y value
+     */
+    public S2DRectangle Y(float y) {
         yPos = y;
         if (alignment == WindowAlignment.NONE) {
             quad.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
         }
+        
         return this;
     }
-
-    @Override
-    public S2DDrawable Z(float z) {
-        zPos = z;
-        layer.updateZ();
+    
+    public S2DRectangle setWidth(float w) {
+        width = w;
+        quad.setWidth(w);
         return this;
     }
-
-    @Override
-    public S2DDrawable hidden(boolean h) {
-        hidden = h;
+    
+    public S2DRectangle setHeight(float h) {
+        height = h;
+        quad.setHeight(h);
+        return this;
+    }
+    
+    public S2DDrawable hidden(boolean b) {
+        hidden = b;
         quad.setHidden(hidden);
         return this;
     }
-
-    @Override
-    public S2DDrawable transparency(float a) {
-        transparency = a;
-        quad.setA((100 - transparency) / 100);
+    
+    public S2DRectangle xOffset(float x) {
+        xOffset = x;
+        if (alignment == WindowAlignment.NONE) {
+            quad.X(layer.getLayerX0() + xPos + xOffset);
+        }
+        else this.updateDrawable();
+        
         return this;
     }
-
-    @Override
-    public S2DDrawable rotate(float degrees) {
+    
+    public S2DRectangle yOffset(float y) {
+        yOffset = y;
+        if (alignment == WindowAlignment.NONE) {
+            quad.Y(layer.getLayerY0() + yPos + yOffset);
+        }
+        else this.updateDrawable();
+        
+        return this;
+    }
+    
+    public S2DRectangle setAlignment(WindowAlignment align) {
+        alignment = align;
+        this.updateDrawable();
+        
+        return this;
+    }
+    
+    public S2DRectangle rotate(float degrees) {
         rotation = degrees;
         rotXOffset = quad.getWidth() * layer.getScale() / 2;
         rotYOffset = quad.getHeight() * layer.getScale() / 2;
@@ -189,10 +197,19 @@ public class S2DRectangle extends S2DDrawable {
         return this;
     }
     
-    public S2DDrawable setAlignment(WindowAlignment align) {
-        alignment = align;
-        this.updateDrawable();
-        
+    public void rotate(float degrees, float xOff, float yOff) {
+        rotation = degrees;
+        rotXOffset = xOff * layer.getScale();
+        rotYOffset = yOff * layer.getScale();
+        quad.setRotXOffset(rotXOffset);
+        quad.setRotYOffset(rotYOffset);
+        quad.setRotation(rotation);
+    }
+    
+    @Override
+    public S2DDrawable transparency(float a) {
+        transparency = a;
+        quad.setA((100 - transparency) / 100);
         return this;
     }
     
@@ -203,5 +220,51 @@ public class S2DRectangle extends S2DDrawable {
         
         quad.setColor(r, g, b);
     }
-
+    
+    public S2DRectangle setLayer(S2DLayer l) {
+        layer.remove(this);
+        layer = l;
+        layer.add(this);
+        this.updateDrawable();
+        
+        return this;
+    }
+    
+    protected void updatePolyZ(float z) {
+        quad.Z(z);
+    }
+    
+    public float getY() {
+        return yPos;
+    }
+    
+    public float getX() {
+        return xPos;
+    }
+    
+    /**
+     * Sets depth value of S2DRectangle
+     * 
+     * @param d Depth value
+     */
+    @Override
+    public S2DDrawable Z(float d) {
+        zPos = d;
+        layer.updateZ();
+        return this;
+    }
+    
+    public float getZ() {
+        return zPos;
+    }
+    
+    
+    /**
+     * Destroys S2DRectangle
+     *
+     */
+    public void destroy() {
+        S2DEngine.render.removeGraphic(quad);
+        layer.remove(this);
+    }   
 }
