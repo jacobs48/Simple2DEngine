@@ -21,7 +21,7 @@ public class S2DWindowLayer extends S2DLayer {
     float height;
     float scale = 1;
     boolean background = false;
-    S2DQuad bgQuad;
+    S2DRectangle bgRect;
     float r, g, b;
 
     protected S2DWindowLayer(float d, SortMode m, float x, float y, float w, float h) {
@@ -33,11 +33,9 @@ public class S2DWindowLayer extends S2DLayer {
         r = 0;
         g = 0;
         b = 0;
-        bgQuad = new S2DQuad(w, h);
-        bgQuad.X(x);
-        bgQuad.Y(y);
-        bgQuad.setHidden(true);
-        S2DEngine.render.addGraphic(bgQuad);
+        bgRect = new S2DRectangle(width, height, this);
+        bgRect.setLayer(this);
+        bgRect.setAlignment(WindowAlignment.FILL_STRETCHED);
     }
     
     protected float translateX(float x) {
@@ -77,14 +75,14 @@ public class S2DWindowLayer extends S2DLayer {
     }
     
     public void backgroundHidden(boolean b) {
-        bgQuad.setHidden(b);
+        bgRect.hidden(b);
     }
     
     public void setBGColor(float r, float g, float b){
         this.r = r;
         this.g = g;
         this.b = b;
-        bgQuad.setColor(r, g, b);
+        bgRect.setColor(r, g, b);
     }
     
     public void addStaticGraphic(S2DDrawable drawable) {
@@ -94,16 +92,14 @@ public class S2DWindowLayer extends S2DLayer {
     public void updatePosition(float x, float y) {
         xPos = x;
         yPos = y;
-        bgQuad.X(x);
-        bgQuad.Y(y);
+        bgRect.X(xPos);
+        bgRect.Y(yPos);
         this.updateAll();
     }
     
     public void resize(float w, float h) {
         width = w;
         height = h;
-        bgQuad.setWidth(width);
-        bgQuad.setHeight(height);
         this.updateAll();
     }
     
@@ -119,19 +115,45 @@ public class S2DWindowLayer extends S2DLayer {
     }
     
     //Updates the depth value of all Graphic2D objects stored in S2DGraphic list
+    @Override
     protected void updateZ(float i) {
-        super.updateZ(i);
-        bgQuad.Z((i - 1) * LAYER_DEPTH_DIF + MIN_DEPTH_DIF);
+        float baseDepth;
+        
+        baseZValue = i; 
+        baseDepth = LAYER_DEPTH_DIF * baseZValue;
+        
+        gObjects.remove(bgRect);
+        this.sort();
+        gObjects.addFirst(bgRect);
+        
+        for (S2DDrawable d : gObjects) {
+            d.updatePolyZ(baseDepth);
+            baseDepth += MIN_DEPTH_DIF;
+        } 
     }
     
+    @Override
     protected void updateZ() {
-        super.updateZ();
-        bgQuad.Z((baseZValue - 1) * LAYER_DEPTH_DIF + MIN_DEPTH_DIF);
+        float baseDepth = LAYER_DEPTH_DIF * baseZValue;
+        
+        gObjects.remove(bgRect);
+        
+        this.sort();
+        
+        gObjects.addFirst(bgRect);
+        
+        for (S2DDrawable d : gObjects) {
+            d.updatePolyZ(baseDepth);
+            baseDepth += MIN_DEPTH_DIF;
+        } 
+        
+        
     }
     
+    @Override
     public void destroy() {
         super.destroy();
-        S2DEngine.render.removeGraphic(bgQuad);
+        bgRect.destroy();
     }
     
 }

@@ -87,8 +87,8 @@ public class S2DEngine {
     /**
      * Initializes engine and begins execution of game.
      * Specified S2DInterface method init(S2DEngine e)
- will run after engine initializes and then 
- update(S2DEngine e) runs at specified framerate.
+     * will run after engine initializes and then 
+     * update(S2DEngine e) runs at specified framerate.
      */
     public void runGame() {
         profile = GLProfile.getDefault();
