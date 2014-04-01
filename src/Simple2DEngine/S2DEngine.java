@@ -10,16 +10,16 @@ import java.util.LinkedList;
 
 /**
  * S2DEngine
- 
- S2DEngine acts as the primary API for the 2D graphics engine.
+ *
+ * S2DEngine acts as the primary API for the 2D graphics engine.
  * Creates a window through NEWT and configures window, engine, 
- and rendering options based on user specifications and provides
- methods for creating and modifying 2D graphic objects within the
- engine.
- 
- Uses S2DInterface to provide methods for initializing
- game state after engine initialization and updating game state
- at specified framerate.
+ * and rendering options based on user specifications and provides
+ * methods for creating and modifying 2D graphic objects within the
+ * engine.
+ * 
+ * Uses S2DInterface to provide methods for initializing
+ * game state after engine initialization and updating game state
+ * at specified framerate.
  *
  * @author Michael Jacobs
  */
