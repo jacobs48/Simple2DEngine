@@ -2,7 +2,6 @@
 
 package Simple2DEngine;
 
-import com.jogamp.opengl.util.texture.Texture;;
 import javax.media.opengl.*;
 
 /*
@@ -11,45 +10,46 @@ import javax.media.opengl.*;
  */
 class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
     
-    private Texture texture = null;
+    private S2DSubTexture texture = null;
     private float texX0 = 0; 
     private float texX1 = 1;
     private float texY0 = 0;
     private float texY1 = 1;
     private boolean textured = true;
-    private boolean hidden = false;
-    private String textureKey;
     
     protected S2DTexturedQuad(String key) {
         super(0, 0);
-        texture = S2DEngine.gLoader.getTexture(key);
-        textureKey = key;
+        texture = S2DEngine.textureLoader.getTexture(key);
+        texture.setMapping(this);
         width = texture.getWidth();
         height = texture.getHeight();
         rotXOffset = width / 2;
         rotYOffset = height / 2;   
     }
     
+    protected boolean setTexture(String key) {
+        S2DSubTexture tempText = S2DEngine.textureLoader.getTexture(key);
+        if(tempText == null) return false;
+        texture = tempText;
+        texture.setMapping(this);
+        width = texture.getWidth();
+        height = texture.getHeight();
+        return true;
+    }
+    
 
-    protected Texture getTexture() {
+    protected S2DSubTexture getTexture() {
         return texture;
     }
     
-    protected String getTextureKey() {
-        return textureKey;
-    }
-    
-    protected void setTexture(Texture texture) {
-        this.texture = texture;
+    @Override
+    protected String getSuperTextureKey() {
+        return texture.getSuperTextureKey();
     }
     
     protected boolean isTextured() {
         return textured;
     }
-    
-    protected String textureKey() {
-        return textureKey;
-    } 
     
     protected S2DTexturedQuad textureMap(float x0, float y0, float x1, float y1) {
         texX0 = x0;

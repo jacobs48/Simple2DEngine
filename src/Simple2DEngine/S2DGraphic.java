@@ -30,4 +30,12 @@ public class S2DGraphic extends S2DRectangle implements Comparable<S2DDrawable> 
         ((S2DTexturedQuad)quad).textureMap(texX0, texY0, texX1, texY1);
     }
     
+    public String getTextureKey() {
+        return quad.getSuperTextureKey();
+    }
+    
+    public boolean setTexture(String key) {
+        return ((S2DTexturedQuad)quad).setTexture(key);
+    }
+    
 }

@@ -2,7 +2,6 @@
 
 package Simple2DEngine;
 
-import com.jogamp.opengl.util.texture.Texture;;
 import javax.media.opengl.*;
 
 /*
@@ -54,11 +53,11 @@ class S2DQuad implements Comparable<S2DQuad> {
         return z;
     }
 
-    protected Texture getTexture() {
+    protected S2DSubTexture getTexture() {
         return null;
     }
-    
-    protected String getTextureKey() {
+
+    protected String getSuperTextureKey() {
         return "";
     }
     

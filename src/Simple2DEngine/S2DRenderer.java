@@ -2,7 +2,6 @@
 
 package Simple2DEngine;
 
-import com.jogamp.opengl.util.texture.Texture;
 import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -24,7 +23,7 @@ class S2DRenderer {
     private FloatBuffer colorBuf = null;
     private FloatBuffer texBuf = null;
     private RenderMode mode;
-    private Texture boundTexture = null;
+    private String boundTexture = "";
     private float backgroundR = 0;
     private float backgroundG = 0;
     private float backgroundB = 0;
@@ -55,7 +54,7 @@ class S2DRenderer {
     //Removes entire list of texture for safely unloading texture
     protected void removeAllTex(String key) {
         for(S2DQuad graphic : graphicList) {
-            if (graphic.getTextureKey().equals(key)) graphicList.remove(graphic);
+            if (graphic.getSuperTextureKey().equals(key)) graphicList.remove(graphic);
         }
     }
     
@@ -81,9 +80,8 @@ class S2DRenderer {
         
         for(S2DQuad graphic : graphicList) {
             if (!(graphic.isHidden())) {
-                if (boundTexture != graphic.getTexture() && graphic.isTextured()) {
-                    boundTexture = graphic.getTexture();
-                    boundTexture.bind(gl);
+                if ((!boundTexture.equals(graphic.getSuperTextureKey())) && graphic.isTextured()) {
+                    graphic.getTexture().bind();
                 }
                 
                 graphic.draw();

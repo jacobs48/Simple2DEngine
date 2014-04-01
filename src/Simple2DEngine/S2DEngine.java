@@ -60,7 +60,7 @@ public class S2DEngine {
     /**
      * Provides static reference for the engine's S2DTextureLoader
      */
-    protected static S2DTextureLoader gLoader;
+    protected static S2DTextureLoader textureLoader;
     
     /**
      * Provides static reference for the engines S2DLayer list
@@ -119,7 +119,7 @@ public class S2DEngine {
     
     //SimpleGLInterface uses to provide loader
     protected void setLoader(S2DTextureLoader loader) {
-        gLoader = loader;
+        textureLoader = loader;
     }
     
     //SimpleGLInterface uses to provide renderer
@@ -218,7 +218,11 @@ public class S2DEngine {
      * @return Returns true if successful, false if file fails to load
      */
     public boolean loadTexture(String path, String name) {
-        return gLoader.loadGraphic(path, name);
+        return textureLoader.loadTexture(path, name);
+    }
+    
+    public boolean loadSubTexture(String superKey, String subKey, float x0, float x1, float y0, float y1) {
+        return textureLoader.loadSubTexture(superKey, subKey, x0, x1, y0, y1);
     }
 
     /**
@@ -227,7 +231,7 @@ public class S2DEngine {
      * @param key Key value of texture to be unloaded
      */
     public void unloadTexture(String key) {
-        gLoader.unloadGraphic(key);
+        textureLoader.unloadGraphic(key);
     }
     
     /**
@@ -237,7 +241,7 @@ public class S2DEngine {
      * @param key Key value of texture to be unloaded
      */
     public void unloadTextureSafe(String key) {
-        gLoader.unloadGraphic(key);
+        textureLoader.unloadGraphic(key);
         render.removeAllTex(key);
     }
     
@@ -255,7 +259,7 @@ public class S2DEngine {
     }
     
     public S2DGraphic newS2DGraphic(String name) {
-        S2DTexturedQuad tQuad = gLoader.newS2DTexturedQuad(name);
+        S2DTexturedQuad tQuad = textureLoader.newS2DTexturedQuad(name);
         if (tQuad == null) return null;
         S2DGraphic g = new S2DGraphic(tQuad, defaultLayer);
         return g;
