@@ -109,7 +109,7 @@ public class S2DWindowLayer extends S2DLayer {
         i = S2DEngine.layerList.indexOf(this);
         this.updateZ(i);
         
-        for(S2DDrawable drawable : gObjects) {
+        for(S2DDrawable drawable : drawableList) {
             drawable.updateDrawable();
         }
     }
@@ -122,11 +122,11 @@ public class S2DWindowLayer extends S2DLayer {
         baseZValue = i; 
         baseDepth = LAYER_DEPTH_DIF * baseZValue;
         
-        gObjects.remove(bgRect);
+        drawableList.remove(bgRect);
         this.sort();
-        gObjects.addFirst(bgRect);
+        drawableList.addFirst(bgRect);
         
-        for (S2DDrawable d : gObjects) {
+        for (S2DDrawable d : drawableList) {
             d.updatePolyZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
@@ -136,13 +136,13 @@ public class S2DWindowLayer extends S2DLayer {
     protected void updateZ() {
         float baseDepth = LAYER_DEPTH_DIF * baseZValue;
         
-        gObjects.remove(bgRect);
+        drawableList.remove(bgRect);
         
         this.sort();
         
-        gObjects.addFirst(bgRect);
+        drawableList.addFirst(bgRect);
         
-        for (S2DDrawable d : gObjects) {
+        for (S2DDrawable d : drawableList) {
             d.updatePolyZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 

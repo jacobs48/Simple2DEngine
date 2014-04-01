@@ -11,7 +11,7 @@ import java.util.LinkedList;
  */
 public class S2DLayer implements Comparable<S2DLayer> {
     
-    protected LinkedList<S2DDrawable> gObjects;
+    protected LinkedList<S2DDrawable> drawableList;
     protected float depth = 0;
     protected final SortMode mode;
     protected float baseZValue = 0;
@@ -20,7 +20,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
     protected static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
 
     protected S2DLayer(float d, SortMode m) {
-        gObjects = new LinkedList<>();
+        drawableList = new LinkedList<>();
         depth = d;
         mode = m;
     }
@@ -88,12 +88,12 @@ public class S2DLayer implements Comparable<S2DLayer> {
     }
     
     protected void add(S2DDrawable g) {
-        gObjects.add(g);
+        drawableList.add(g);
         g.updateDrawable();
     }
     
     protected void remove(S2DDrawable g) {
-        gObjects.remove(g);
+        drawableList.remove(g);
     }
     
     protected void updateAll(){
@@ -102,7 +102,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
         i = S2DEngine.layerList.indexOf(this);
         this.updateZ(i);
         
-        for(S2DDrawable g : gObjects) {
+        for(S2DDrawable g : drawableList) {
             g.updateDrawable();
         }
     }
@@ -110,10 +110,10 @@ public class S2DLayer implements Comparable<S2DLayer> {
     protected void sort() {
         switch(mode) {
             case DEPTH_SORTED:
-                Collections.sort(gObjects);
+                Collections.sort(drawableList);
                 break;
             case Y_POSITION: 
-                Collections.sort(gObjects, new S2DDrawable.ReverseYComparator());
+                Collections.sort(drawableList, new S2DDrawable.ReverseYComparator());
                 break;
         }
     }
@@ -126,7 +126,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
         baseDepth = LAYER_DEPTH_DIF * baseZValue;
         this.sort();
         
-        for (S2DDrawable d : gObjects) {
+        for (S2DDrawable d : drawableList) {
             d.updatePolyZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
@@ -137,14 +137,14 @@ public class S2DLayer implements Comparable<S2DLayer> {
         
         this.sort();
         
-        for (S2DDrawable d : gObjects) {
+        for (S2DDrawable d : drawableList) {
             d.updatePolyZ(baseDepth);
             baseDepth += MIN_DEPTH_DIF;
         } 
     }
     
     public void destroy() {
-        for(S2DDrawable graphic : gObjects) {
+        for(S2DDrawable graphic : drawableList) {
             graphic.destroy();
         }
         S2DEngine.engine.removeLayer(this);

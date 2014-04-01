@@ -210,7 +210,7 @@ public class S2DEngine {
     
     /**
      * Loads specified image file into current S2DTextureLoader
- and assigns it with provided key name. Returns false if 
+     * and assigns it with provided key name. Returns false if 
      * specified key is already in use.
      * 
      * @param path Path of file to be loaded
@@ -286,16 +286,16 @@ public class S2DEngine {
     
     /**
      * Builder class used to create instance of S2DEngine object
- 
- Begin build with Builder(S2DInterface s) 
- Terminate with Build()
- 
- Potential Attributes:
-      size(int x, int y) - Size of window in pixels
-      fullscreen(boolean f) - Specifies if fullscreen enabled
-      fps(int f) - Engine framerate
-      title(String s) - Window title
-      renderMode(RenderMode r) - Render mode to be used by engine
+     * 
+     * Begin build with Builder(S2DInterface s) 
+     * Terminate with Build()
+     *  
+     * Potential Attributes:
+     * size(int x, int y) - Size of window in pixels
+     * fullscreen(boolean f) - Specifies if fullscreen enabled
+     * fps(int f) - Engine framerate
+     * title(String s) - Window title
+     * renderMode(RenderMode r) - Render mode to be used by engine
      *      
      */
     public static class Builder {

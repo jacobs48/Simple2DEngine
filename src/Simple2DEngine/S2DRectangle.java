@@ -6,14 +6,14 @@ import java.util.Comparator;
 
 /**
  * Basic 2D graphic object to be used with S2DEngine
- Instantiate through S2DEngine.newS2DRectangle();
+ * Instantiate through S2DEngine.newS2DRectangle();
  *
  * @author Michael Jacobs
  */
 public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>{
     
     protected S2DQuad quad;
-    float r, g, b;
+    protected float r, g, b;
     
     /**
      * Used by S2DEngine.newGraphicObject() to instantiate S2DGraphic
@@ -30,7 +30,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         quad = q;
         width = quad.getWidth();
         height = quad.getHeight();
-        S2DEngine.render.addGraphic(quad);
+        S2DEngine.render.addQuad(quad);
     }
     
     protected void updateDrawable() {
@@ -264,7 +264,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
      *
      */
     public void destroy() {
-        S2DEngine.render.removeGraphic(quad);
+        S2DEngine.render.removeQuad(quad);
         layer.remove(this);
     }   
 }
