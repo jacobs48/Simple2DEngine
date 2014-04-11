@@ -40,7 +40,7 @@ public class S2DSubTexture {
         texY0 = y0;
         texY1 = y1;
     }
-
+    
     protected String getTextureKey() {
         return textureKey;
     }
