@@ -57,6 +57,25 @@ class S2DTextureLoader {
         
     }
     
+    protected boolean loadSubTexture(String superKey, String subKey, int x0, int x1, int y0, int y1) {
+        float fX0, fX1, fY0, fY1;
+        Texture tempText = textureTree.get(superKey);
+        
+        fX0 = ((float) x0) / tempText.getWidth();
+        fX1 = ((float) x1) / tempText.getWidth();
+        fY0 = ((float) y0) / tempText.getWidth();
+        fY1 = ((float) y1) / tempText.getWidth();
+        
+        if (tempText == null) return false;
+        else {
+            S2DSubTexture tempSub = new S2DSubTexture(tempText, subKey, superKey);
+            tempSub.setMapping(fX0, fX1, fY0, fY1);
+            subTextTree.put(subKey, tempSub);
+            return true;
+        }
+        
+    }
+    
    //Creates Graphic2D object from specified key
    protected S2DTexturedQuad newS2DTexturedQuad(String key) {
        if (!(subTextTree.containsKey(key))) return null;

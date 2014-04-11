@@ -37,6 +37,13 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         return true;
     }
     
+    protected void setTexture(S2DSubTexture s) {
+        texture = s;
+        width = texture.getWidth();
+        height = texture.getHeight();
+        texture.setMapping(this);
+    }
+    
 
     protected S2DSubTexture getTexture() {
         return texture;

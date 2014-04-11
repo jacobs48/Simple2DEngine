@@ -29,8 +29,7 @@ public class S2DEngine {
     private GLProfile profile;
     private GLCapabilities capabilities;
     private GLWindow window;
-    private FPSAnimator animator;
-    
+    private FPSAnimator FPSAnim;
     
     private int sizeX;
     private int sizeY;
@@ -44,6 +43,8 @@ public class S2DEngine {
     private float cameraX = 0;
     private float cameraY = 0;
     private float gameSpaceCoeff = 1;
+    private long prevTime;
+    private long curTime;
     
     protected static S2DEngine engine;
     
@@ -62,10 +63,13 @@ public class S2DEngine {
      */
     protected static S2DTextureLoader textureLoader;
     
+    protected static S2DAnimator animator;
+    
     /**
      * Provides static reference for the engines S2DLayer list
      */
     protected static LinkedList<S2DLayer> layerList = new LinkedList<>();
+    
     
     private S2DEngine() {
 
@@ -96,7 +100,11 @@ public class S2DEngine {
         window = GLWindow.create(capabilities);
         window.addGLEventListener(new S2DGLInterface(updater, this, renderMode));
         
-        animator = new FPSAnimator(window, FPS);
+        animator = new S2DAnimator();
+        prevTime = System.nanoTime();
+        curTime = System.nanoTime();
+        
+        FPSAnim = new FPSAnimator(window, FPS);
         
         window.setSize(sizeX, sizeY);
         window.setFullscreen(fullscreen);
@@ -110,11 +118,16 @@ public class S2DEngine {
             };
         });
         
-        animator.start();
+        FPSAnim.start();
     }
     
     protected void update() {
+        curTime = System.nanoTime();
+        float timeDif = (float) ((curTime - prevTime) / 1000000000.0);
         
+        animator.update(timeDif);
+        
+        prevTime = curTime;
     }
     
     //SimpleGLInterface uses to provide loader
@@ -207,7 +220,6 @@ public class S2DEngine {
         this.updateLayersZ();
     }
     
-    
     /**
      * Loads specified image file into current S2DTextureLoader
      * and assigns it with provided key name. Returns false if 
@@ -221,7 +233,11 @@ public class S2DEngine {
         return textureLoader.loadTexture(path, name);
     }
     
-    public boolean loadSubTexture(String superKey, String subKey, float x0, float x1, float y0, float y1) {
+    public boolean loadSubTexture(String superKey, String subKey, int x0, int x1, int y0, int y1) {
+        return textureLoader.loadSubTexture(superKey, subKey, x0, x1, y0, y1);
+    }
+    
+    public boolean loadSubTextureF(String superKey, String subKey, float x0, float x1, float y0, float y1) {
         return textureLoader.loadSubTexture(superKey, subKey, x0, x1, y0, y1);
     }
 
@@ -262,6 +278,13 @@ public class S2DEngine {
         S2DTexturedQuad tQuad = textureLoader.newS2DTexturedQuad(name);
         if (tQuad == null) return null;
         S2DGraphic g = new S2DGraphic(tQuad, defaultLayer);
+        return g;
+    }
+    
+    public S2DAnimatedGraphic newS2DAnimatedGraphic(String defaultTex) {
+        S2DTexturedQuad tQuad = textureLoader.newS2DTexturedQuad(defaultTex);
+        if (tQuad == null) return null;
+        S2DAnimatedGraphic g = new S2DAnimatedGraphic(tQuad, defaultLayer, defaultTex);
         return g;
     }
     
