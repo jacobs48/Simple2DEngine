@@ -14,22 +14,22 @@ import java.util.LinkedList;
  */
 public class S2DAnimator {
     
-    protected LinkedList<S2DAnimatedGraphic> animationList;
+    protected LinkedList<S2DDrawable> animationList;
     
     protected S2DAnimator() {
         animationList = new LinkedList<>();
     }
     
-    protected void registerAnimated(S2DAnimatedGraphic a) {
+    protected void register(S2DDrawable a) {
         animationList.add(a);
     }
     
-    protected void removeAnimated(S2DAnimatedGraphic a) {
+    protected void unregister(S2DDrawable a) {
         animationList.remove(a);
     }
     
     protected void update(float t) {
-        for(S2DAnimatedGraphic graphic : animationList) {
+        for(S2DDrawable graphic : animationList) {
             graphic.updateAnimation(t);
         }
     }

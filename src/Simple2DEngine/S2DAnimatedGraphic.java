@@ -16,17 +16,12 @@ import java.util.TreeMap;
 public class S2DAnimatedGraphic extends S2DGraphic {
     
     protected TreeMap<String, S2DAnimation> animationTree;
-    protected LinkedList<S2DAnimation> animationQueue;
-    protected S2DSubTexture currentSubText;
     protected S2DSubTexture defaultSubText;
 
     protected S2DAnimatedGraphic(S2DTexturedQuad g, S2DLayer l, String d) {
         super(g, l);
         animationTree = new TreeMap<>();
-        animationQueue = new LinkedList<>();
         defaultSubText = S2DEngine.textureLoader.getTexture(d);
-        currentSubText = defaultSubText;
-        S2DEngine.animator.registerAnimated(this);
     }
     
     public boolean newAnimation(String key) {
@@ -45,39 +40,37 @@ public class S2DAnimatedGraphic extends S2DGraphic {
     
     public void clearQueue() {
         animationQueue = new LinkedList<>();
+        S2DEngine.animator.unregister(this);
     }
     
     public void playAnimation(String s) {
         this.clearQueue();
-        animationQueue.add(animationTree.get(s).begin());
+        S2DEngine.animator.register(this);
+        animationQueue.addAll(animationTree.get(s).getFrames());
+        animationQueue.getFirst().initialize(this);
     }
     
     public void queueAnimation(String s) {
-        animationQueue.add(animationTree.get(s).begin());
+        if (animationQueue.size() == 0) {
+            S2DEngine.animator.register(this);
+            animationQueue.addAll(animationTree.get(s).getFrames());
+            animationQueue.getFirst().initialize(this);
+        }
+        else {
+            animationQueue.addAll(animationTree.get(s).getFrames());
+        }
     }
     
+    @Override
     protected void updateAnimation(float t) {
-        float remainder = 0;
-        S2DAnimation curAnim = null;
-        
-        if (!animationQueue.isEmpty()) {
-            curAnim = animationQueue.getFirst();
-            curAnim.updateTime(t);
-            if (curAnim.hasEnded()) {
-                remainder = curAnim.remainingDuration();
-                animationQueue.remove();
-                if (!animationQueue.isEmpty()) {
-                    curAnim = animationQueue.getFirst();
-                    curAnim.begin();
-                    curAnim.updateTime(remainder);
-                }
-                else curAnim = null;
-            }
+        super.updateAnimation(t);
+        if(animationQueue.size() == 0) {
+            updateFrame(defaultSubText);
         }
-        
-        if (animationQueue.isEmpty()) currentSubText = defaultSubText;
-        else currentSubText = curAnim.currentSubText();
-        ((S2DTexturedQuad) quad).setTexture(currentSubText);
-    }   
+    }
+    
+    protected void updateFrame(S2DSubTexture s) {
+        ((S2DTexturedQuad) quad).setTexture(s);
+    }
     
 }

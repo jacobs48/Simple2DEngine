@@ -3,6 +3,7 @@
 package Simple2DEngine;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 
 /**
  * Basic 2D graphic object to be used with S2DEngine
@@ -14,6 +15,8 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     
     protected S2DQuad quad;
     protected float r, g, b;
+    protected LinkedList<S2DQueueable> animationQueue;
+    protected float currentFrameTime;
     
     /**
      * Used by S2DEngine.newGraphicObject() to instantiate S2DGraphic
@@ -31,6 +34,8 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         width = quad.getWidth();
         height = quad.getHeight();
         S2DEngine.render.addQuad(quad);
+        currentFrameTime = 0;
+        animationQueue = new LinkedList<>();
     }
     
     protected void updateDrawable() {
@@ -245,6 +250,30 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     
     public float getX() {
         return xPos;
+    }
+    
+    protected void updateAnimation(float t) {
+        currentFrameTime += t;
+        if (animationQueue.size() == 0) {
+            S2DEngine.animator.unregister(this);
+        }
+        else if (currentFrameTime <= animationQueue.getFirst().getDuration()) {
+            animationQueue.getFirst().update(this, t);
+        }
+        else {
+            currentFrameTime -= animationQueue.getFirst().getDuration();
+            animationQueue.getFirst().update(this, t - currentFrameTime);
+            animationQueue.getFirst().terminate(this);
+            animationQueue.remove();
+            
+            if(animationQueue.size() == 0) {
+                S2DEngine.animator.unregister(this);
+            }
+            else {
+                animationQueue.getFirst().initialize(this);
+                animationQueue.getFirst().update(this, currentFrameTime);
+            }
+        }
     }
     
     /**

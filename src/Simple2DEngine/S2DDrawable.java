@@ -71,6 +71,8 @@ abstract class S2DDrawable implements Comparable<S2DDrawable> {
     abstract public S2DDrawable transparency(float a);
     
     abstract public S2DDrawable rotate(float degrees);
+    
+    abstract protected void updateAnimation(float t);
 
     @Override
     public int compareTo(S2DDrawable t) {
