@@ -5,6 +5,7 @@ package Simple2DEngine;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import java.io.File;
+import java.util.Map;
 import java.util.TreeMap;
 import javax.media.opengl.*;
 
@@ -91,6 +92,12 @@ class S2DTextureLoader {
    //Unloads texture specified by key from memory
    protected void unloadGraphic(String key) {
        textureTree.get(key).destroy(gl);
+       textureTree.remove(key);
+       for(Map.Entry<String, S2DSubTexture> entry : subTextTree.entrySet()) {
+           if(key == entry.getValue().getSuperTextureKey()) {
+               subTextTree.remove(entry.getKey());
+           }
+       }
    }
    
 }
