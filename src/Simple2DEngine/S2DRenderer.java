@@ -76,6 +76,8 @@ class S2DRenderer {
             if (!(quad.isHidden())) {
                 if (quad.isTextured() && (!boundTexture.equals(quad.getSuperTextureKey()))) {
                     quad.getTexture().bind();
+                    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+                    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
                 }
                 
                 quad.draw();

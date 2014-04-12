@@ -238,7 +238,7 @@ public class S2DEngine {
     }
     
     public boolean loadSubTextureF(String superKey, String subKey, float x0, float x1, float y0, float y1) {
-        return textureLoader.loadSubTexture(superKey, subKey, x0, x1, y0, y1);
+        return textureLoader.loadSubTextureF(superKey, subKey, x0, x1, y0, y1);
     }
 
     /**

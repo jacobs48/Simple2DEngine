@@ -45,7 +45,7 @@ class S2DTextureLoader {
         }
     }
     
-    protected boolean loadSubTexture(String superKey, String subKey, float x0, float x1, float y0, float y1) {
+    protected boolean loadSubTextureF(String superKey, String subKey, float x0, float x1, float y0, float y1) {
         Texture tempText = textureTree.get(superKey);
         if (tempText == null) return false;
         else {
@@ -63,8 +63,8 @@ class S2DTextureLoader {
         
         fX0 = ((float) x0) / tempText.getWidth();
         fX1 = ((float) x1) / tempText.getWidth();
-        fY0 = ((float) y0) / tempText.getWidth();
-        fY1 = ((float) y1) / tempText.getWidth();
+        fY0 = ((float) y0) / tempText.getHeight();
+        fY1 = ((float) y1) / tempText.getHeight();
         
         if (tempText == null) return false;
         else {

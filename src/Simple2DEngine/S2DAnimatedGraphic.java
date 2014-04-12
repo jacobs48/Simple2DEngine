@@ -26,6 +26,7 @@ public class S2DAnimatedGraphic extends S2DGraphic {
         animationQueue = new LinkedList<>();
         defaultSubText = S2DEngine.textureLoader.getTexture(d);
         currentSubText = defaultSubText;
+        S2DEngine.animator.registerAnimated(this);
     }
     
     public boolean newAnimation(String key) {
@@ -46,8 +47,13 @@ public class S2DAnimatedGraphic extends S2DGraphic {
         animationQueue = new LinkedList<>();
     }
     
+    public void playAnimation(String s) {
+        this.clearQueue();
+        animationQueue.add(animationTree.get(s).begin());
+    }
+    
     public void queueAnimation(String s) {
-        animationQueue.add(animationTree.get(s));
+        animationQueue.add(animationTree.get(s).begin());
     }
     
     protected void updateAnimation(float t) {
@@ -62,6 +68,7 @@ public class S2DAnimatedGraphic extends S2DGraphic {
                 animationQueue.remove();
                 if (!animationQueue.isEmpty()) {
                     curAnim = animationQueue.getFirst();
+                    curAnim.begin();
                     curAnim.updateTime(remainder);
                 }
                 else curAnim = null;

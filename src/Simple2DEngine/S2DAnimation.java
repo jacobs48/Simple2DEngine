@@ -25,6 +25,7 @@ public class S2DAnimation {
     
     protected S2DAnimation(String n) {
         frameList = new LinkedList<>();
+        frameQueue = new LinkedList<>();
         name = n;
         currentTime = 0;
         duration = 0;
@@ -40,18 +41,21 @@ public class S2DAnimation {
         duration += t;
     }
     
-    protected void begin() {
+    protected S2DAnimation begin() {
         currentTime = 0;
         frameQueue = new LinkedList<>();
         frameQueue.addAll(frameList);
         currentFrame = frameQueue.get(0);
+        return this;
     }
     
     protected void updateTime(float t) {
         currentTime += t;
         if (frameQueue.size() != 0 && currentTime > frameQueue.get(0).getDuration()) {
             currentTime -= frameQueue.get(0).getDuration();
-            frameQueue.remove();
+            frameQueue.remove(0);
+            System.out.println("currentTime: " + currentTime);
+            System.out.println("t: " + t);
             if (frameQueue.size() != 0) currentFrame = frameQueue.get(0);
         }
     }

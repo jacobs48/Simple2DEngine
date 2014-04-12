@@ -153,6 +153,11 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         return this;
     }
     
+    public S2DRectangle setScale(float s) {
+        quad.setScale(s);
+        return this;
+    }
+    
     public S2DDrawable hidden(boolean b) {
         hidden = b;
         quad.setHidden(hidden);
