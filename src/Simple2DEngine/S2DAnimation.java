@@ -54,8 +54,6 @@ public class S2DAnimation {
         if (frameQueue.size() != 0 && currentTime > frameQueue.get(0).getDuration()) {
             currentTime -= frameQueue.get(0).getDuration();
             frameQueue.remove(0);
-            System.out.println("currentTime: " + currentTime);
-            System.out.println("t: " + t);
             if (frameQueue.size() != 0) currentFrame = frameQueue.get(0);
         }
     }
