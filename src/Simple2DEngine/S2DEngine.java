@@ -56,7 +56,7 @@ public class S2DEngine {
     /**
      * Provides static reference for the engine's Graphic2DRenderer
      */
-    protected static S2DRenderer render;
+    protected static S2DRendererImmediate render;
     
     /**
      * Provides static reference for the engine's S2DTextureLoader
@@ -122,12 +122,18 @@ public class S2DEngine {
     }
     
     protected void update() {
+        LinkedList<S2DQuad> quadList = new LinkedList<>();
+        
         curTime = System.nanoTime();
         float timeDif = (float) ((curTime - prevTime) / 1000000000.0);
-        
         animator.update(timeDif);
-        
         prevTime = curTime;
+        
+        for(S2DLayer l : layerList) {
+            quadList.addAll(l.getQuadList());
+        }
+        
+        render.draw(quadList);
     }
     
     //SimpleGLInterface uses to provide loader
@@ -136,7 +142,7 @@ public class S2DEngine {
     }
     
     //SimpleGLInterface uses to provide renderer
-    protected void setRenderer(S2DRenderer renderer) {
+    protected void setRenderer(S2DRendererImmediate renderer) {
         render = renderer;
     }
     
@@ -297,8 +303,8 @@ public class S2DEngine {
     
     protected void updateLayersZ() {
         Collections.sort(layerList);
-        for (int i = 0; i < layerList.size(); i++) {
-            layerList.get(i).updateZ(i);
+        for (S2DLayer l : layerList) {
+            l.updateZ();
         }
     }
     

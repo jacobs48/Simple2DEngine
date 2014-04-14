@@ -36,6 +36,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         S2DEngine.render.addQuad(quad);
         currentFrameTime = 0;
         animationQueue = new LinkedList<>();
+        layer.add(this);
     }
     
     protected void updateDrawable() {
@@ -44,7 +45,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         quad.setRotYOffset(rotYOffset);
         quad.setRotation(rotation);   
         quad.setA((100 - transparency) / 100);
-        quad.setScale(layer.getScale());
+        quad.setScale(layer.getScale() * scale);
         
         switch (alignment) {
             case LEFT_UPPER:
@@ -118,12 +119,18 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         }
     }
     
+    @Override
+    protected S2DQuad getQuad() {
+        return quad;
+    }
+    
     
     /**
      * Sets X position of S2DRectangle
      *
      * @param x X value
      */
+    @Override
     public S2DRectangle X(float x) {
         xPos = x;
         if (alignment == WindowAlignment.NONE) {
@@ -137,6 +144,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
      *
      * @param y Y value
      */
+    @Override
     public S2DRectangle Y(float y) {
         yPos = y;
         if (alignment == WindowAlignment.NONE) {
@@ -159,7 +167,8 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     }
     
     public S2DRectangle setScale(float s) {
-        quad.setScale(s);
+        scale = s;
+        quad.setScale(layer.getScale() * scale);
         return this;
     }
     

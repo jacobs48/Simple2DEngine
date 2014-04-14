@@ -25,6 +25,14 @@ public class S2DLayer implements Comparable<S2DLayer> {
         mode = m;
     }
     
+    protected LinkedList<S2DQuad> getQuadList() {
+        LinkedList<S2DQuad> quadList = new LinkedList<>();
+        for(S2DDrawable d : drawableList) {
+            quadList.add(d.getQuad());
+        }
+        return quadList;
+    }
+    
     public void setDepth(float d) {
         depth = d;
         S2DEngine.engine.updateLayersZ();
@@ -97,11 +105,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
     }
     
     protected void updateAll(){
-        int i;
-        
-        i = S2DEngine.layerList.indexOf(this);
-        this.updateZ(i);
-        
+        this.updateZ();
         for(S2DDrawable g : drawableList) {
             g.updateDrawable();
         }
@@ -119,28 +123,8 @@ public class S2DLayer implements Comparable<S2DLayer> {
     }
     
     //Updates the depth value of all Graphic2D objects stored in S2DGraphic list
-    protected void updateZ(float i) {
-        float baseDepth;
-        
-        baseZValue = i; 
-        baseDepth = LAYER_DEPTH_DIF * baseZValue;
-        this.sort();
-        
-        for (S2DDrawable d : drawableList) {
-            d.updatePolyZ(baseDepth);
-            baseDepth += MIN_DEPTH_DIF;
-        } 
-    }
-    
     protected void updateZ() {
-        float baseDepth = LAYER_DEPTH_DIF * baseZValue;
-        
         this.sort();
-        
-        for (S2DDrawable d : drawableList) {
-            d.updatePolyZ(baseDepth);
-            baseDepth += MIN_DEPTH_DIF;
-        } 
     }
     
     public void destroy() {

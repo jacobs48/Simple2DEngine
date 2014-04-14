@@ -104,50 +104,17 @@ public class S2DWindowLayer extends S2DLayer {
     }
     
     protected void updateAll(){
-        int i;
-        
-        i = S2DEngine.layerList.indexOf(this);
-        this.updateZ(i);
-        
+        this.updateZ();
         for(S2DDrawable drawable : drawableList) {
             drawable.updateDrawable();
         }
     }
     
-    //Updates the depth value of all Graphic2D objects stored in S2DGraphic list
-    @Override
-    protected void updateZ(float i) {
-        float baseDepth;
-        
-        baseZValue = i; 
-        baseDepth = LAYER_DEPTH_DIF * baseZValue;
-        
-        drawableList.remove(bgRect);
-        this.sort();
-        drawableList.addFirst(bgRect);
-        
-        for (S2DDrawable d : drawableList) {
-            d.updatePolyZ(baseDepth);
-            baseDepth += MIN_DEPTH_DIF;
-        } 
-    }
-    
     @Override
     protected void updateZ() {
-        float baseDepth = LAYER_DEPTH_DIF * baseZValue;
-        
         drawableList.remove(bgRect);
-        
-        this.sort();
-        
-        drawableList.addFirst(bgRect);
-        
-        for (S2DDrawable d : drawableList) {
-            d.updatePolyZ(baseDepth);
-            baseDepth += MIN_DEPTH_DIF;
-        } 
-        
-        
+        this.sort();       
+        drawableList.addFirst(bgRect);  
     }
     
     @Override

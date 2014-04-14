@@ -2,8 +2,6 @@
 
 package Simple2DEngine;
 
-import java.nio.FloatBuffer;
-import java.util.Collections;
 import java.util.LinkedList;
 import javax.media.opengl.*;
 
@@ -12,7 +10,7 @@ import javax.media.opengl.*;
  * Contains all Graphic2D objects and renders them using rendering
  * mode selected at initialization
  */
-class S2DRenderer {
+class S2DRendererImmediate {
     
     private LinkedList<S2DQuad> quadList = null;
     private GL2 gl;
@@ -23,7 +21,7 @@ class S2DRenderer {
     private float backgroundB = 0;
     
     
-    protected S2DRenderer(RenderMode m) {
+    protected S2DRendererImmediate(RenderMode m) {
         gl = S2DEngine.gl;
         quadList = new LinkedList<>();
         mode = m;
@@ -52,30 +50,18 @@ class S2DRenderer {
         }
     }
     
-    protected void draw() {
-        switch (mode) {
-            case IMMEDIATE:
-                drawImmediate();
-                break;
-            case VERTEX_ARRAY:
-                break;
-            case VERTEX_BUFFER_OBJECT:
-                break;
-        }
-    }
     
-    private void drawImmediate() {   
-        Collections.sort(quadList);
-        
+    protected void draw(LinkedList<S2DQuad> l) {   
         gl.glClearColor(backgroundR, backgroundG, backgroundB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         
-        for(S2DQuad quad : quadList) {
+        for(S2DQuad quad : l) {
             if (!(quad.isHidden())) {
                 if (quad.isTextured() && (!boundTexture.equals(quad.getSuperTextureKey()))) {
                     quad.getTexture().bind();
+                    boundTexture = quad.getSuperTextureKey();
                     gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
                     gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
                 }
