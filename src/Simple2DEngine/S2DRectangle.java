@@ -33,7 +33,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         quad = q;
         width = quad.getWidth();
         height = quad.getHeight();
-        S2DEngine.render.addQuad(quad);
+        //S2DEngine.render.addQuad(quad);
         currentFrameTime = 0;
         animationQueue = new LinkedList<>();
         layer.add(this);
@@ -307,7 +307,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
      *
      */
     public void destroy() {
-        S2DEngine.render.removeQuad(quad);
+        //S2DEngine.render.removeQuad(quad);
         layer.remove(this);
     }   
 }

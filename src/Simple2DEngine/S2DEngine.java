@@ -56,7 +56,7 @@ public class S2DEngine {
     /**
      * Provides static reference for the engine's Graphic2DRenderer
      */
-    protected static S2DRendererImmediate render;
+    protected static S2DRenderer render;
     
     /**
      * Provides static reference for the engine's S2DTextureLoader
@@ -142,7 +142,7 @@ public class S2DEngine {
     }
     
     //SimpleGLInterface uses to provide renderer
-    protected void setRenderer(S2DRendererImmediate renderer) {
+    protected void setRenderer(S2DRenderer renderer) {
         render = renderer;
     }
     
@@ -178,7 +178,7 @@ public class S2DEngine {
     }
     
     public void setBGColor(float r, float g, float b) {
-        render.setBackgroundColor(r, g, b);
+        render.setBGColor(r, g, b);
     }
     
     public void updateCamera(float x, float y) {
@@ -264,7 +264,7 @@ public class S2DEngine {
      */
     public void unloadTextureSafe(String key) {
         textureLoader.unloadGraphic(key);
-        render.removeAllTex(key);
+        //render.removeAllTex(key);
     }
     
     /**

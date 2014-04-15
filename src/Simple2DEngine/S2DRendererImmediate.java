@@ -10,24 +10,22 @@ import javax.media.opengl.*;
  * Contains all Graphic2D objects and renders them using rendering
  * mode selected at initialization
  */
-class S2DRendererImmediate {
+class S2DRendererImmediate extends S2DRenderer {
     
     private LinkedList<S2DQuad> quadList = null;
     private GL2 gl;
-    private RenderMode mode;
     private String boundTexture = "";
     private float backgroundR = 0;
     private float backgroundG = 0;
     private float backgroundB = 0;
     
     
-    protected S2DRendererImmediate(RenderMode m) {
+    protected S2DRendererImmediate() {
         gl = S2DEngine.gl;
         quadList = new LinkedList<>();
-        mode = m;
     }
     
-    protected void setBackgroundColor(float r, float g, float b) {
+    protected void setBGColor(float r, float g, float b) {
         backgroundR = r;
         backgroundG = g;
         backgroundB = b;

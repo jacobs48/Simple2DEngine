@@ -127,7 +127,7 @@ class S2DQuad implements Comparable<S2DQuad> {
     protected float getScale() {
         return scale;
     }
-
+    
     protected void setScale(float scale) {
         this.scale = scale;
     }
@@ -159,7 +159,7 @@ class S2DQuad implements Comparable<S2DQuad> {
     /*
      * Returns float[12] containing vector coordinates of Graphic2D quad
      */
-    protected float[] getVArr() {
+    protected float[] getVertexArray() {
         float [] v = new float [] {
             xPos, yPos, z,
             xPos, yPos + height * scale, z,
@@ -172,7 +172,7 @@ class S2DQuad implements Comparable<S2DQuad> {
     /*
      * Returns float[16] containing color values for Graphic2D quad
      */
-    protected float[] getCArr() {
+    protected float[] getColorArray() {
         float [] c = new float [] {
             r, g, b, a,
             r, g, b, a,
@@ -180,6 +180,16 @@ class S2DQuad implements Comparable<S2DQuad> {
             r, g, b, a,
         };      
         return c;
+    }
+    
+    protected float[] getTexArray() {
+        float [] t = new float [] {
+            0, 0,
+            0, 0,
+            0, 0,
+            0, 0  
+        }; 
+        return t;
     }
 
     @Override

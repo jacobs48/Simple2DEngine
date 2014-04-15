@@ -15,7 +15,7 @@ class S2DGLInterface implements GLEventListener {
     S2DInterface updater;
     S2DEngine engine;
     S2DTextureLoader gLoader = null;
-    S2DRendererImmediate render = null;
+    S2DRenderer render = null;
     RenderMode mode;
     
     //Prevents instantiation without proper parameters
@@ -34,7 +34,7 @@ class S2DGLInterface implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         engine.setGL(gl);
         gLoader = new S2DTextureLoader();
-        render = new S2DRendererImmediate(mode);
+        render = new S2DRendererVertexArray();
         engine.setLoader(gLoader); //Provides initialized S2DTextureLoader to engine
         engine.setRenderer(render); //Provides initialized Graphic2DRenderer to engine
         

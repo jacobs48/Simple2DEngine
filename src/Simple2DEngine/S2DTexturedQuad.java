@@ -91,7 +91,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
     /*
      * Returns float[12] containing vector coordinates of Graphic2D quad
      */
-    protected float[] getVArr() {
+    protected float[] getVertexArray() {
         float [] v = new float [] {
             xPos, yPos, z,
             xPos, yPos + height * scale, z,
@@ -104,7 +104,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
     /*
      * Returns float[16] containing color values for Graphic2D quad
      */
-    protected float[] getCArr() {
+    protected float[] getColorArray() {
         float [] c = new float [] {
             r, g, b, a,
             r, g, b, a,
@@ -117,7 +117,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
     /*
      * Returns float[8] containing texture coordinates for Graphic2D quad
      */
-    protected float[] getTArr() {
+    protected float[] getTexArray() {
         float [] t = new float [] {
             texX0, texY0,
             texX0, texY1,
