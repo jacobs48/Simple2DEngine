@@ -41,7 +41,6 @@ class S2DRendererVertexArray extends S2DRenderer {
         String superKey = list.getFirst().getSuperTextureKey();
         float lastRotation = list.getFirst().getRotation();
         int lastDrawnIndex = 0;
-        int size = list.size();
         
         gl.glClearColor(bgR, bgG, bgB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
