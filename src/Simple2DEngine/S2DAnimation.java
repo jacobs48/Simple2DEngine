@@ -7,7 +7,6 @@
 package Simple2DEngine;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  *
@@ -16,13 +15,11 @@ import java.util.Queue;
 public class S2DAnimation {
     
     private LinkedList<S2DQueueable> frameList;
-    private String name;
     private float duration;
 
     
-    protected S2DAnimation(String n) {
+    protected S2DAnimation() {
         frameList = new LinkedList<>();
-        name = n;
         duration = 0;
     }
     
@@ -37,11 +34,5 @@ public class S2DAnimation {
     
     protected LinkedList<S2DQueueable> getFrames() {
         return frameList;
-    }
-    
-    protected String getName() {
-        return name;
-    }
-
-    
+    }   
 }

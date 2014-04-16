@@ -27,7 +27,7 @@ public class S2DAnimatedGraphic extends S2DGraphic {
     public boolean newAnimation(String key) {
         if (animationTree.containsKey(key)) return false;
         else {
-            S2DAnimation tempAnim = new S2DAnimation(key);
+            S2DAnimation tempAnim = new S2DAnimation();
             animationTree.put(key, tempAnim);
             return true;
         }

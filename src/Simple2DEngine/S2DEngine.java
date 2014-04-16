@@ -37,7 +37,7 @@ public class S2DEngine {
     private boolean fullscreen;
     private String title;
     private S2DInterface updater;
-    private RenderMode renderMode;
+    private RenderMode renderMode = RenderMode.VERTEX_ARRAY;
     private S2DLayer defaultLayer;
     
     private float cameraX = 0;
@@ -98,7 +98,7 @@ public class S2DEngine {
         profile = GLProfile.getDefault();
         capabilities = new GLCapabilities(profile);
         window = GLWindow.create(capabilities);
-        window.addGLEventListener(new S2DGLInterface(updater, this, renderMode));
+        window.addGLEventListener(new S2DGLInterface(updater, this));
         
         animator = new S2DAnimator();
         prevTime = System.nanoTime();
@@ -121,6 +121,21 @@ public class S2DEngine {
         FPSAnim.start();
     }
     
+    protected void init(GL2 g) {
+        gl = g;
+        textureLoader = new S2DTextureLoader();
+        switch (renderMode) {
+            case IMMEDIATE:
+                render = new S2DRendererImmediate();
+                break;
+            case VERTEX_ARRAY:
+                render = new S2DRendererVertexArray();
+                break;
+            case VERTEX_BUFFER_OBJECT:
+                break;
+        }
+    }
+    
     protected void update() {
         LinkedList<S2DQuad> quadList = new LinkedList<>();
         
@@ -134,21 +149,6 @@ public class S2DEngine {
         }
         
         render.draw(quadList);
-    }
-    
-    //SimpleGLInterface uses to provide loader
-    protected void setLoader(S2DTextureLoader loader) {
-        textureLoader = loader;
-    }
-    
-    //SimpleGLInterface uses to provide renderer
-    protected void setRenderer(S2DRenderer renderer) {
-        render = renderer;
-    }
-    
-    //SimpleGLInterface uses to provide GL2 instance
-    protected void setGL(GL2 gl2) {
-        gl = gl2;
     }
     
     /**
