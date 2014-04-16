@@ -14,7 +14,15 @@ import java.util.LinkedList;
  */
 abstract class S2DRenderer {
     
-    abstract protected void setBGColor(float r, float g, float b);
+    protected float bgR = 0;
+    protected float bgG = 0;
+    protected float bgB = 0;
+    
+    protected void setBGColor(float r, float g, float b) {
+        bgR = r;
+        bgG = g;
+        bgB = b;
+    }
     
     abstract protected void draw(LinkedList<S2DQuad> l);
     

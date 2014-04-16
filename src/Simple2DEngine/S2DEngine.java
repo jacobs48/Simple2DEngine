@@ -132,6 +132,7 @@ public class S2DEngine {
                 render = new S2DRendererVertexArray();
                 break;
             case VERTEX_BUFFER_OBJECT:
+                render = new S2DRendererVertexBuffer();
                 break;
         }
     }

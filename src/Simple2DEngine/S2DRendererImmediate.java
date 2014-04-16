@@ -15,20 +15,11 @@ class S2DRendererImmediate extends S2DRenderer {
     private LinkedList<S2DQuad> quadList = null;
     private GL2 gl;
     private String boundTexture = "";
-    private float backgroundR = 0;
-    private float backgroundG = 0;
-    private float backgroundB = 0;
     
     
     protected S2DRendererImmediate() {
         gl = S2DEngine.gl;
         quadList = new LinkedList<>();
-    }
-    
-    protected void setBGColor(float r, float g, float b) {
-        backgroundR = r;
-        backgroundG = g;
-        backgroundB = b;
     }
     
     //Add Graphic2D object LinkedList in treeMap with provided key value
@@ -50,7 +41,7 @@ class S2DRendererImmediate extends S2DRenderer {
     
     
     protected void draw(LinkedList<S2DQuad> l) {   
-        gl.glClearColor(backgroundR, backgroundG, backgroundB, 0);
+        gl.glClearColor(bgR, bgG, bgB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         gl.glMatrixMode(GL2.GL_MODELVIEW);

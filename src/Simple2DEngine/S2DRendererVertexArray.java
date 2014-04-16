@@ -19,9 +19,6 @@ class S2DRendererVertexArray extends S2DRenderer {
     
     private LinkedList<S2DQuad> quadList;
     private GL2 gl;
-    private float bgR = 0;
-    private float bgG = 0;
-    private float bgB = 0;
     private FloatBuffer vertexBuffer;
     private FloatBuffer colorBuffer;
     private FloatBuffer texBuffer;
@@ -31,12 +28,7 @@ class S2DRendererVertexArray extends S2DRenderer {
         quadList = new LinkedList<>();
     }
     
-    protected void setBGColor(float r, float g, float b) {
-        bgR = r;
-        bgG = g;
-        bgB = b;
-    }
-    
+    @Override
     protected void draw(LinkedList<S2DQuad> list) {
         String superKey = list.getFirst().getSuperTextureKey();
         float lastRotation = list.getFirst().getRotation();
