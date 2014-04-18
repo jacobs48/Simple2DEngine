@@ -29,7 +29,13 @@ class S2DRendererVertexArray extends S2DRenderer {
     }
     
     @Override
-    protected void draw(LinkedList<S2DQuad> list) {
+    protected void draw(LinkedList<S2DLayer> l) {
+        LinkedList<S2DQuad> list = new LinkedList<>();
+        
+        for(S2DLayer layer : l) {
+            list.addAll(layer.getQuadList());
+        }
+        
         String superKey = list.getFirst().getSuperTextureKey();
         float lastRotation = list.getFirst().getRotation();
         int lastDrawnIndex = 0;

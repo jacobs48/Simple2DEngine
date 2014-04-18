@@ -15,6 +15,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
     protected float depth = 0;
     protected final SortMode mode;
     protected float baseZValue = 0;
+    protected S2DVertexBatch vertexBatch;
     
     protected static final float MIN_DEPTH_DIF = 0.0000001f; //Minimum diffrence between depth values of Graphic2D objects
     protected static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
@@ -125,6 +126,10 @@ public class S2DLayer implements Comparable<S2DLayer> {
     //Updates the depth value of all Graphic2D objects stored in S2DGraphic list
     protected void updateZ() {
         this.sort();
+    }
+    
+    protected void setBatch(S2DVertexBatch v) {
+        vertexBatch = v;
     }
     
     public void destroy() {

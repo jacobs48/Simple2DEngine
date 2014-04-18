@@ -149,7 +149,7 @@ public class S2DEngine {
             quadList.addAll(l.getQuadList());
         }
         
-        render.draw(quadList);
+        render.draw(layerList);
     }
     
     /**

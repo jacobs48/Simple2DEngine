@@ -7,6 +7,7 @@
 package Simple2DEngine;
 
 import java.util.LinkedList;
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 /**
@@ -22,13 +23,14 @@ public class S2DRendererVertexBuffer extends S2DRenderer {
         batchList = new LinkedList<>();
     }
     
-    protected void generateBatches(S2DLayer l) {
+    @Override
+    protected void initializeLayer(S2DLayer l) {
         LinkedList<S2DQuad> qList = l.getQuadList();
         if (qList.size() == 0) return;
         LinkedList<LinkedList<S2DQuad>> batchGenLists = new LinkedList<>();
         LinkedList<S2DQuad> tempList = new LinkedList<>();
         String curSuperKey = qList.getFirst().getSuperTextureKey();
-        int[] bufferNames = new int[] {-1};
+        int[] bufferNames;
         
         for(S2DQuad quad : qList) {
             if (quad.getSuperTextureKey().equals(curSuperKey)) {
@@ -43,15 +45,33 @@ public class S2DRendererVertexBuffer extends S2DRenderer {
         }
         if(tempList.size() > 0) batchGenLists.add(tempList);
         
+        bufferNames = new int[batchGenLists.size() * 3];
+        
         gl.glGenBuffers(batchGenLists.size() * 3, bufferNames, 0);
         
         for(int i = 0; i < batchGenLists.size(); i++) {
-            batchList.add(new S2DVertexBatch(batchGenLists.get(i), bufferNames[i * 3], bufferNames[i * 3 + 1], bufferNames[i * 3 + 2]));
+            batchList.add(new S2DVertexBatch(batchGenLists.get(i),
+                                             batchGenLists.get(i).get(0).getTexture(),
+                                             bufferNames[i * 3],
+                                             bufferNames[i * 3 + 1],
+                                             bufferNames[i * 3 + 2]));
         }
     }
 
     @Override
-    protected void draw(LinkedList<S2DQuad> l) {
+    protected void draw(LinkedList<S2DLayer> l) {
+        for(S2DLayer layer : l) {
+            this.initializeLayer(layer);
+        }
         
+        gl.glClearColor(bgR, bgG, bgB, 0);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        
+        for(S2DVertexBatch batch : batchList) {
+            batch.initBuffers();
+            batch.draw();
+        }
     }
 }

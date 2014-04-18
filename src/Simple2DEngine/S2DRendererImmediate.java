@@ -40,13 +40,20 @@ class S2DRendererImmediate extends S2DRenderer {
     }
     
     
-    protected void draw(LinkedList<S2DQuad> l) {   
+    protected void draw(LinkedList<S2DLayer> layers) {   
+        LinkedList<S2DQuad> quadList = new LinkedList<>();
+        
+        for(S2DLayer layer : layers) {
+            quadList.addAll(layer.getQuadList());
+        }
+        
+        
         gl.glClearColor(bgR, bgG, bgB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         
-        for(S2DQuad quad : l) {
+        for(S2DQuad quad : quadList) {
             if (!(quad.isHidden())) {
                 if (quad.isTextured() && (!boundTexture.equals(quad.getSuperTextureKey()))) {
                     quad.getTexture().bind();

@@ -28,13 +28,16 @@ class S2DVertexBatch {
     private int vBufferName;
     private int cBufferName;
     private int tBufferName;
+    private S2DSubTexture texture;
     
-    protected S2DVertexBatch(LinkedList<S2DQuad> qList, int v, int c, int t) {
+    protected S2DVertexBatch(LinkedList<S2DQuad> qList, S2DSubTexture tex, int v, int c, int t) {
         vertexArray = new ArrayList<>();
         colorArray = new ArrayList<>();
         texCoordArray = new ArrayList<>();
         vertexDif = new ArrayList<>();
         gl = S2DEngine.gl;
+        
+        texture = tex;
         
         vBufferName = v;
         cBufferName = c;
@@ -150,9 +153,68 @@ class S2DVertexBatch {
     
     protected void initBuffers() {
         FloatBuffer vBuff = Buffers.newDirectFloatBuffer(vertexArray.size());
+        FloatBuffer cBuff = Buffers.newDirectFloatBuffer(colorArray.size());
+        FloatBuffer tBuff = Buffers.newDirectFloatBuffer(texCoordArray.size());
+        
+        for(Float f : vertexArray) {
+            vBuff.put(f);
+        }
+        
+        for(Float f : colorArray) {
+            cBuff.put(f);
+        }
+        
+        for(Float f : texCoordArray) {
+            tBuff.put(f);
+        }
+        
+        vBuff.rewind();
+        cBuff.rewind();
+        tBuff.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexDif.size() * 12, null, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexArray.size() * Buffers.SIZEOF_FLOAT, vBuff, GL.GL_DYNAMIC_DRAW);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, colorArray.size() * Buffers.SIZEOF_FLOAT, cBuff, GL.GL_DYNAMIC_DRAW);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordArray.size() * Buffers.SIZEOF_FLOAT, tBuff, GL.GL_DYNAMIC_DRAW);
+    }
+    
+    protected void draw() {
+        if(texture != null) {
+            gl.glEnable(GL.GL_TEXTURE_2D);
+            texture.bind();
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+        }
+        else {
+            gl.glDisable(GL.GL_TEXTURE_2D);
+        }
+        
+        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+        gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
+        gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
+        gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
+        gl.glColorPointer(4, GL.GL_FLOAT, 0, 0);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
+        gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
+        
+        gl.glDrawArrays(GL2.GL_QUADS, 0, vertexArray.size());
+        
+        gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+        gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
+        gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+    }
+    
+    protected int getSize() {
+        return vertexDif.size();
     }
     
 }

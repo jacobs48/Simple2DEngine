@@ -24,6 +24,14 @@ abstract class S2DRenderer {
         bgB = b;
     }
     
-    abstract protected void draw(LinkedList<S2DQuad> l);
+    protected void initializeLayer(S2DLayer l) {
+        
+    }
+    
+    protected void updateLayer(S2DLayer l) {
+        
+    }
+    
+    abstract protected void draw(LinkedList<S2DLayer> l);
     
 }
