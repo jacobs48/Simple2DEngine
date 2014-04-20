@@ -29,6 +29,12 @@ class S2DRendererVertexArray extends S2DRenderer {
     }
     
     @Override
+    protected void initialize() {
+        gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+        gl.glEnable(GL.GL_TEXTURE_2D);
+    }
+    
+    @Override
     protected void draw(LinkedList<S2DLayer> l) {
         LinkedList<S2DQuad> list = new LinkedList<>();
         

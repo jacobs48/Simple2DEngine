@@ -14,17 +14,60 @@ import javax.media.opengl.GL2;
  *
  * @author michael.jacobs.adm
  */
-public class S2DRendererVertexBuffer extends S2DRenderer {
+class S2DRendererVertexBuffer extends S2DRenderer {
     
-    LinkedList<S2DVertexBatch> batchList;
-    GL2 gl = S2DEngine.gl;
+    private LinkedList<S2DVertexBatch> batchList;
+    private GL2 gl = S2DEngine.gl;
+    private int vertexShader;
+    private int fragmentShader;
+    private int shaderProgram;
+    private String[] vertexSource;
+    private String[] fragmentSource;
     
     protected S2DRendererVertexBuffer() {
         batchList = new LinkedList<>();
     }
     
     @Override
+    protected void initialize() {
+        vertexShader = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
+        fragmentShader = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
+        
+        vertexSource = new String[]{
+                "void main()\n" +
+                "{\n" +
+                "   gl_TexCoord[0] = gl_MultiTexCoord0;\n" +
+                "   gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;\n" +
+                "}\n"
+                };
+        
+        fragmentSource = new String[]{
+                "uniform sampler2D tex;\n" +
+                "void main()\n" +
+                "{\n" +
+                "   gl_FragColor = texture2D(tex, gl_TexCoord[0]);\n" +
+                "}\n"
+                };
+        
+        gl.glShaderSource(vertexShader, 1, vertexSource, null, 0);
+        gl.glCompileShader(vertexShader);
+        gl.glShaderSource(fragmentShader, 1, fragmentSource, null, 0);
+        gl.glCompileShader(fragmentShader);
+        
+        shaderProgram = gl.glCreateProgram();
+        gl.glAttachShader(shaderProgram, vertexShader);
+        gl.glAttachShader(shaderProgram, fragmentShader);        
+        gl.glLinkProgram(shaderProgram);
+        gl.glValidateProgram(shaderProgram);
+        
+        gl.glUseProgram(shaderProgram);
+        
+        
+    }
+    
+    @Override
     protected void initializeLayer(S2DLayer l) {
+        /*
         LinkedList<S2DQuad> qList = l.getQuadList();
         if (qList.size() == 0) return;
         LinkedList<LinkedList<S2DQuad>> batchGenLists = new LinkedList<>();
@@ -45,23 +88,40 @@ public class S2DRendererVertexBuffer extends S2DRenderer {
         }
         if(tempList.size() > 0) batchGenLists.add(tempList);
         
-        bufferNames = new int[batchGenLists.size() * 3];
+        bufferNames = new int[batchGenLists.size() * 4];
         
-        gl.glGenBuffers(batchGenLists.size() * 3, bufferNames, 0);
+        gl.glGenBuffers(batchGenLists.size() * 4, bufferNames, 0);
         
         for(int i = 0; i < batchGenLists.size(); i++) {
             batchList.add(new S2DVertexBatch(batchGenLists.get(i),
                                              batchGenLists.get(i).get(0).getTexture(),
-                                             bufferNames[i * 3],
-                                             bufferNames[i * 3 + 1],
-                                             bufferNames[i * 3 + 2]));
+                                             bufferNames[i * 4],
+                                             bufferNames[i * 4 + 1],
+                                             bufferNames[i * 4 + 2],
+                                             bufferNames[i * 4 + 3]));
         }
+        */
+        
+        LinkedList<S2DQuad> qList = l.getQuadList();
+        S2DVertexBatch tempBatch;
+        int[] bufferNames = new int[4];
+        
+        gl.glGenBuffers(4, bufferNames, 0);
+        tempBatch = new S2DVertexBatch(qList,
+                                         bufferNames[0],
+                                         bufferNames[1],
+                                         bufferNames[2],
+                                         bufferNames[3]);
+        
+        batchList.add(tempBatch);
+        l.setBatch(tempBatch);
     }
-
+    
     @Override
     protected void draw(LinkedList<S2DLayer> l) {
         for(S2DLayer layer : l) {
-            this.initializeLayer(layer);
+            if (!layer.batchInitialized()) this.initializeLayer(layer);
+            layer.updateBatch();
         }
         
         gl.glClearColor(bgR, bgG, bgB, 0);

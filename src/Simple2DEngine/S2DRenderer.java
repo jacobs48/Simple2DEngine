@@ -32,6 +32,10 @@ abstract class S2DRenderer {
         
     }
     
+    protected void initialize() {
+        
+    }
+    
     abstract protected void draw(LinkedList<S2DLayer> l);
     
 }

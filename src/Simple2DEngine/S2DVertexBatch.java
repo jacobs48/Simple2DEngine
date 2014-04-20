@@ -7,8 +7,8 @@
 package Simple2DEngine;
 
 import com.jogamp.common.nio.Buffers;
-import java.nio.Buffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.media.opengl.GL;
@@ -23,22 +23,24 @@ class S2DVertexBatch {
     private ArrayList<Float> vertexArray;
     private ArrayList<Float> colorArray;
     private ArrayList<Float> texCoordArray;
+    private ArrayList<Integer> texNameArray;
     private ArrayList<Boolean> vertexDif;
     private GL2 gl;
     private int vBufferName;
     private int cBufferName;
     private int tBufferName;
-    private S2DSubTexture texture;
+    private int texTargetName;
     
-    protected S2DVertexBatch(LinkedList<S2DQuad> qList, S2DSubTexture tex, int v, int c, int t) {
+    protected S2DVertexBatch(LinkedList<S2DQuad> qList, int v, int c, int t, int texName) {
         vertexArray = new ArrayList<>();
         colorArray = new ArrayList<>();
         texCoordArray = new ArrayList<>();
         vertexDif = new ArrayList<>();
+        texNameArray = new ArrayList<>();
         gl = S2DEngine.gl;
         
-        texture = tex;
-        
+        texTargetName = texName;
+              
         vBufferName = v;
         cBufferName = c;
         tBufferName = t;
@@ -54,6 +56,13 @@ class S2DVertexBatch {
             
             for(Float f : quad.getTexArray()) {
                 texCoordArray.add(f);
+            }
+            
+            if(quad.getTexture() != null) {
+                texNameArray.add(quad.getTexture().getTexTarget());
+            }
+            else {
+                texNameArray.add(-1);
             }
             
             vertexDif.add(Boolean.FALSE);
@@ -78,6 +87,7 @@ class S2DVertexBatch {
             texCoordArray.add(i * 8 + j, f[j]);
         }
         
+        texNameArray.add(i, quad.getTexture().getTexTarget());
         
         for(int j = i; j < vertexDif.size(); j++) {
             vertexDif.set(j, Boolean.TRUE);
@@ -98,9 +108,12 @@ class S2DVertexBatch {
             texCoordArray.remove(i);
         }
         
+        texNameArray.remove(i);
+        
         for(int j = i; j < vertexDif.size(); j++) {
             vertexDif.set(j, Boolean.TRUE);
         }
+        
         vertexDif.remove(vertexDif.size() - 1);
     }
     
@@ -121,6 +134,8 @@ class S2DVertexBatch {
             texCoordArray.set(i * 8 + j, f[j]);
         }
         
+        texNameArray.set(i, quad.getTexture().getTexTarget());
+        
         vertexDif.set(i, Boolean.TRUE);
     }
     
@@ -129,6 +144,7 @@ class S2DVertexBatch {
         colorArray = new ArrayList<>();
         texCoordArray = new ArrayList<>();
         vertexDif = new ArrayList<>();
+        texNameArray = new ArrayList<>();
         
         for(S2DQuad quad : qList) {
             for(Float f : quad.getVertexArray()) {
@@ -143,6 +159,8 @@ class S2DVertexBatch {
                 texCoordArray.add(f);
             }
             
+            if(quad.isTextured()) texNameArray.add(quad.getTexture().getTexTarget());
+            
             vertexDif.add(Boolean.FALSE);
         }
     }
@@ -155,6 +173,7 @@ class S2DVertexBatch {
         FloatBuffer vBuff = Buffers.newDirectFloatBuffer(vertexArray.size());
         FloatBuffer cBuff = Buffers.newDirectFloatBuffer(colorArray.size());
         FloatBuffer tBuff = Buffers.newDirectFloatBuffer(texCoordArray.size());
+        IntBuffer tNameBuff = Buffers.newDirectIntBuffer(texNameArray.size());
         
         for(Float f : vertexArray) {
             vBuff.put(f);
@@ -168,9 +187,14 @@ class S2DVertexBatch {
             tBuff.put(f);
         }
         
+        for(Integer i: texNameArray) {
+            tNameBuff.put(i);
+        }
+        
         vBuff.rewind();
         cBuff.rewind();
         tBuff.rewind();
+        tNameBuff.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
         gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexArray.size() * Buffers.SIZEOF_FLOAT, vBuff, GL.GL_DYNAMIC_DRAW);
@@ -180,31 +204,24 @@ class S2DVertexBatch {
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
         gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordArray.size() * Buffers.SIZEOF_FLOAT, tBuff, GL.GL_DYNAMIC_DRAW);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texTargetName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, texNameArray.size() * Buffers.SIZEOF_INT, tNameBuff, GL.GL_DYNAMIC_DRAW);
     }
     
     protected void draw() {
-        if(texture != null) {
-            gl.glEnable(GL.GL_TEXTURE_2D);
-            texture.bind();
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
-        }
-        else {
-            gl.glDisable(GL.GL_TEXTURE_2D);
-        }
-        
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
         gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
-        gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
-        
+        gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);       
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
-        gl.glColorPointer(4, GL.GL_FLOAT, 0, 0);
-        
+        gl.glColorPointer(4, GL.GL_FLOAT, 0, 0);       
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
         gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texTargetName);
+        gl.glVertexAttribPointer(vBufferName, vBufferName, tBufferName, true, vBufferName, tBufferName);
         
         gl.glDrawArrays(GL2.GL_QUADS, 0, vertexArray.size());
         

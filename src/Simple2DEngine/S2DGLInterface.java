@@ -33,15 +33,14 @@ class S2DGLInterface implements GLEventListener {
         gl.glLoadIdentity();
         gl.glOrtho(0.0, engine.getWindowWidth(), 0.0, engine.getWindowHeight(), -1, 1);
         
-        gl.glEnable(GL.GL_TEXTURE_2D);
+        
         gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
         
         engine.init(gl);
+        S2DEngine.render.initialize();
         
         updater.init(engine); //Runs S2DInterface initalization
-        
     }
 
     @Override

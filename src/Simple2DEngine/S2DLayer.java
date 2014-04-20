@@ -12,10 +12,12 @@ import java.util.LinkedList;
 public class S2DLayer implements Comparable<S2DLayer> {
     
     protected LinkedList<S2DDrawable> drawableList;
+    protected LinkedList<S2DQuad> quadList;
     protected float depth = 0;
     protected final SortMode mode;
     protected float baseZValue = 0;
     protected S2DVertexBatch vertexBatch;
+    protected boolean listUpdated = true;
     
     protected static final float MIN_DEPTH_DIF = 0.0000001f; //Minimum diffrence between depth values of Graphic2D objects
     protected static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
@@ -27,9 +29,12 @@ public class S2DLayer implements Comparable<S2DLayer> {
     }
     
     protected LinkedList<S2DQuad> getQuadList() {
-        LinkedList<S2DQuad> quadList = new LinkedList<>();
-        for(S2DDrawable d : drawableList) {
-            quadList.add(d.getQuad());
+        if (listUpdated) {
+            quadList = new LinkedList<>();
+            for(S2DDrawable d : drawableList) {
+                quadList.add(d.getQuad());
+            }
+            listUpdated = false;
         }
         return quadList;
     }
@@ -99,10 +104,12 @@ public class S2DLayer implements Comparable<S2DLayer> {
     protected void add(S2DDrawable g) {
         drawableList.add(g);
         g.updateDrawable();
+        listUpdated = true;
     }
     
     protected void remove(S2DDrawable g) {
         drawableList.remove(g);
+        listUpdated = true;
     }
     
     protected void updateAll(){
@@ -130,6 +137,14 @@ public class S2DLayer implements Comparable<S2DLayer> {
     
     protected void setBatch(S2DVertexBatch v) {
         vertexBatch = v;
+    }
+    
+    protected boolean batchInitialized() {
+        return (vertexBatch != null);
+    }
+    
+    protected void updateBatch() {
+        vertexBatch.rebuild(this.getQuadList());
     }
     
     public void destroy() {

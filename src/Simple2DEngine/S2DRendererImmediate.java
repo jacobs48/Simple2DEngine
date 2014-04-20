@@ -22,6 +22,12 @@ class S2DRendererImmediate extends S2DRenderer {
         quadList = new LinkedList<>();
     }
     
+    @Override
+    protected void initialize() {
+        gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
+        gl.glEnable(GL.GL_TEXTURE_2D);
+    }
+    
     //Add Graphic2D object LinkedList in treeMap with provided key value
     protected void addQuad(S2DQuad q) {
         quadList.add(q);

@@ -138,16 +138,10 @@ public class S2DEngine {
     }
     
     protected void update() {
-        LinkedList<S2DQuad> quadList = new LinkedList<>();
-        
         curTime = System.nanoTime();
         float timeDif = (float) ((curTime - prevTime) / 1000000000.0);
         animator.update(timeDif);
         prevTime = curTime;
-        
-        for(S2DLayer l : layerList) {
-            quadList.addAll(l.getQuadList());
-        }
         
         render.draw(layerList);
     }

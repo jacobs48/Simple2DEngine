@@ -17,6 +17,7 @@ public class S2DSubTexture {
     private Texture texture;
     private String textureKey;
     private String superTextureKey;
+    private int texTarget;
     private float texX0 = 0;
     private float texX1 = 1;
     private float texY0 = 0;
@@ -26,12 +27,14 @@ public class S2DSubTexture {
         texture = t;
         textureKey = k;
         superTextureKey = k;
+        texTarget = texture.getTarget();
     }
     
     protected S2DSubTexture(Texture t, String k, String sK) {
         texture = t;
         textureKey = k;
         superTextureKey = sK;
+        texTarget = texture.getTarget();
     }
     
     protected void setMapping(float x0, float x1, float y0, float y1) {
@@ -47,6 +50,10 @@ public class S2DSubTexture {
     
     protected String getSuperTextureKey() {
         return superTextureKey;
+    }
+    
+    protected int getTexTarget(){
+        return texTarget;
     }
     
     protected S2DSubTexture setMapping(S2DTexturedQuad q) {
