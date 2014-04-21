@@ -21,6 +21,7 @@ class S2DRendererVertexBuffer extends S2DRenderer {
     private int vertexShader;
     private int fragmentShader;
     private int shaderProgram;
+    private int[] sampler;
     private String[] vertexSource;
     private String[] fragmentSource;
     
@@ -42,10 +43,10 @@ class S2DRendererVertexBuffer extends S2DRenderer {
                 };
         
         fragmentSource = new String[]{
-                "uniform sampler2D tex;\n" +
+                "uniform sampler2D samplerArray[4];\n" +
                 "void main()\n" +
                 "{\n" +
-                "   gl_FragColor = texture2D(tex, gl_TexCoord[0]);\n" +
+                "   gl_FragColor = texture2D(samplerArray[0], gl_TexCoord[0]);\n" +
                 "}\n"
                 };
         
@@ -62,6 +63,16 @@ class S2DRendererVertexBuffer extends S2DRenderer {
         
         gl.glUseProgram(shaderProgram);
         
+        sampler = new int[]{-1};
+        
+        gl.getGL3().glGenSamplers(1, sampler, 0);
+        
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+        
+        S2DEngine.textureLoader.bindSamplers(shaderProgram, sampler);
         
     }
     
@@ -123,6 +134,8 @@ class S2DRendererVertexBuffer extends S2DRenderer {
             if (!layer.batchInitialized()) this.initializeLayer(layer);
             layer.updateBatch();
         }
+        
+        S2DEngine.textureLoader.bindSamplers(shaderProgram, sampler);
         
         gl.glClearColor(bgR, bgG, bgB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);

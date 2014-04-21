@@ -5,6 +5,7 @@ package Simple2DEngine;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.media.opengl.*;
@@ -94,9 +95,22 @@ class S2DTextureLoader {
        textureTree.get(key).destroy(gl);
        textureTree.remove(key);
        for(Map.Entry<String, S2DSubTexture> entry : subTextTree.entrySet()) {
-           if(key == entry.getValue().getSuperTextureKey()) {
+           if(key.equals(entry.getValue().getSuperTextureKey())) {
                subTextTree.remove(entry.getKey());
            }
+       }
+   }
+   
+   protected void bindSamplers(int program, int[] sampler) {
+       LinkedList<Texture> texList = new LinkedList<>();
+       texList.addAll(textureTree.values());
+
+       for(int i = 0; i < texList.size(); i++) {
+           int loc = gl.glGetUniformLocation(program, "samplerArray[" + i + "]");
+           gl.glActiveTexture(texList.get(i).getTextureObject());
+           texList.get(i).bind(gl);
+           gl.glUniform1i(loc, texList.get(i).getTextureObject());
+           gl.getGL3().glBindSampler(texList.get(i).getTextureObject(), sampler[0]);
        }
    }
    
