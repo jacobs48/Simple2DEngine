@@ -76,6 +76,14 @@ class S2DQuad implements Comparable<S2DQuad> {
     protected float getRotation() {
         return rotation;
     }
+    
+    protected float getCenterX() {
+        return xPos + (width / 2);
+    }
+    
+    protected float getCenterY() {
+        return yPos + (height / 2);
+    }
 
     protected S2DQuad setRotation(float rotation) {
         this.rotation = rotation;
@@ -184,12 +192,25 @@ class S2DQuad implements Comparable<S2DQuad> {
     
     protected float[] getTexArray() {
         float [] t = new float [] {
-            0, 0,
-            0, 0,
-            0, 0,
-            0, 0  
+            -1, -1,
+            -1, -1,
+            -1, -1,
+            -1, -1  
         }; 
         return t;
+    }
+    
+    protected float[] getRotArray() {
+        float xCenter = xPos + (width / 2);
+        float yCenter = yPos + (height / 2);
+        float [] r = new float [] {
+            rotation, xCenter, yCenter,
+            rotation, xCenter, yCenter,
+            rotation, xCenter, yCenter,
+            rotation, xCenter, yCenter
+        };
+                
+        return r;
     }
 
     @Override

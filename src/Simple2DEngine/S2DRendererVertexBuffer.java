@@ -35,18 +35,31 @@ class S2DRendererVertexBuffer extends S2DRenderer {
         fragmentShader = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
         
         vertexSource = new String[]{
+                "attribute vec3 rotation;\n" +
+                "float rads;\n" +
+                "vec4 pos;\n" +
                 "void main()\n" +
                 "{\n" +
+                "   gl_FrontColor = gl_Color;\n" +
                 "   gl_TexCoord[0] = gl_MultiTexCoord0;\n" +
-                "   gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;\n" +
+                "   float PI = 3.14159265359;\n" +
+                "   rads = rotation.x * PI / 180;\n" +
+                "   pos = gl_Vertex;\n" +
+                "   pos.x = cos(rads) * (gl_Vertex.x - rotation.y) - sin(rads) * (gl_Vertex.y - rotation.z) + rotation.y;\n" +
+                "   pos.y = sin(rads) * (gl_Vertex.x - rotation.y) + cos(rads) * (gl_Vertex.y - rotation.z) + rotation.z;\n" +
+                "   pos = gl_ProjectionMatrix * gl_ModelViewMatrix * pos;\n" +
+                "   gl_Position = pos;\n" +
                 "}\n"
                 };
         
         fragmentSource = new String[]{
-                "uniform sampler2D samplerArray[4];\n" +
+                "uniform sampler2D tex;\n" +
                 "void main()\n" +
                 "{\n" +
-                "   gl_FragColor = texture2D(samplerArray[0], gl_TexCoord[0]);\n" +
+                "   vec4 color;\n" +
+                "   if(gl_TexCoord[0] != -1) color = texture2D(tex, gl_TexCoord[0]);\n" +
+                "   else color = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+                "   gl_FragColor = color * gl_Color;\n" +
                 "}\n"
                 };
         
@@ -78,51 +91,19 @@ class S2DRendererVertexBuffer extends S2DRenderer {
     
     @Override
     protected void initializeLayer(S2DLayer l) {
-        /*
-        LinkedList<S2DQuad> qList = l.getQuadList();
-        if (qList.size() == 0) return;
-        LinkedList<LinkedList<S2DQuad>> batchGenLists = new LinkedList<>();
-        LinkedList<S2DQuad> tempList = new LinkedList<>();
-        String curSuperKey = qList.getFirst().getSuperTextureKey();
-        int[] bufferNames;
-        
-        for(S2DQuad quad : qList) {
-            if (quad.getSuperTextureKey().equals(curSuperKey)) {
-                tempList.add(quad);
-            }
-            else {
-                batchGenLists.add(tempList);
-                tempList = new LinkedList<>();
-                tempList.add(quad);
-                curSuperKey = quad.getSuperTextureKey();
-            }
-        }
-        if(tempList.size() > 0) batchGenLists.add(tempList);
-        
-        bufferNames = new int[batchGenLists.size() * 4];
-        
-        gl.glGenBuffers(batchGenLists.size() * 4, bufferNames, 0);
-        
-        for(int i = 0; i < batchGenLists.size(); i++) {
-            batchList.add(new S2DVertexBatch(batchGenLists.get(i),
-                                             batchGenLists.get(i).get(0).getTexture(),
-                                             bufferNames[i * 4],
-                                             bufferNames[i * 4 + 1],
-                                             bufferNames[i * 4 + 2],
-                                             bufferNames[i * 4 + 3]));
-        }
-        */
-        
         LinkedList<S2DQuad> qList = l.getQuadList();
         S2DVertexBatch tempBatch;
         int[] bufferNames = new int[4];
+        int rotBuffName;
         
+        rotBuffName = gl.glGetAttribLocation(shaderProgram, "rotation");
         gl.glGenBuffers(4, bufferNames, 0);
         tempBatch = new S2DVertexBatch(qList,
                                          bufferNames[0],
                                          bufferNames[1],
                                          bufferNames[2],
-                                         bufferNames[3]);
+                                         bufferNames[3],
+                                         rotBuffName);
         
         batchList.add(tempBatch);
         l.setBatch(tempBatch);

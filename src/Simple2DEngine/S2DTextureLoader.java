@@ -102,7 +102,7 @@ class S2DTextureLoader {
    }
    
    protected void bindSamplers(int program, int[] sampler) {
-       LinkedList<Texture> texList = new LinkedList<>();
+       /*LinkedList<Texture> texList = new LinkedList<>();
        texList.addAll(textureTree.values());
 
        for(int i = 0; i < texList.size(); i++) {
@@ -111,7 +111,7 @@ class S2DTextureLoader {
            texList.get(i).bind(gl);
            gl.glUniform1i(loc, texList.get(i).getTextureObject());
            gl.getGL3().glBindSampler(texList.get(i).getTextureObject(), sampler[0]);
-       }
+       }*/
    }
    
 }

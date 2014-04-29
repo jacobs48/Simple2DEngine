@@ -23,27 +23,28 @@ class S2DVertexBatch {
     private ArrayList<Float> vertexArray;
     private ArrayList<Float> colorArray;
     private ArrayList<Float> texCoordArray;
-    private ArrayList<Integer> texNameArray;
+    private ArrayList<Float> rotateArray;
     private ArrayList<Boolean> vertexDif;
     private GL2 gl;
     private int vBufferName;
     private int cBufferName;
     private int tBufferName;
-    private int texTargetName;
+    private int rotBufferName;
+    private int rotAttName;
     
-    protected S2DVertexBatch(LinkedList<S2DQuad> qList, int v, int c, int t, int texName) {
+    protected S2DVertexBatch(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt) {
         vertexArray = new ArrayList<>();
         colorArray = new ArrayList<>();
         texCoordArray = new ArrayList<>();
         vertexDif = new ArrayList<>();
-        texNameArray = new ArrayList<>();
+        rotateArray = new ArrayList<>();
         gl = S2DEngine.gl;
-        
-        texTargetName = texName;
               
-        vBufferName = v;
-        cBufferName = c;
-        tBufferName = t;
+        vBufferName = vName;
+        cBufferName = cName;
+        tBufferName = tName;
+        rotBufferName = rotBuff;
+        rotAttName = rotAtt;
         
         for(S2DQuad quad : qList) {
             for(Float f : quad.getVertexArray()) {
@@ -58,11 +59,8 @@ class S2DVertexBatch {
                 texCoordArray.add(f);
             }
             
-            if(quad.getTexture() != null) {
-                texNameArray.add(quad.getTexture().getTexTarget());
-            }
-            else {
-                texNameArray.add(-1);
+            for(Float f : quad.getRotArray()) {
+                rotateArray.add(f);
             }
             
             vertexDif.add(Boolean.FALSE);
@@ -87,7 +85,9 @@ class S2DVertexBatch {
             texCoordArray.add(i * 8 + j, f[j]);
         }
         
-        texNameArray.add(i, quad.getTexture().getTexTarget());
+        rotateArray.add(i * 3, quad.getCenterY());
+        rotateArray.add(i * 3, quad.getCenterX());
+        rotateArray.add(i * 3, quad.getRotation());
         
         for(int j = i; j < vertexDif.size(); j++) {
             vertexDif.set(j, Boolean.TRUE);
@@ -108,7 +108,9 @@ class S2DVertexBatch {
             texCoordArray.remove(i);
         }
         
-        texNameArray.remove(i);
+        rotateArray.remove(i);
+        rotateArray.remove(i);
+        rotateArray.remove(i);
         
         for(int j = i; j < vertexDif.size(); j++) {
             vertexDif.set(j, Boolean.TRUE);
@@ -134,7 +136,9 @@ class S2DVertexBatch {
             texCoordArray.set(i * 8 + j, f[j]);
         }
         
-        texNameArray.set(i, quad.getTexture().getTexTarget());
+        rotateArray.set(i, quad.getRotation());
+        rotateArray.set(i + 1, quad.getCenterX());
+        rotateArray.set(i + 2, quad.getCenterY());
         
         vertexDif.set(i, Boolean.TRUE);
     }
@@ -144,7 +148,7 @@ class S2DVertexBatch {
         colorArray = new ArrayList<>();
         texCoordArray = new ArrayList<>();
         vertexDif = new ArrayList<>();
-        texNameArray = new ArrayList<>();
+        rotateArray = new ArrayList<>();
         
         for(S2DQuad quad : qList) {
             for(Float f : quad.getVertexArray()) {
@@ -159,7 +163,9 @@ class S2DVertexBatch {
                 texCoordArray.add(f);
             }
             
-            if(quad.isTextured()) texNameArray.add(quad.getTexture().getTexTarget());
+            for(Float f : quad.getRotArray()) {
+                rotateArray.add(f);
+            }
             
             vertexDif.add(Boolean.FALSE);
         }
@@ -173,28 +179,17 @@ class S2DVertexBatch {
         FloatBuffer vBuff = Buffers.newDirectFloatBuffer(vertexArray.size());
         FloatBuffer cBuff = Buffers.newDirectFloatBuffer(colorArray.size());
         FloatBuffer tBuff = Buffers.newDirectFloatBuffer(texCoordArray.size());
-        IntBuffer tNameBuff = Buffers.newDirectIntBuffer(texNameArray.size());
+        FloatBuffer rotBuff = Buffers.newDirectFloatBuffer(rotateArray.size());
         
-        for(Float f : vertexArray) {
-            vBuff.put(f);
-        }
-        
-        for(Float f : colorArray) {
-            cBuff.put(f);
-        }
-        
-        for(Float f : texCoordArray) {
-            tBuff.put(f);
-        }
-        
-        for(Integer i: texNameArray) {
-            tNameBuff.put(i);
-        }
+        for(Float f : vertexArray) vBuff.put(f);
+        for(Float f : colorArray) cBuff.put(f);
+        for(Float f : texCoordArray) tBuff.put(f);
+        for(Float f: rotateArray) rotBuff.put(f);
         
         vBuff.rewind();
         cBuff.rewind();
         tBuff.rewind();
-        tNameBuff.rewind();
+        rotBuff.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
         gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexArray.size() * Buffers.SIZEOF_FLOAT, vBuff, GL.GL_DYNAMIC_DRAW);
@@ -205,14 +200,15 @@ class S2DVertexBatch {
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
         gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordArray.size() * Buffers.SIZEOF_FLOAT, tBuff, GL.GL_DYNAMIC_DRAW);
         
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texTargetName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, texNameArray.size() * Buffers.SIZEOF_INT, tNameBuff, GL.GL_DYNAMIC_DRAW);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, rotateArray.size() * Buffers.SIZEOF_FLOAT, rotBuff, GL.GL_DYNAMIC_DRAW);
     }
     
     protected void draw() {
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
         gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+        gl.glEnableVertexAttribArray(rotAttName);
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
         gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);       
@@ -220,14 +216,17 @@ class S2DVertexBatch {
         gl.glColorPointer(4, GL.GL_FLOAT, 0, 0);       
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
         gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texTargetName);
-        gl.glVertexAttribPointer(vBufferName, vBufferName, tBufferName, true, vBufferName, tBufferName);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
+        gl.glVertexAttribPointer(rotAttName, 3, GL.GL_FLOAT, false, 0, 0);
+        
+        
         
         gl.glDrawArrays(GL2.GL_QUADS, 0, vertexArray.size());
         
         gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
         gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+        gl.glDisableVertexAttribArray(rotAttName);
     }
     
     protected int getSize() {
