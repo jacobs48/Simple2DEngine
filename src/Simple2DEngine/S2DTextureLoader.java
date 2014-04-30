@@ -5,7 +5,6 @@ package Simple2DEngine;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import java.io.File;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.media.opengl.*;

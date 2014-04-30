@@ -38,16 +38,16 @@ class S2DRendererVertexBuffer extends S2DRenderer {
                 "attribute vec3 rotation;\n" +
                 "float rads;\n" +
                 "vec4 pos;\n" +
+                "float PI = 3.14159265359;\n" +
                 "void main()\n" +
                 "{\n" +
                 "   gl_FrontColor = gl_Color;\n" +
                 "   gl_TexCoord[0] = gl_MultiTexCoord0;\n" +
-                "   float PI = 3.14159265359;\n" +
                 "   rads = rotation.x * PI / 180;\n" +
                 "   pos = gl_Vertex;\n" +
                 "   pos.x = cos(rads) * (gl_Vertex.x - rotation.y) - sin(rads) * (gl_Vertex.y - rotation.z) + rotation.y;\n" +
                 "   pos.y = sin(rads) * (gl_Vertex.x - rotation.y) + cos(rads) * (gl_Vertex.y - rotation.z) + rotation.z;\n" +
-                "   pos = gl_ProjectionMatrix * gl_ModelViewMatrix * pos;\n" +
+                "   pos = gl_ProjectionMatrix * pos;\n" +
                 "   gl_Position = pos;\n" +
                 "}\n"
                 };
@@ -73,20 +73,7 @@ class S2DRendererVertexBuffer extends S2DRenderer {
         gl.glAttachShader(shaderProgram, fragmentShader);        
         gl.glLinkProgram(shaderProgram);
         gl.glValidateProgram(shaderProgram);
-        
-        gl.glUseProgram(shaderProgram);
-        
-        sampler = new int[]{-1};
-        
-        gl.getGL3().glGenSamplers(1, sampler, 0);
-        
-        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
-        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
-        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
-        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
-        
-        S2DEngine.textureLoader.bindSamplers(shaderProgram, sampler);
-        
+        gl.glUseProgram(shaderProgram);    
     }
     
     @Override
@@ -116,12 +103,8 @@ class S2DRendererVertexBuffer extends S2DRenderer {
             layer.updateBatch();
         }
         
-        S2DEngine.textureLoader.bindSamplers(shaderProgram, sampler);
-        
         gl.glClearColor(bgR, bgG, bgB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity();
         
         for(S2DVertexBatch batch : batchList) {
             batch.initBuffers();

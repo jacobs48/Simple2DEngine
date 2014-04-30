@@ -8,7 +8,6 @@ package Simple2DEngine;
 
 import com.jogamp.common.nio.Buffers;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.media.opengl.GL;
@@ -20,6 +19,7 @@ import javax.media.opengl.GL2;
  */
 class S2DVertexBatch {
     
+    private ArrayList<S2DQuad> quadList;
     private ArrayList<Float> vertexArray;
     private ArrayList<Float> colorArray;
     private ArrayList<Float> texCoordArray;
@@ -211,7 +211,7 @@ class S2DVertexBatch {
         gl.glEnableVertexAttribArray(rotAttName);
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
-        gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);       
+        gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0); 
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
         gl.glColorPointer(4, GL.GL_FLOAT, 0, 0);       
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
