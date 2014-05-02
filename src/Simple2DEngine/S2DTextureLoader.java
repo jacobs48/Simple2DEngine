@@ -5,6 +5,7 @@ package Simple2DEngine;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.media.opengl.*;
@@ -16,13 +17,16 @@ import javax.media.opengl.*;
  */
 class S2DTextureLoader {
     
-    GL2 gl = null;   
-    TreeMap<String, Texture> textureTree = null;
-    TreeMap<String, S2DSubTexture> subTextTree = null;
+    private GL2 gl = null;   
+    private TreeMap<String, Texture> textureTree = null;
+    private TreeMap<String, S2DSubTexture> subTextTree = null;
+    private TreeMap<String, Float> samplerIndexTree = null;
+    private boolean hasUpdated = false;
     
     protected S2DTextureLoader() {
         textureTree = new TreeMap<>();
         subTextTree = new TreeMap<>();
+        samplerIndexTree = new TreeMap<>();
         gl = S2DEngine.gl;
     }
     
@@ -53,9 +57,9 @@ class S2DTextureLoader {
             S2DSubTexture tempSub = new S2DSubTexture(tempText, subKey, superKey);
             tempSub.setMapping(x0, x1, y0, y1);
             subTextTree.put(subKey, tempSub);
+            hasUpdated = true;
             return true;
         }
-        
     }
     
     protected boolean loadSubTexture(String superKey, String subKey, int x0, int x1, int y0, int y1) {
@@ -100,17 +104,31 @@ class S2DTextureLoader {
        }
    }
    
-   protected void bindSamplers(int program, int[] sampler) {
-       /*LinkedList<Texture> texList = new LinkedList<>();
-       texList.addAll(textureTree.values());
-
-       for(int i = 0; i < texList.size(); i++) {
-           int loc = gl.glGetUniformLocation(program, "samplerArray[" + i + "]");
-           gl.glActiveTexture(texList.get(i).getTextureObject());
-           texList.get(i).bind(gl);
-           gl.glUniform1i(loc, texList.get(i).getTextureObject());
-           gl.getGL3().glBindSampler(texList.get(i).getTextureObject(), sampler[0]);
-       }*/
+   protected boolean hasUpdated(){
+       return hasUpdated;
+   }
+   
+   protected void finishUpdate() {
+       hasUpdated = false;
+   }
+   
+   protected LinkedList<String> getSuperKeyList() {
+       LinkedList<String> tempList = new LinkedList<>();
+       for(Map.Entry<String, Texture> entry : textureTree.entrySet()) {
+           tempList.add(entry.getKey());
+       }
+       return tempList;
+   }
+   
+   protected void bindSampler(int program, int sampler, String key) {
+       samplerIndexTree.put(key, (float) sampler);
+   }
+   
+   protected float getSamplerIndex(String key) {
+       float index;
+       if(samplerIndexTree.containsKey(key)) index = samplerIndexTree.get(key);
+       else index = -1;
+       return index;
    }
    
 }

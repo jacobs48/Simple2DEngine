@@ -212,6 +212,16 @@ class S2DQuad implements Comparable<S2DQuad> {
                 
         return r;
     }
+    
+    protected float[] getTexIndexArray() {
+        float [] i = new float [] {
+            0,
+            0,
+            0,
+            0
+        };
+        return i;
+    }
 
     @Override
     public int compareTo(S2DQuad g) {

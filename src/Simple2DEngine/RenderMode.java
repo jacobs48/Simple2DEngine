@@ -22,5 +22,10 @@ public enum RenderMode {
     /**
      * Vertex buffer object rendering mode
      */
-    VERTEX_BUFFER_OBJECT
+    VERTEX_BUFFER_OBJECT,
+    
+    /**
+     * Vertex buffer object with advanced shader features
+     */
+    VBO_ADVANCED
 }

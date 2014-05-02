@@ -100,4 +100,15 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         }; 
         return t;
     }
+    
+    protected float[] getTexIndexArray() {
+        float index = S2DEngine.textureLoader.getSamplerIndex(this.getSuperTextureKey());
+        float [] i = new float [] {
+            index,
+            index,
+            index,
+            index
+        };
+        return i;
+    }
 }

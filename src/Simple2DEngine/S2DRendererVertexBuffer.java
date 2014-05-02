@@ -16,14 +16,14 @@ import javax.media.opengl.GL2;
  */
 class S2DRendererVertexBuffer extends S2DRenderer {
     
-    private LinkedList<S2DVertexBatch> batchList;
-    private GL2 gl = S2DEngine.gl;
-    private int vertexShader;
-    private int fragmentShader;
-    private int shaderProgram;
-    private int[] sampler;
-    private String[] vertexSource;
-    private String[] fragmentSource;
+    protected LinkedList<S2DVertexBatch> batchList;
+    protected GL2 gl = S2DEngine.gl;
+    protected int vertexShader;
+    protected int fragmentShader;
+    protected int shaderProgram;
+    protected int[] sampler;
+    protected String[] vertexSource;
+    protected String[] fragmentSource;
     
     protected S2DRendererVertexBuffer() {
         batchList = new LinkedList<>();

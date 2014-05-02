@@ -19,18 +19,18 @@ import javax.media.opengl.GL2;
  */
 class S2DVertexBatch {
     
-    private LinkedList<S2DQuad> quadList;
-    private ArrayList<Float> vertexArray;
-    private ArrayList<Float> colorArray;
-    private ArrayList<Float> texCoordArray;
-    private ArrayList<Float> rotateArray;
-    private ArrayList<Boolean> vertexDif;
-    private GL2 gl;
-    private int vBufferName;
-    private int cBufferName;
-    private int tBufferName;
-    private int rotBufferName;
-    private int rotAttName;
+    protected LinkedList<S2DQuad> quadList;
+    protected ArrayList<Float> vertexArray;
+    protected ArrayList<Float> colorArray;
+    protected ArrayList<Float> texCoordArray;
+    protected ArrayList<Float> rotateArray;
+    protected ArrayList<Boolean> vertexDif;
+    protected GL2 gl;
+    protected int vBufferName;
+    protected int cBufferName;
+    protected int tBufferName;
+    protected int rotBufferName;
+    protected int rotAttName;
     
     protected S2DVertexBatch(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt) {
         vertexArray = new ArrayList<>();

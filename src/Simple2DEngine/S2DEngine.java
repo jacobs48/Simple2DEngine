@@ -134,6 +134,9 @@ public class S2DEngine {
             case VERTEX_BUFFER_OBJECT:
                 render = new S2DRendererVertexBuffer();
                 break;
+            case VBO_ADVANCED:
+                render = new S2DRendererVBOAdvanced();
+                break;
         }
     }
     
