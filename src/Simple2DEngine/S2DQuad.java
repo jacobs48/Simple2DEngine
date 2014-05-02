@@ -215,10 +215,10 @@ class S2DQuad implements Comparable<S2DQuad> {
     
     protected float[] getTexIndexArray() {
         float [] i = new float [] {
-            0,
-            0,
-            0,
-            0
+            -1,
+            -1,
+            -1,
+            -1
         };
         return i;
     }

@@ -61,7 +61,7 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
             "{\n" +
             "   vec4 color;\n" +
             ifList +
-            "   if(gl_TexCoord[0] == -1) color = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+            "   if(varTexIndex == -1) color = vec4(1.0, 1.0, 1.0, 1.0);\n" +
             "   gl_FragColor = color * gl_Color;\n" +
             "}\n"
         };
