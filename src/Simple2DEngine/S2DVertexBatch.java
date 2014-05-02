@@ -19,7 +19,7 @@ import javax.media.opengl.GL2;
  */
 class S2DVertexBatch {
     
-    private ArrayList<S2DQuad> quadList;
+    private LinkedList<S2DQuad> quadList;
     private ArrayList<Float> vertexArray;
     private ArrayList<Float> colorArray;
     private ArrayList<Float> texCoordArray;
@@ -38,6 +38,7 @@ class S2DVertexBatch {
         texCoordArray = new ArrayList<>();
         vertexDif = new ArrayList<>();
         rotateArray = new ArrayList<>();
+        quadList = qList;
         gl = S2DEngine.gl;
               
         vBufferName = vName;
@@ -149,6 +150,7 @@ class S2DVertexBatch {
         texCoordArray = new ArrayList<>();
         vertexDif = new ArrayList<>();
         rotateArray = new ArrayList<>();
+        quadList = qList;
         
         for(S2DQuad quad : qList) {
             for(Float f : quad.getVertexArray()) {
@@ -205,6 +207,11 @@ class S2DVertexBatch {
     }
     
     protected void draw() {
+        String superKey = "";
+        int prevIndex = 0;
+        
+        if(quadList.size() == 0) return;
+        
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
         gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
@@ -219,9 +226,22 @@ class S2DVertexBatch {
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
         gl.glVertexAttribPointer(rotAttName, 3, GL.GL_FLOAT, false, 0, 0);
         
+        if(quadList.size() > 0) superKey = quadList.getFirst().getSuperTextureKey();
         
-        
-        gl.glDrawArrays(GL2.GL_QUADS, 0, vertexArray.size());
+        for(int i = 0; i < quadList.size() + 1; i++) {
+            if(i == quadList.size() || !quadList.get(i).getSuperTextureKey().equals(superKey)) {
+                S2DQuad tempQuad = quadList.get(prevIndex);
+                if(tempQuad.isTextured()) {
+                    tempQuad.getTexture().bind();
+                    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+                    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+                }
+                gl.glDrawArrays(GL2.GL_QUADS, prevIndex * 4, (i - prevIndex) * 4);
+                    
+                prevIndex = i;
+                if(i < quadList.size()) superKey = quadList.get(i).getSuperTextureKey();
+            }
+        }
         
         gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
