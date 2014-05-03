@@ -74,8 +74,6 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
         gl.glLinkProgram(shaderProgram);   
         gl.glUseProgram(shaderProgram); 
         
-        int locationTest = gl.glGetUniformLocation(shaderProgram, "mario");
-        
         for(int i = 0; i < keyList.size(); i++) {
             S2DEngine.textureLoader.bindSampler(shaderProgram, sampler[0], i, keyList.get(i));
         }
