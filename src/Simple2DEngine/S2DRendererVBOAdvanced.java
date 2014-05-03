@@ -16,6 +16,8 @@ import javax.media.opengl.GL2;
  */
 public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
     
+    protected int sampler[] = new int[] {-1};
+    
     protected S2DRendererVBOAdvanced() {
         super();
     }
@@ -51,7 +53,7 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
         
         for(int i = 0; i < keyList.size(); i++) {
             samplerList += "uniform sampler2D " + keyList.get(i) + ";\n";
-            ifList += "  if(varTexIndex == " + i +") color = texture2D(" + keyList.get(i) + ", gl_TexCoord[0]);\n";
+            ifList += "   if(varTexIndex == " + i +") color = texture2D(" + keyList.get(i) + ", gl_TexCoord[0]);\n";
         }
         
         fragmentSource = new String[]{
@@ -65,18 +67,19 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
             "   gl_FragColor = color * gl_Color;\n" +
             "}\n"
         };
-        
+
         gl.glShaderSource(fragmentShader, 1, fragmentSource, null, 0);
         gl.glCompileShader(fragmentShader);
         gl.glAttachShader(shaderProgram, fragmentShader);        
-        gl.glLinkProgram(shaderProgram);
-        gl.glValidateProgram(shaderProgram);
+        gl.glLinkProgram(shaderProgram);   
         gl.glUseProgram(shaderProgram); 
         
+        int locationTest = gl.glGetUniformLocation(shaderProgram, "mario");
         
-        for (String key : keyList) {
-            S2DEngine.textureLoader.bindSampler(shaderProgram, 1, key);
+        for(int i = 0; i < keyList.size(); i++) {
+            S2DEngine.textureLoader.bindSampler(shaderProgram, sampler[0], i, keyList.get(i));
         }
+        
         S2DEngine.textureLoader.finishUpdate();
     }
     
@@ -127,6 +130,12 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
         gl.glLinkProgram(shaderProgram);
         gl.glValidateProgram(shaderProgram);
         gl.glUseProgram(shaderProgram); 
+
+        gl.getGL3().glGenSamplers(1, sampler, 0);
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+        gl.getGL3().glSamplerParameteri(sampler[0], GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
     }
     
     @Override

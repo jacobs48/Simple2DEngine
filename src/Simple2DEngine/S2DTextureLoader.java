@@ -120,8 +120,15 @@ class S2DTextureLoader {
        return tempList;
    }
    
-   protected void bindSampler(int program, int sampler, String key) {
-       samplerIndexTree.put(key, (float) sampler);
+   protected void bindSampler(int program, int sampler, int texUnit, String key) {
+       int sampleLocation = gl.glGetUniformLocation(program, key);
+       
+       gl.glUniform1i(sampleLocation, texUnit);
+       gl.glActiveTexture(GL.GL_TEXTURE0 + texUnit);
+       gl.glBindTexture(GL.GL_TEXTURE_2D, textureTree.get(key).getTextureObject());
+       gl.getGL3().glBindSampler(texUnit, sampler);
+       
+       samplerIndexTree.put(key, (float) texUnit);
    }
    
    protected float getSamplerIndex(String key) {
