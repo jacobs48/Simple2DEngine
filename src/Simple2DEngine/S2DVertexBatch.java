@@ -105,7 +105,7 @@ class S2DVertexBatch {
         if(quadList.size() > bufferSize) {
             initBuffers();
         }
-        else{
+        else {
             int begin = 0;
             int end = 0;
             
@@ -117,9 +117,9 @@ class S2DVertexBatch {
             }
 
             for(Integer i : updateList) {
-                if (i - end > 1) {
+                if (i - end > 1 && begin < updateIndex) {
                     updateVBORange(begin, end - begin);
-                    begin = end;
+                    begin = i;
                 }
                 else {
                     end = i;
