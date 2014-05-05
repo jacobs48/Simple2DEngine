@@ -19,49 +19,42 @@ import javax.media.opengl.GL2;
  */
 public class S2DVertexBatchAdv extends S2DVertexBatch {
     
-    protected ArrayList<Float> texIndexArray;
     protected int texIndexAttName;
     protected int texIndexBuffName;
     
     protected S2DVertexBatchAdv(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt, int indBuff, int indAtt) {
         super(qList, vName, cName, tName, rotBuff, rotAtt);
         
-        texIndexArray = new ArrayList<>();
-        
         texIndexBuffName = indBuff;
         texIndexAttName = indAtt;
         
-        for(S2DQuad quad : qList) {
-            for (Float f : quad.getTexIndexArray()) {
-                texIndexArray.add(f);
-            }
-        }
-    }
-    
-    @Override
-    protected void rebuild(LinkedList<S2DQuad> qList) {
-        super.rebuild(qList);
-        
-        texIndexArray = new ArrayList<>();
-        
-        for(S2DQuad quad : qList) {
-            for (Float f : quad.getTexIndexArray()) {
-                texIndexArray.add(f);
-            }
-        }
     }
     
     @Override
     protected void initBuffers() {
         super.initBuffers();
         
-        FloatBuffer texIndexBuffer = Buffers.newDirectFloatBuffer(texIndexArray.size());
+        int size = quadList.size();
         
-        for(Float f : texIndexArray) texIndexBuffer.put(f);
+        FloatBuffer texIndexBuffer = Buffers.newDirectFloatBuffer(size * 4);
+        
+        for(S2DQuad quad : quadList) texIndexBuffer.put(quad.getTexIndexArray());
         texIndexBuffer.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texIndexBuffName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, texIndexArray.size() * Buffers.SIZEOF_FLOAT, texIndexBuffer, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 4 * Buffers.SIZEOF_FLOAT * 2, texIndexBuffer, GL.GL_DYNAMIC_DRAW);
+    }
+    
+    @Override
+    protected void updateVBORange(int index, int length) {
+        FloatBuffer texIndexBuff = Buffers.newDirectFloatBuffer(length * 4);
+        super.updateVBORange(index, length);
+        
+        for(int i = 0; i < length; i++) texIndexBuff.put(quadList.get(i + index).getTexIndexArray());
+        texIndexBuff.rewind();
+
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texIndexBuffName);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * 4 * Buffers.SIZEOF_FLOAT, length * 4 * Buffers.SIZEOF_FLOAT, texIndexBuff);
     }
     
     @Override
@@ -83,7 +76,7 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texIndexBuffName);
         gl.glVertexAttribPointer(texIndexAttName, 1, GL.GL_FLOAT, false, 0, 0);
         
-        gl.glDrawArrays(GL2.GL_QUADS, 0, vertexArray.size() / 3);
+        gl.glDrawArrays(GL2.GL_QUADS, 0, quadList.size() * 4);
         
         gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glDisableClientState(GL2.GL_COLOR_ARRAY);

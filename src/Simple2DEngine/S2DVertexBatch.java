@@ -9,6 +9,7 @@ package Simple2DEngine;
 import com.jogamp.common.nio.Buffers;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -20,190 +21,144 @@ import javax.media.opengl.GL2;
 class S2DVertexBatch {
     
     protected LinkedList<S2DQuad> quadList;
-    protected ArrayList<Float> vertexArray;
-    protected ArrayList<Float> colorArray;
-    protected ArrayList<Float> texCoordArray;
-    protected ArrayList<Float> rotateArray;
-    protected ArrayList<Boolean> vertexDif;
+    protected LinkedList<Integer> updateList;
+    protected int updateIndex = -1;
     protected GL2 gl;
     protected int vBufferName;
     protected int cBufferName;
     protected int tBufferName;
     protected int rotBufferName;
     protected int rotAttName;
+    protected int bufferSize;
     
     protected S2DVertexBatch(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt) {
-        vertexArray = new ArrayList<>();
-        colorArray = new ArrayList<>();
-        texCoordArray = new ArrayList<>();
-        vertexDif = new ArrayList<>();
-        rotateArray = new ArrayList<>();
+        updateList = new LinkedList<>();
         quadList = qList;
         gl = S2DEngine.gl;
+        bufferSize = 0;
               
         vBufferName = vName;
         cBufferName = cName;
         tBufferName = tName;
         rotBufferName = rotBuff;
         rotAttName = rotAtt;
-        
-        for(S2DQuad quad : qList) {
-            for(Float f : quad.getVertexArray()) {
-                vertexArray.add(f);
-            }
-            
-            for(Float f : quad.getColorArray()) {
-                colorArray.add(f);
-            }
-            
-            for(Float f : quad.getTexArray()) {
-                texCoordArray.add(f);
-            }
-            
-            for(Float f : quad.getRotArray()) {
-                rotateArray.add(f);
-            }
-            
-            vertexDif.add(Boolean.FALSE);
-        }
-        
+         
     }
     
-    protected void insert(S2DQuad quad, int i) {
-        float[] f = quad.getVertexArray();
+    protected void insert(S2DQuad quad, int i) {    
+        quadList.add(i, quad);
         
-        for(int j = 0; j < 12; j++) {
-            vertexArray.add(i * 12 + j, f[j]);
-        }
-        
-        f = quad.getColorArray();
-        for(int j = 0; j < 16; j++) {
-            colorArray.add(i * 16 + j, f[j]);
-        }
-        
-        f = quad.getTexArray();
-        for(int j = 0; j < 8; j++) {
-            texCoordArray.add(i * 8 + j, f[j]);
-        }
-        
-        rotateArray.add(i * 3, quad.getCenterY());
-        rotateArray.add(i * 3, quad.getCenterX());
-        rotateArray.add(i * 3, quad.getRotation());
-        
-        for(int j = i; j < vertexDif.size(); j++) {
-            vertexDif.set(j, Boolean.TRUE);
-        }
-        vertexDif.add(Boolean.TRUE);
+        if(updateIndex == -1 || i < updateIndex) updateIndex = i;
     }
     
     protected void remove(int i) {
-        for(int j = 0; j < 12; j++) {
-            vertexArray.remove(i);
-        }
+        quadList.remove(i);
         
-        for(int j = 0; j < 16; j++) {
-            colorArray.remove(i);
-        }
-        
-        for(int j = 0; j < 8; j++) {
-            texCoordArray.remove(i);
-        }
-        
-        rotateArray.remove(i);
-        rotateArray.remove(i);
-        rotateArray.remove(i);
-        
-        for(int j = i; j < vertexDif.size(); j++) {
-            vertexDif.set(j, Boolean.TRUE);
-        }
-        
-        vertexDif.remove(vertexDif.size() - 1);
+        if(updateIndex == -1 || i < updateIndex) updateIndex = i;
     }
     
     protected void update(S2DQuad quad, int i) {
-        float[] f = quad.getVertexArray();
+        quadList.set(i, quad);
         
-        for(int j = 0; j < 12; j++) {
-            vertexArray.set(i * 12 + j, f[j]);
-        }
-        
-        f = quad.getColorArray();
-        for(int j = 0; j < 16; j++) {
-            colorArray.set(i * 16 + j, f[j]);
-        }
-        
-        f = quad.getTexArray();
-        for(int j = 0; j < 8; j++) {
-            texCoordArray.set(i * 8 + j, f[j]);
-        }
-        
-        rotateArray.set(i, quad.getRotation());
-        rotateArray.set(i + 1, quad.getCenterX());
-        rotateArray.set(i + 2, quad.getCenterY());
-        
-        vertexDif.set(i, Boolean.TRUE);
+        updateList.add(i);
     }
     
     protected void rebuild(LinkedList<S2DQuad> qList) {
-        vertexArray = new ArrayList<>();
-        colorArray = new ArrayList<>();
-        texCoordArray = new ArrayList<>();
-        vertexDif = new ArrayList<>();
-        rotateArray = new ArrayList<>();
         quadList = qList;
-        
-        for(S2DQuad quad : qList) {
-            for(Float f : quad.getVertexArray()) {
-                vertexArray.add(f);
-            }
-            
-            for(Float f : quad.getColorArray()) {
-                colorArray.add(f);
-            }
-            
-            for(Float f : quad.getTexArray()) {
-                texCoordArray.add(f);
-            }
-            
-            for(Float f : quad.getRotArray()) {
-                rotateArray.add(f);
-            }
-            
-            vertexDif.add(Boolean.FALSE);
-        }
-    }
-    
-    protected int size() {
-        return vertexDif.size();
+
+        updateIndex = 0;
     }
     
     protected void initBuffers() {
-        FloatBuffer vBuff = Buffers.newDirectFloatBuffer(vertexArray.size());
-        FloatBuffer cBuff = Buffers.newDirectFloatBuffer(colorArray.size());
-        FloatBuffer tBuff = Buffers.newDirectFloatBuffer(texCoordArray.size());
-        FloatBuffer rotBuff = Buffers.newDirectFloatBuffer(rotateArray.size());
+        int size = quadList.size();
         
-        for(Float f : vertexArray) vBuff.put(f);
-        for(Float f : colorArray) cBuff.put(f);
-        for(Float f : texCoordArray) tBuff.put(f);
-        for(Float f: rotateArray) rotBuff.put(f);
+        FloatBuffer vBuff = Buffers.newDirectFloatBuffer(size * 12);
+        FloatBuffer cBuff = Buffers.newDirectFloatBuffer(size * 16);
+        FloatBuffer tBuff = Buffers.newDirectFloatBuffer(size * 8);
+        FloatBuffer rBuff = Buffers.newDirectFloatBuffer(size * 12);
+        
+        for(S2DQuad quad : quadList) {
+            vBuff.put(quad.getVertexArray());
+            cBuff.put(quad.getColorArray());
+            tBuff.put(quad.getTexArray());
+            rBuff.put(quad.getRotArray());
+        }
         
         vBuff.rewind();
         cBuff.rewind();
         tBuff.rewind();
-        rotBuff.rewind();
+        rBuff.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexArray.size() * Buffers.SIZEOF_FLOAT, vBuff, GL.GL_DYNAMIC_DRAW);
-        
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 12 * Buffers.SIZEOF_FLOAT * 2, vBuff, GL.GL_DYNAMIC_DRAW);
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, colorArray.size() * Buffers.SIZEOF_FLOAT, cBuff, GL.GL_DYNAMIC_DRAW);
-        
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 16 * Buffers.SIZEOF_FLOAT * 2, cBuff, GL.GL_DYNAMIC_DRAW);
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, texCoordArray.size() * Buffers.SIZEOF_FLOAT, tBuff, GL.GL_DYNAMIC_DRAW);
-        
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 8 * Buffers.SIZEOF_FLOAT * 2, tBuff, GL.GL_DYNAMIC_DRAW); 
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, rotateArray.size() * Buffers.SIZEOF_FLOAT, rotBuff, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 12 * Buffers.SIZEOF_FLOAT * 2, rBuff, GL.GL_DYNAMIC_DRAW);
+        
+        bufferSize = quadList.size() * 2;
+    }
+    
+    protected void updateVBOs() {
+        if(quadList.size() > bufferSize) {
+            initBuffers();
+        }
+        else{
+            int begin = 0;
+            int end = 0;
+            
+            Collections.sort(updateList);
+
+            if(updateList.size() > 0) {
+                begin = updateList.getFirst();
+                end = updateList.getFirst();
+            }
+
+            for(Integer i : updateList) {
+                if (i - end > 1) {
+                    updateVBORange(begin, end - begin);
+                    begin = end;
+                }
+                else {
+                    end = i;
+                }
+            }
+
+            if(updateIndex != -1) {
+                updateVBORange(updateIndex, quadList.size() - updateIndex);
+            }
+
+            updateList = new LinkedList<>();
+            updateIndex = -1;
+        }
+    }
+    
+    protected void updateVBORange(int index, int length) {
+        FloatBuffer vBuff = Buffers.newDirectFloatBuffer(length * 12);
+        FloatBuffer cBuff = Buffers.newDirectFloatBuffer(length * 16);
+        FloatBuffer tBuff = Buffers.newDirectFloatBuffer(length * 8);
+        FloatBuffer rBuff = Buffers.newDirectFloatBuffer(length * 12);
+        
+        for(int i = 0; i < length; i++) vBuff.put(quadList.get(index + i).getVertexArray());
+        for(int i = 0; i < length; i++) cBuff.put(quadList.get(index + i).getColorArray());
+        for(int i = 0; i < length; i++) tBuff.put(quadList.get(index + i).getTexArray());
+        for(int i = 0; i < length; i++) rBuff.put(quadList.get(index + i).getRotArray());
+        
+        vBuff.rewind();
+        cBuff.rewind();
+        tBuff.rewind();
+        rBuff.rewind();
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * 12 * Buffers.SIZEOF_FLOAT, length * 12 * Buffers.SIZEOF_FLOAT, vBuff); 
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * 16 * Buffers.SIZEOF_FLOAT, length * 16 * Buffers.SIZEOF_FLOAT, cBuff);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * 8 * Buffers.SIZEOF_FLOAT, length * 8 * Buffers.SIZEOF_FLOAT, tBuff);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, index * 12 * Buffers.SIZEOF_FLOAT, length * 12 * Buffers.SIZEOF_FLOAT, rBuff);
     }
     
     protected void draw() {
@@ -247,10 +202,15 @@ class S2DVertexBatch {
         gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
         gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableVertexAttribArray(rotAttName);
-    }
+    } 
     
-    protected int getSize() {
-        return vertexDif.size();
+    protected float[] reverse(float[] a) {
+        float[] b = new float[a.length];
+        
+        for(int i = 0; i < a.length; i++) {
+            b[i] = a[a.length - (i + 1)];
+        }
+        
+        return b;
     }
-    
 }

@@ -1,8 +1,7 @@
 
 
 package Simple2DEngine;
-
-import java.util.Comparator;
+;
 import java.util.LinkedList;
 
 /**
@@ -39,6 +38,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         layer.add(this);
     }
     
+    @Override
     protected void updateDrawable() {
         quad.setHidden(hidden);
         quad.setRotXOffset(rotXOffset);
@@ -129,6 +129,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
      * Sets X position of S2DRectangle
      *
      * @param x X value
+     * @return 
      */
     @Override
     public S2DRectangle X(float x) {
@@ -143,6 +144,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
      * Sets Y position of S2DRectangle
      *
      * @param y Y value
+     * @return 
      */
     @Override
     public S2DRectangle Y(float y) {
@@ -172,6 +174,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         return this;
     }
     
+    @Override
     public S2DDrawable hidden(boolean b) {
         hidden = b;
         quad.setHidden(hidden);
@@ -205,6 +208,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         return this;
     }
     
+    @Override
     public S2DRectangle rotate(float degrees) {
         rotation = degrees;
         rotXOffset = quad.getWidth() * layer.getScale() / 2;
@@ -240,6 +244,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         quad.setColor(r, g, b);
     }
     
+    @Override
     public S2DRectangle setLayer(S2DLayer l) {
         layer.remove(this);
         layer = l;
@@ -249,10 +254,12 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         return this;
     }
     
+    @Override
     protected void updatePolyZ(float z) {
         quad.Z(z);
     }
     
+    @Override
     public float getY() {
         return yPos;
     }
@@ -261,6 +268,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         return xPos;
     }
     
+    @Override
     protected void updateAnimation(float t) {
         currentFrameTime += t;
         if (animationQueue.size() == 0) {
@@ -289,6 +297,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
      * Sets depth value of S2DRectangle
      * 
      * @param d Depth value
+     * @return 
      */
     @Override
     public S2DDrawable Z(float d) {
@@ -297,6 +306,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         return this;
     }
     
+    @Override
     public float getZ() {
         return zPos;
     }
@@ -306,6 +316,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
      * Destroys S2DRectangle
      *
      */
+    @Override
     public void destroy() {
         //S2DEngine.render.removeQuad(quad);
         layer.remove(this);

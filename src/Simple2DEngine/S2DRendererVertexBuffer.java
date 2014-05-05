@@ -107,7 +107,7 @@ class S2DRendererVertexBuffer extends S2DRenderer {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         for(S2DVertexBatch batch : batchList) {
-            batch.initBuffers();
+            batch.updateVBOs();
             batch.draw();
         }
     }

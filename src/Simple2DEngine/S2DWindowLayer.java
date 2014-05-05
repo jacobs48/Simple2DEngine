@@ -6,8 +6,6 @@
 
 package Simple2DEngine;
 
-import static Simple2DEngine.S2DLayer.LAYER_DEPTH_DIF;
-import java.util.Collections;
 
 /**
  *
@@ -38,18 +36,22 @@ public class S2DWindowLayer extends S2DLayer {
         bgRect.setAlignment(WindowAlignment.FILL_STRETCHED);
     }
     
+    @Override
     protected float translateX(float x) {
         return x * scale;
     }
     
+    @Override
     protected float translateY(float y) {
         return y * scale;
     }
 
+    @Override
     protected float getLayerX0() {
         return xPos;
     }
     
+    @Override
     protected float getLayerX1() {
         return xPos + width;
     }
@@ -58,6 +60,7 @@ public class S2DWindowLayer extends S2DLayer {
         return yPos;
     }
     
+    @Override
     protected float getLayerY1() {
         return yPos + height;
     }
@@ -66,10 +69,12 @@ public class S2DWindowLayer extends S2DLayer {
         return height;
     }
     
+    @Override
     public float getWidth() {
         return width;
     }   
     
+    @Override
     protected float getScale() {
         return scale;
     }
@@ -103,6 +108,7 @@ public class S2DWindowLayer extends S2DLayer {
         this.updateAll();
     }
     
+    @Override
     protected void updateAll(){
         this.updateZ();
         for(S2DDrawable drawable : drawableList) {

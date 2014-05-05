@@ -45,6 +45,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
     }
     
 
+    @Override
     protected S2DSubTexture getTexture() {
         return texture;
     }
@@ -54,6 +55,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         return texture.getSuperTextureKey();
     }
     
+    @Override
     protected boolean isTextured() {
         return textured;
     }
@@ -66,6 +68,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         return this;
     }
     
+    @Override
     protected void draw() {
         
         gl.glLoadIdentity(); 
@@ -91,6 +94,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
     /*
      * Returns float[8] containing texture coordinates for Graphic2D quad
      */
+    @Override
     protected float[] getTexArray() {
         float [] t = new float [] {
             texX0, texY0,
@@ -101,6 +105,7 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         return t;
     }
     
+    @Override
     protected float[] getTexIndexArray() {
         float index = S2DEngine.textureLoader.getSamplerIndex(this.getSuperTextureKey());
         float [] i = new float [] {

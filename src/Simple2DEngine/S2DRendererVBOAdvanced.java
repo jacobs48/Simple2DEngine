@@ -16,10 +16,12 @@ import javax.media.opengl.GL2;
  */
 public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
     
-    protected int sampler[] = new int[] {-1};
+    protected int sampler[];
     
     protected S2DRendererVBOAdvanced() {
         super();
+        
+        sampler = new int[] {-1};
     }
     
     @Override
@@ -47,13 +49,14 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
     }
     
     protected void regenShaders() {
-        String samplerList = "";
+        String samplerList;
         String ifList = "";
         LinkedList<String> keyList = S2DEngine.textureLoader.getSuperKeyList();
         
+        samplerList = "uniform sampler2D texSampler[" + keyList.size() + "];\n";
+        
         for(int i = 0; i < keyList.size(); i++) {
-            samplerList += "uniform sampler2D " + keyList.get(i) + ";\n";
-            ifList += "   if(varTexIndex == " + i +") color = texture2D(" + keyList.get(i) + ", gl_TexCoord[0]);\n";
+            ifList += "   if(varTexIndex == " + i +") color = texture2D(texSampler[" + i + "], gl_TexCoord[0]);\n";
         }
         
         fragmentSource = new String[]{
@@ -75,7 +78,14 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
         gl.glUseProgram(shaderProgram); 
         
         for(int i = 0; i < keyList.size(); i++) {
-            S2DEngine.textureLoader.bindSampler(shaderProgram, sampler[0], i, keyList.get(i));
+            int samplerLocation = gl.glGetUniformLocation(shaderProgram, "texSampler[" + i + "]");
+       
+            gl.glUniform1i(samplerLocation, i);
+            gl.glActiveTexture(GL.GL_TEXTURE0 + i);
+            gl.glBindTexture(GL.GL_TEXTURE_2D, S2DEngine.textureLoader.getTexUnit(keyList.get(i)));
+            gl.getGL3().glBindSampler(i, sampler[0]);
+
+            S2DEngine.textureLoader.setSampler(keyList.get(i), i);
         }
         
         S2DEngine.textureLoader.finishUpdate();
@@ -139,17 +149,7 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
     @Override
     protected void draw(LinkedList<S2DLayer> l) {
         if (S2DEngine.textureLoader.hasUpdated()) regenShaders();
-        for(S2DLayer layer : l) {
-            if (!layer.batchInitialized()) this.initializeLayer(layer);
-            layer.updateBatch();
-        }
-        
-        gl.glClearColor(bgR, bgG, bgB, 0);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        
-        for(S2DVertexBatch batch : batchList) {
-            batch.initBuffers();
-            batch.draw();
-        }
+        super.draw(l);
     }
+
 }

@@ -26,6 +26,7 @@ public class S2DGameLayer extends S2DLayer {
         gameSpaceCoeff = gSC;
     }
     
+    @Override
     protected void updateCamera(float cX, float cY) {
         cameraX = cX;
         cameraY = cY;
