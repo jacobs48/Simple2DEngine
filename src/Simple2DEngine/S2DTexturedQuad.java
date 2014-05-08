@@ -11,20 +11,25 @@ import javax.media.opengl.*;
 class S2DTexturedQuad extends S2DQuad{
     
     private S2DSubTexture texture = null;
-    private float texX0 = 0; 
-    private float texX1 = 1;
-    private float texY0 = 0;
-    private float texY1 = 1;
+    private float[] texCoords;
     private boolean textured = true;
+    private int texRotate;
     
     protected S2DTexturedQuad(String key) {
         super(0, 0);
+        texCoords = new float[] {
+            0, 0,
+            0, 1,
+            1, 1,
+            1, 0
+        };
+        texRotate = 0;
         texture = S2DEngine.textureLoader.getTexture(key);
         texture.setMapping(this);
         width = texture.getWidth();
         height = texture.getHeight();
         rotXOffset = width / 2;
-        rotYOffset = height / 2;   
+        rotYOffset = height / 2;  
     }
     
     protected boolean setTexture(String key) {
@@ -60,14 +65,31 @@ class S2DTexturedQuad extends S2DQuad{
         return textured;
     }
     
-    protected S2DTexturedQuad textureMap(float x0, float y0, float x1, float y1) {
-        texX0 = x0;
-        texX1 = x1;
-        texY0 = y0;
-        texY1 = y1;
+    protected S2DTexturedQuad textureMap(float x0, float x1, float y0, float y1) {
+        float[] tempCoords = new float[] {
+            x0, y0,
+            x0, y1,
+            x1, y1,
+            x1, y0
+        };
+        
+        for(int i = 0; i < 8; i++) {
+            texCoords[i] = tempCoords[(i + 2 * texRotate) % 8];
+        }
+        
         return this;
     }
     
+    protected void rotateTex(int r) {
+        float[] tempCoords = texCoords;
+        texCoords = new float[8];
+        texRotate = r;
+        
+        for(int i = 0; i < 8; i++) {
+            texCoords[i] = tempCoords[(i + 2 * texRotate) % 8];
+        }  
+    }
+
     @Override
     protected void draw() {
         
@@ -79,13 +101,13 @@ class S2DTexturedQuad extends S2DQuad{
         }
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
-        gl.glTexCoord2f(texX0, texY0);
+        gl.glTexCoord2f(texCoords[0], texCoords[1]);
         gl.glVertex3f(xPos, yPos, 0);
-        gl.glTexCoord2f(texX0, texY1);
+        gl.glTexCoord2f(texCoords[2], texCoords[3]);
         gl.glVertex3f(xPos, yPos + height * scale, 0);
-        gl.glTexCoord2f(texX1, texY1);
+        gl.glTexCoord2f(texCoords[4], texCoords[5]);
         gl.glVertex3f(xPos + width * scale, yPos + height * scale, 0);
-        gl.glTexCoord2f(texX1, texY0);
+        gl.glTexCoord2f(texCoords[6], texCoords[7]);
         gl.glVertex3f(xPos + width * scale, yPos, 0);
         gl.glEnd();
         
@@ -96,13 +118,7 @@ class S2DTexturedQuad extends S2DQuad{
      */
     @Override
     protected float[] getTexArray() {
-        float [] t = new float [] {
-            texX0, texY0,
-            texX0, texY1,
-            texX1, texY1,
-            texX1, texY0  
-        }; 
-        return t;
+        return texCoords;
     }
     
     @Override

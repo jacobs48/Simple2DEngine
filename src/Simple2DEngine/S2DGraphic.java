@@ -21,13 +21,8 @@ public class S2DGraphic extends S2DRectangle implements Comparable<S2DDrawable> 
         super(g, l);
     }
     
-    public void setTextureMapping(float x0, float x1, float y0, float y1) {
-        texX0 = x0;
-        texX1 = x1;
-        texY0 = y0;
-        texY1 = y1;
-        
-        ((S2DTexturedQuad)quad).textureMap(texX0, texY0, texX1, texY1);
+    public void rotateTexture(int rotation) {
+        ((S2DTexturedQuad)quad).rotateTex(rotation);
     }
     
     public String getTextureKey() {

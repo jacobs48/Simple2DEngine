@@ -301,6 +301,10 @@ public class S2DEngine {
         sizeY = y;
     }
     
+    public void cursorHidden(boolean hidden) {
+        window.setPointerVisible(!hidden);
+    }
+    
     /**
      * Builder class used to create instance of S2DEngine object
      * 

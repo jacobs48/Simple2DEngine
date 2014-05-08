@@ -57,7 +57,7 @@ public class S2DSubTexture {
     }
     
     protected S2DSubTexture setMapping(S2DTexturedQuad q) {
-        q.textureMap(texX0, texY0, texX1, texY1);
+        q.textureMap(texX0, texX1, texY0, texY1);
         return this;
     }
     
