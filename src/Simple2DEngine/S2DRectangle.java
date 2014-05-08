@@ -43,7 +43,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         quad.setHidden(hidden);
         quad.setRotXOffset(rotXOffset);
         quad.setRotYOffset(rotYOffset);
-        quad.setRotation(rotation);   
+        this.rotate(rotation);   
         quad.setA((100 - transparency) / 100);
         quad.setScale(layer.getScale() * scale);
         
@@ -152,7 +152,6 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         if (alignment == WindowAlignment.NONE) {
             quad.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
         }
-        
         return this;
     }
     
@@ -175,9 +174,15 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     }
     
     @Override
-    public S2DDrawable hidden(boolean b) {
-        hidden = b;
-        quad.setHidden(hidden);
+    public S2DDrawable hidden(boolean hide) {
+        if(hide && !hidden) {
+            layer.remove(this);
+            hidden = true;
+        }
+        else if(!hide && hidden) {
+            layer.add(this);
+            hidden = false;
+        }
         return this;
     }
     
@@ -220,15 +225,6 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         return this;
     }
     
-    public void rotate(float degrees, float xOff, float yOff) {
-        rotation = degrees;
-        rotXOffset = xOff * layer.getScale();
-        rotYOffset = yOff * layer.getScale();
-        quad.setRotXOffset(rotXOffset);
-        quad.setRotYOffset(rotYOffset);
-        quad.setRotation(rotation);
-    }
-    
     @Override
     public S2DDrawable transparency(float a) {
         transparency = a;
@@ -252,11 +248,6 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         this.updateDrawable();
         
         return this;
-    }
-    
-    @Override
-    protected void updatePolyZ(float z) {
-        quad.Z(z);
     }
     
     @Override
@@ -302,7 +293,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     @Override
     public S2DDrawable Z(float d) {
         zPos = d;
-        layer.updateZ();
+        quad.Z(d);
         return this;
     }
     

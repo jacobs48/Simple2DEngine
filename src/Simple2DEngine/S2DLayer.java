@@ -4,6 +4,7 @@ package Simple2DEngine;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 /**
  *
@@ -17,31 +18,28 @@ public class S2DLayer implements Comparable<S2DLayer> {
     protected final SortMode mode;
     protected float baseZValue = 0;
     protected S2DVertexBatch vertexBatch;
-    protected boolean listUpdated = true;
     
     protected static final float MIN_DEPTH_DIF = 0.0000001f; //Minimum diffrence between depth values of Graphic2D objects
     protected static final float LAYER_DEPTH_DIF = 0.1f; //Difference in depth value multiplied by layerDepth
 
     protected S2DLayer(float d, SortMode m) {
         drawableList = new LinkedList<>();
+        quadList = new LinkedList<>();
         depth = d;
         mode = m;
     }
     
     protected LinkedList<S2DQuad> getQuadList() {
-        if (listUpdated) {
-            quadList = new LinkedList<>();
-            for(S2DDrawable d : drawableList) {
-                quadList.add(d.getQuad());
-            }
-            listUpdated = false;
-        }
         return quadList;
+    }
+    
+    protected boolean contains(S2DDrawable d) {
+        return drawableList.contains(d);
     }
     
     public void setDepth(float d) {
         depth = d;
-        S2DEngine.engine.updateLayersZ();
+        Collections.sort(S2DEngine.layerList);
     }
     
     protected float translateX(float x) {
@@ -80,6 +78,10 @@ public class S2DLayer implements Comparable<S2DLayer> {
         return 1;
     }
     
+    protected SortMode getSortMode() {
+        return mode;
+    }
+    
     protected void updateGameSpace(float x) {
         
     }
@@ -103,17 +105,16 @@ public class S2DLayer implements Comparable<S2DLayer> {
     
     protected void add(S2DDrawable g) {
         drawableList.add(g);
+        quadList.add(g.getQuad());
         g.updateDrawable();
-        listUpdated = true;
     }
     
     protected void remove(S2DDrawable g) {
         drawableList.remove(g);
-        listUpdated = true;
+        quadList.remove(g.getQuad());
     }
     
     protected void updateAll(){
-        this.updateZ();
         for(S2DDrawable g : drawableList) {
             g.updateDrawable();
         }
@@ -122,17 +123,12 @@ public class S2DLayer implements Comparable<S2DLayer> {
     protected void sort() {
         switch(mode) {
             case DEPTH_SORTED:
-                Collections.sort(drawableList);
+                Collections.sort(quadList, new S2DQuad.ZComparator());
                 break;
             case Y_POSITION: 
-                Collections.sort(drawableList, new S2DDrawable.ReverseYComparator());
+                Collections.sort(quadList, new S2DQuad.YComparator());
                 break;
         }
-    }
-    
-    //Updates the depth value of all Graphic2D objects stored in S2DGraphic list
-    protected void updateZ() {
-        this.sort();
     }
     
     protected void setBatch(S2DVertexBatch v) {
@@ -144,7 +140,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
     }
     
     protected void updateBatch() {
-        vertexBatch.rebuild(this.getQuadList());
+        vertexBatch.rebuild(quadList);
     }
     
     public void destroy() {
@@ -153,7 +149,4 @@ public class S2DLayer implements Comparable<S2DLayer> {
         }
         S2DEngine.engine.removeLayer(this);
     }
-    
-    
-
 }

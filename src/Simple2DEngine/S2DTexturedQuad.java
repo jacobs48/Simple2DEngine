@@ -8,7 +8,7 @@ import javax.media.opengl.*;
  * Graphic2D describes a 2D image as it is to be rendered by Graphic2DRenderer
  * 
  */
-class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
+class S2DTexturedQuad extends S2DQuad{
     
     private S2DSubTexture texture = null;
     private float texX0 = 0; 
@@ -80,13 +80,13 @@ class S2DTexturedQuad extends S2DQuad implements Comparable<S2DQuad> {
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
         gl.glTexCoord2f(texX0, texY0);
-        gl.glVertex3f(xPos, yPos, z);
+        gl.glVertex3f(xPos, yPos, 0);
         gl.glTexCoord2f(texX0, texY1);
-        gl.glVertex3f(xPos, yPos + height * scale, z);
+        gl.glVertex3f(xPos, yPos + height * scale, 0);
         gl.glTexCoord2f(texX1, texY1);
-        gl.glVertex3f(xPos + width * scale, yPos + height * scale, z);
+        gl.glVertex3f(xPos + width * scale, yPos + height * scale, 0);
         gl.glTexCoord2f(texX1, texY0);
-        gl.glVertex3f(xPos + width * scale, yPos, z);
+        gl.glVertex3f(xPos + width * scale, yPos, 0);
         gl.glEnd();
         
     }

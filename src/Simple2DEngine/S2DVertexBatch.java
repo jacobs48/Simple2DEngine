@@ -20,7 +20,7 @@ import javax.media.opengl.GL2;
  */
 class S2DVertexBatch {
     
-    protected LinkedList<S2DQuad> quadList;
+    protected ArrayList<S2DQuad> quadList;
     protected LinkedList<Integer> updateList;
     protected int updateIndex = -1;
     protected GL2 gl;
@@ -33,7 +33,9 @@ class S2DVertexBatch {
     
     protected S2DVertexBatch(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt) {
         updateList = new LinkedList<>();
-        quadList = qList;
+        quadList = new ArrayList<>();
+        quadList.ensureCapacity(qList.size());
+        quadList.addAll(qList);
         gl = S2DEngine.gl;
         bufferSize = 0;
               
@@ -64,7 +66,9 @@ class S2DVertexBatch {
     }
     
     protected void rebuild(LinkedList<S2DQuad> qList) {
-        quadList = qList;
+        quadList.clear();
+        quadList.ensureCapacity(qList.size());
+        quadList.addAll(qList);
 
         updateIndex = 0;
     }
@@ -165,7 +169,7 @@ class S2DVertexBatch {
         String superKey = "";
         int prevIndex = 0;
         
-        if(quadList.size() == 0) return;
+        if(quadList.isEmpty()) return;
         
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
@@ -181,7 +185,7 @@ class S2DVertexBatch {
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
         gl.glVertexAttribPointer(rotAttName, 3, GL.GL_FLOAT, false, 0, 0);
         
-        if(quadList.size() > 0) superKey = quadList.getFirst().getSuperTextureKey();
+        if(quadList.size() > 0) superKey = quadList.get(0).getSuperTextureKey();
         
         for(int i = 0; i < quadList.size() + 1; i++) {
             if(i == quadList.size() || !quadList.get(i).getSuperTextureKey().equals(superKey)) {

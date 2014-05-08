@@ -2,13 +2,14 @@
 
 package Simple2DEngine;
 
+import java.util.Comparator;
 import javax.media.opengl.*;
 
 /*
  * Graphic2D describes a 2D image as it is to be rendered by Graphic2DRenderer
  * 
  */
-class S2DQuad implements Comparable<S2DQuad> {
+class S2DQuad {
     
     protected float xPos = 0;
     protected float yPos = 0;
@@ -155,10 +156,10 @@ class S2DQuad implements Comparable<S2DQuad> {
         }
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor4f(r, g, b, a);
-        gl.glVertex3f(xPos, yPos, z);
-        gl.glVertex3f(xPos, yPos + height * scale, z);
-        gl.glVertex3f(xPos + width * scale, yPos + height * scale, z);
-        gl.glVertex3f(xPos + width * scale, yPos, z);
+        gl.glVertex3f(xPos, yPos, 0);
+        gl.glVertex3f(xPos, yPos + height * scale, 0);
+        gl.glVertex3f(xPos + width * scale, yPos + height * scale, 0);
+        gl.glVertex3f(xPos + width * scale, yPos, 0);
         gl.glEnd();
         
         gl.glEnable(GL.GL_TEXTURE_2D);
@@ -169,10 +170,10 @@ class S2DQuad implements Comparable<S2DQuad> {
      */
     protected float[] getVertexArray() {
         float [] v = new float [] {
-            xPos, yPos, z,
-            xPos, yPos + height * scale, z,
-            xPos + width * scale, yPos + height * scale, z,
-            xPos + width * scale, yPos, z 
+            xPos, yPos, 0,
+            xPos, yPos + height * scale, 0,
+            xPos + width * scale, yPos + height * scale, 0,
+            xPos + width * scale, yPos, 0 
         };
         return v;  
     }
@@ -223,9 +224,20 @@ class S2DQuad implements Comparable<S2DQuad> {
         return i;
     }
 
-    @Override
-    public int compareTo(S2DQuad g) {
-        return Float.compare(z, g.getZ());
+    static class ZComparator implements Comparator<S2DQuad> {
+        @Override
+        public int compare(S2DQuad t, S2DQuad t1) {
+            return Float.compare(t.z, t1.z);
+        }
+    }
+    
+    static class YComparator implements Comparator<S2DQuad> {
+
+        @Override
+        public int compare(S2DQuad t, S2DQuad t1) {
+            return -1 * Float.compare(t.yPos, t1.yPos);
+        }
+   
     }
     
 }

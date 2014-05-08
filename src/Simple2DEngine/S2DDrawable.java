@@ -54,8 +54,6 @@ abstract class S2DDrawable implements Comparable<S2DDrawable> {
     
     abstract protected void updateDrawable();
     
-    abstract protected void updatePolyZ(float z);
-    
     abstract public S2DDrawable setLayer(S2DLayer l);
     
     abstract public void destroy();
@@ -81,13 +79,7 @@ abstract class S2DDrawable implements Comparable<S2DDrawable> {
         return Float.compare(this.getZ(), t.getZ());
     }
     
-    static class ReverseYComparator implements Comparator<S2DDrawable> {
-
-        @Override
-        public int compare(S2DDrawable t, S2DDrawable t1) {
-            return -1 * Float.compare(t.getY(), t1.getY());
-        }
-   
-    }
+    
+    
     
 }

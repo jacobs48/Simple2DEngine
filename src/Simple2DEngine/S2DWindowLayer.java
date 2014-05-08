@@ -109,21 +109,6 @@ public class S2DWindowLayer extends S2DLayer {
     }
     
     @Override
-    protected void updateAll(){
-        this.updateZ();
-        for(S2DDrawable drawable : drawableList) {
-            drawable.updateDrawable();
-        }
-    }
-    
-    @Override
-    protected void updateZ() {
-        drawableList.remove(bgRect);
-        this.sort();       
-        drawableList.addFirst(bgRect);  
-    }
-    
-    @Override
     public void destroy() {
         super.destroy();
         bgRect.destroy();

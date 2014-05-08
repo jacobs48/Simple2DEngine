@@ -146,6 +146,7 @@ public class S2DEngine {
         animator.update(timeDif);
         prevTime = curTime;
         
+        for(S2DLayer l : layerList) l.sort();
         render.draw(layerList);
     }
     
@@ -198,7 +199,6 @@ public class S2DEngine {
         S2DLayer tempLayer = new S2DLayer(depth, m);
         layerList.add(tempLayer);
         Collections.sort(layerList);
-        this.updateLayersZ();
         return tempLayer;
     }
     
@@ -206,7 +206,6 @@ public class S2DEngine {
         S2DGameLayer tempLayer = new S2DGameLayer(depth, m, cameraX, cameraY, gameSpaceCoeff);
         layerList.add(tempLayer);
         Collections.sort(layerList);
-        this.updateLayersZ();
         return tempLayer;
     }
     
@@ -214,14 +213,12 @@ public class S2DEngine {
         S2DWindowLayer tempLayer = new S2DWindowLayer(d, m, x, y, w, h);
         layerList.add(tempLayer);
         Collections.sort(layerList);
-        this.updateLayersZ();
         return tempLayer;
     }
     
     protected void removeLayer(S2DLayer layer) {
         layerList.remove(layer);
         Collections.sort(layerList);
-        this.updateLayersZ();
     }
     
     /**
@@ -293,16 +290,9 @@ public class S2DEngine {
     }
     
     protected void updateLayers() {
-        this.updateLayersZ();
+        Collections.sort(layerList);
         for (S2DLayer layer : layerList) {
             layer.updateAll();
-        }
-    }
-    
-    protected void updateLayersZ() {
-        Collections.sort(layerList);
-        for (S2DLayer l : layerList) {
-            l.updateZ();
         }
     }
     
