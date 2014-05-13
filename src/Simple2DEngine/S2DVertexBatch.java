@@ -94,19 +94,26 @@ class S2DVertexBatch {
         rBuff.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 12 * Buffers.SIZEOF_FLOAT * 2, vBuff, GL.GL_DYNAMIC_DRAW);
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 16 * Buffers.SIZEOF_FLOAT * 2, cBuff, GL.GL_DYNAMIC_DRAW);
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 8 * Buffers.SIZEOF_FLOAT * 2, tBuff, GL.GL_DYNAMIC_DRAW); 
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 12 * Buffers.SIZEOF_FLOAT * 2, rBuff, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 12 * Buffers.SIZEOF_FLOAT * 2, null, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, size * 12 * Buffers.SIZEOF_FLOAT, vBuff);
         
-        bufferSize = quadList.size() * 2;
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, cBufferName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 16 * Buffers.SIZEOF_FLOAT * 2, null, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, size * 16 * Buffers.SIZEOF_FLOAT, cBuff);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, tBufferName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 8 * Buffers.SIZEOF_FLOAT * 2, null, GL.GL_DYNAMIC_DRAW); 
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, size * 8 * Buffers.SIZEOF_FLOAT, tBuff);
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, rotBufferName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 12 * Buffers.SIZEOF_FLOAT * 2, null, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, size * 12 * Buffers.SIZEOF_FLOAT, rBuff);
+        
+        bufferSize = size * 2;
     }
     
     protected void updateVBOs() {
-        if(quadList.size() > bufferSize) {
+        if(quadList.size() >= bufferSize || quadList.size() < (bufferSize / 4)) {
             initBuffers();
         }
         else {

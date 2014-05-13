@@ -6,8 +6,6 @@
 
 package Simple2DEngine;
 
-import java.util.Comparator;
-
 /**
  *
  * @author Mike

@@ -25,8 +25,7 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
         super(qList, vName, cName, tName, rotBuff, rotAtt);
         
         texIndexBuffName = indBuff;
-        texIndexAttName = indAtt;
-        
+        texIndexAttName = indAtt;  
     }
     
     @Override
@@ -41,7 +40,8 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
         texIndexBuffer.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texIndexBuffName);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 4 * Buffers.SIZEOF_FLOAT * 2, texIndexBuffer, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 4 * Buffers.SIZEOF_FLOAT * 2, null, GL.GL_DYNAMIC_DRAW);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, size * 12 * Buffers.SIZEOF_FLOAT, texIndexBuffer);
     }
     
     @Override

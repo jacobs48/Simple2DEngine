@@ -208,6 +208,11 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     
     public S2DRectangle setAlignment(WindowAlignment align) {
         alignment = align;
+        if(alignment == WindowAlignment.BOTTOM_STRETCHED 
+                || alignment == WindowAlignment.TOP_STRETCHED
+                || alignment == WindowAlignment.RIGHT_STRETCHED
+                || alignment == WindowAlignment.LEFT_UPPER
+                || alignment == WindowAlignment.FILL_STRETCHED) this.rotate(0);
         this.updateDrawable();
         
         return this;
@@ -215,13 +220,18 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     
     @Override
     public S2DRectangle rotate(float degrees) {
-        rotation = degrees;
-        rotXOffset = quad.getWidth() * layer.getScale() / 2;
-        rotYOffset = quad.getHeight() * layer.getScale() / 2;
-        quad.setRotXOffset(rotXOffset);
-        quad.setRotYOffset(rotYOffset);
-        quad.setRotation(rotation);
-        
+        if(alignment != WindowAlignment.BOTTOM_STRETCHED 
+                && alignment != WindowAlignment.TOP_STRETCHED
+                && alignment != WindowAlignment.RIGHT_STRETCHED
+                && alignment != WindowAlignment.LEFT_UPPER
+                && alignment != WindowAlignment.FILL_STRETCHED) {
+            rotation = degrees;
+            rotXOffset = quad.getWidth() * layer.getScale() / 2;
+            rotYOffset = quad.getHeight() * layer.getScale() / 2;
+            quad.setRotXOffset(rotXOffset);
+            quad.setRotYOffset(rotYOffset);
+            quad.setRotation(rotation);
+        }
         return this;
     }
     
