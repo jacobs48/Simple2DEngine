@@ -42,7 +42,8 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
                                          bufferNames[3],
                                          rotAttName,
                                          bufferNames[4],
-                                         texIndexAttName);
+                                         texIndexAttName,
+                                         shaderProgram);
         
         batchList.add(tempBatch);
         l.setBatch(tempBatch);
@@ -89,6 +90,8 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
         }
         
         S2DEngine.textureLoader.finishUpdate();
+        
+        for(S2DVertexBatch batch : batchList) batch.updateShaderLocations(shaderProgram);
     }
     
     @Override
@@ -102,6 +105,10 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
                 "varying float varTexIndex;\n" +
                 "float rads;\n" +
                 "vec4 pos;\n" +
+                "vec4 tempPos;\n" +
+                "uniform float cameraX;\n" +
+                "uniform float cameraY;\n" +
+                "uniform float cameraScale;\n" +
                 "float PI = 3.14159265359;\n" +
                 "void main()\n" +
                 "{\n" +
@@ -110,8 +117,13 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
                 "   varTexIndex = textureIndex;\n" + 
                 "   rads = rotation.x * PI / 180;\n" +
                 "   pos = gl_Vertex;\n" +
-                "   pos.x = cos(rads) * (gl_Vertex.x - rotation.y) - sin(rads) * (gl_Vertex.y - rotation.z) + rotation.y;\n" +
-                "   pos.y = sin(rads) * (gl_Vertex.x - rotation.y) + cos(rads) * (gl_Vertex.y - rotation.z) + rotation.z;\n" +
+                "   tempPos = pos;\n" +
+                "   tempPos.x = (tempPos.x - cameraX) * cameraScale;\n" +
+                "   tempPos.y = (tempPos.y - cameraY) * cameraScale;\n" +
+                "   rotation.y = (rotation.y - cameraX) * cameraScale;\n" +
+                "   rotation.z = (rotation.z - cameraY) * cameraScale;\n" +
+                "   pos.x = cos(rads) * (tempPos.x - rotation.y) - sin(rads) * (tempPos.y - rotation.z) + rotation.y;\n" +
+                "   pos.y = sin(rads) * (tempPos.x - rotation.y) + cos(rads) * (tempPos.y - rotation.z) + rotation.z;\n" +
                 "   pos = gl_ProjectionMatrix * pos;\n" +
                 "   gl_Position = pos;\n" +
                 "}\n"

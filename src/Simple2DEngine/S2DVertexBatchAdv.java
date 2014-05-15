@@ -21,8 +21,8 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
     protected int texIndexAttName;
     protected int texIndexBuffName;
     
-    protected S2DVertexBatchAdv(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt, int indBuff, int indAtt) {
-        super(qList, vName, cName, tName, rotBuff, rotAtt);
+    protected S2DVertexBatchAdv(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt, int indBuff, int indAtt, int shader) {
+        super(qList, vName, cName, tName, rotBuff, rotAtt, shader);
         
         texIndexBuffName = indBuff;
         texIndexAttName = indAtt;  
@@ -58,6 +58,10 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
     
     @Override
     protected void draw() {
+        gl.glUniform1f(camXUniformLocation, cameraX);
+        gl.glUniform1f(camYUniformLocation, cameraY);
+        gl.glUniform1f(camScaleUniformLocation, cameraScale);
+        
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
         gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
@@ -82,6 +86,17 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
         gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableVertexAttribArray(rotAttName);
         gl.glDisableVertexAttribArray(texIndexAttName);
+    }
+    
+    @Override
+    protected void destroy() {
+        super.destroy();
+        
+        int buffers[] = new int[] {
+            texIndexBuffName
+        };
+        
+        gl.glDeleteBuffers(1, buffers, 0);
     }
     
 }

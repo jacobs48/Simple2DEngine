@@ -81,12 +81,12 @@ public class S2DLayer implements Comparable<S2DLayer> {
         return mode;
     }
     
-    protected void updateGameSpace(float x) {
-        
+    protected void updateGameSpace(float g) {
+ 
     }
     
     protected void updateCamera(float x, float y) {
-        
+
     }
     
     public void setScale(float s) {
@@ -147,5 +147,7 @@ public class S2DLayer implements Comparable<S2DLayer> {
             graphic.destroy();
         }
         S2DEngine.engine.removeLayer(this);
+        
+        if (vertexBatch != null) vertexBatch.destroy();
     }
 }

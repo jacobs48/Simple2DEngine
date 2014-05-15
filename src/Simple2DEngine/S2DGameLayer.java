@@ -30,13 +30,13 @@ public class S2DGameLayer extends S2DLayer {
     protected void updateCamera(float cX, float cY) {
         cameraX = cX;
         cameraY = cY;
-        this.updateAll();
+        if(vertexBatch != null) vertexBatch.setCamera(cX, cY);
     }
     
     @Override
-    protected void updateGameSpace(float x) {
-        gameSpaceCoeff = x;
-        this.updateAll();
+    protected void updateGameSpace(float g) {
+        gameSpaceCoeff = g;
+        if(vertexBatch != null) vertexBatch.setScale(g);
     }
     
     @Override
@@ -57,6 +57,13 @@ public class S2DGameLayer extends S2DLayer {
     @Override
     public void setScale(float s) {
         scale = s;
+    }
+    
+    @Override
+    protected void setBatch(S2DVertexBatch v) {
+        vertexBatch = v;
+        vertexBatch.setCamera(cameraX, cameraY);
+        vertexBatch.setScale(gameSpaceCoeff);
     }
     
 }

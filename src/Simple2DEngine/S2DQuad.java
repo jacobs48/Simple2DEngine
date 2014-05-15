@@ -202,8 +202,8 @@ class S2DQuad {
     }
     
     protected float[] getRotArray() {
-        float xCenter = xPos + (width / 2);
-        float yCenter = yPos + (height / 2);
+        float xCenter = xPos + (width / 2) * scale;
+        float yCenter = yPos + (height / 2) * scale;
         float [] r = new float [] {
             rotation, xCenter, yCenter,
             rotation, xCenter, yCenter,

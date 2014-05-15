@@ -90,7 +90,8 @@ class S2DRendererVertexBuffer extends S2DRenderer {
                                          bufferNames[1],
                                          bufferNames[2],
                                          bufferNames[3],
-                                         rotBuffName);
+                                         rotBuffName,
+                                         shaderProgram);
         
         batchList.add(tempBatch);
         l.setBatch(tempBatch);

@@ -24,6 +24,8 @@ class S2DVertexBatch {
     protected LinkedList<Integer> updateList;
     protected int updateIndex = -1;
     protected GL2 gl;
+    protected int shaderProgram;
+    
     protected int vBufferName;
     protected int cBufferName;
     protected int tBufferName;
@@ -31,7 +33,14 @@ class S2DVertexBatch {
     protected int rotAttName;
     protected int bufferSize;
     
-    protected S2DVertexBatch(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt) {
+    protected float cameraX;
+    protected int camXUniformLocation;
+    protected float cameraY;
+    protected int camYUniformLocation;
+    protected float cameraScale;
+    protected int camScaleUniformLocation;
+    
+    protected S2DVertexBatch(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt, int shader) {
         updateList = new LinkedList<>();
         quadList = new ArrayList<>();
         quadList.ensureCapacity(qList.size());
@@ -44,7 +53,14 @@ class S2DVertexBatch {
         tBufferName = tName;
         rotBufferName = rotBuff;
         rotAttName = rotAtt;
-         
+        
+        cameraX = 0;
+        cameraY = 0;
+        cameraScale = 1;
+        
+        camXUniformLocation = gl.glGetUniformLocation(shader, "cameraX");
+        camYUniformLocation = gl.glGetUniformLocation(shader, "cameraY");
+        camScaleUniformLocation = gl.glGetUniformLocation(shader, "cameraScale");
     }
     
     protected void insert(S2DQuad quad, int i) {    
@@ -63,6 +79,21 @@ class S2DVertexBatch {
         quadList.set(i, quad);
         
         updateList.add(i);
+    }
+    
+    protected void setCamera(float x, float y) {
+        cameraX = x;
+        cameraY = y;
+    }
+    
+    protected void setScale(float s) {
+        cameraScale = s;
+    }
+    
+    protected void updateShaderLocations(int shader) {
+        camXUniformLocation = gl.glGetUniformLocation(shader, "cameraX");
+        camYUniformLocation = gl.glGetUniformLocation(shader, "cameraY");
+        camScaleUniformLocation = gl.glGetUniformLocation(shader, "cameraScale");
     }
     
     protected void rebuild(LinkedList<S2DQuad> qList) {
@@ -178,6 +209,10 @@ class S2DVertexBatch {
         
         if(quadList.isEmpty()) return;
         
+        gl.glUniform1f(camXUniformLocation, cameraX);
+        gl.glUniform1f(camYUniformLocation, cameraY);
+        gl.glUniform1f(camScaleUniformLocation, cameraScale);
+        
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
         gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
@@ -215,13 +250,11 @@ class S2DVertexBatch {
         gl.glDisableVertexAttribArray(rotAttName);
     } 
     
-    protected float[] reverse(float[] a) {
-        float[] b = new float[a.length];
+    protected void destroy() {
+        int buffers[] = new int[] {
+          vBufferName, cBufferName, tBufferName, rotBufferName  
+        };
         
-        for(int i = 0; i < a.length; i++) {
-            b[i] = a[a.length - (i + 1)];
-        }
-        
-        return b;
+        gl.glDeleteBuffers(4, buffers, 0);
     }
 }

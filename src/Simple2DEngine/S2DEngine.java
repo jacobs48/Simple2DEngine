@@ -172,7 +172,6 @@ public class S2DEngine {
         gameSpaceCoeff = 1/g;
         for (S2DLayer layer : layerList) {
             layer.updateGameSpace(gameSpaceCoeff);
-            layer.updateAll();
         }
     }
     
