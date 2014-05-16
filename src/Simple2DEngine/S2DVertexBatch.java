@@ -172,7 +172,7 @@ class S2DVertexBatch {
                 updateVBORange(updateIndex, quadList.size() - updateIndex);
             }
 
-            updateList = new LinkedList<>();
+            updateList.clear();
             updateIndex = -1;
         }
     }

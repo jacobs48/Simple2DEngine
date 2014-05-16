@@ -39,7 +39,7 @@ public class S2DAnimatedGraphic extends S2DGraphic {
     
     
     public void clearQueue() {
-        animationQueue = new LinkedList<>();
+        animationQueue.clear();
         S2DEngine.animator.unregister(this);
     }
     

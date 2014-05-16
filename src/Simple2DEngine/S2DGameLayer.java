@@ -21,15 +21,15 @@ public class S2DGameLayer extends S2DLayer {
 
     protected S2DGameLayer(float d, SortMode m, float camX, float camY, float gSC) {
         super(d, m);
-        cameraX = camX;
-        cameraY = camY;
+        cameraX = camX * gSC;
+        cameraY = camY * gSC;
         gameSpaceCoeff = gSC;
     }
     
     @Override
     protected void updateCamera(float cX, float cY) {
-        cameraX = cX;
-        cameraY = cY;
+        cameraX = cX * gameSpaceCoeff;
+        cameraY = cY * gameSpaceCoeff;
         if(vertexBatch != null) vertexBatch.setCamera(cX, cY);
     }
     
@@ -40,12 +40,12 @@ public class S2DGameLayer extends S2DLayer {
     
     @Override
     protected float translateX(float x) {
-        return (x * gameSpaceCoeff * scale);
+        return (x * gameSpaceCoeff);
     }
     
     @Override
     protected float translateY(float y) {
-        return (y * gameSpaceCoeff * scale);
+        return (y * gameSpaceCoeff);
     }
     
     @Override
