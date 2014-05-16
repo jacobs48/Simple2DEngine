@@ -38,6 +38,9 @@ class S2DRendererVertexBuffer extends S2DRenderer {
                 "attribute vec3 rotation;\n" +
                 "float rads;\n" +
                 "vec4 pos;\n" +
+                "vec4 tempPos;\n" +
+                "uniform float cameraX;\n" +
+                "uniform float cameraY;\n" +
                 "float PI = 3.14159265359;\n" +
                 "void main()\n" +
                 "{\n" +
@@ -45,8 +48,13 @@ class S2DRendererVertexBuffer extends S2DRenderer {
                 "   gl_TexCoord[0] = gl_MultiTexCoord0;\n" +
                 "   rads = rotation.x * PI / 180;\n" +
                 "   pos = gl_Vertex;\n" +
-                "   pos.x = cos(rads) * (gl_Vertex.x - rotation.y) - sin(rads) * (gl_Vertex.y - rotation.z) + rotation.y;\n" +
-                "   pos.y = sin(rads) * (gl_Vertex.x - rotation.y) + cos(rads) * (gl_Vertex.y - rotation.z) + rotation.z;\n" +
+                "   tempPos = pos;\n" +
+                "   tempPos.x -= cameraX;\n" +
+                "   tempPos.y -=cameraY;\n" +
+                "   rotation.y -= cameraX;\n" +
+                "   rotation.z -= cameraY;\n" +
+                "   pos.x = cos(rads) * (tempPos.x - rotation.y) - sin(rads) * (tempPos.y - rotation.z) + rotation.y;\n" +
+                "   pos.y = sin(rads) * (tempPos.x - rotation.y) + cos(rads) * (tempPos.y - rotation.z) + rotation.z;\n" +
                 "   pos = gl_ProjectionMatrix * pos;\n" +
                 "   gl_Position = pos;\n" +
                 "}\n"

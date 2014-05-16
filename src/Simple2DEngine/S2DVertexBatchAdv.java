@@ -60,7 +60,6 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
     protected void draw() {
         gl.glUniform1f(camXUniformLocation, cameraX);
         gl.glUniform1f(camYUniformLocation, cameraY);
-        gl.glUniform1f(camScaleUniformLocation, cameraScale);
         
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);

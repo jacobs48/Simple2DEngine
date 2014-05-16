@@ -72,7 +72,6 @@ public class S2DGameLayer extends S2DLayer {
     protected void setBatch(S2DVertexBatch v) {
         vertexBatch = v;
         vertexBatch.setCamera(cameraX, cameraY);
-        vertexBatch.setScale(gameSpaceCoeff);
     }
     
 }

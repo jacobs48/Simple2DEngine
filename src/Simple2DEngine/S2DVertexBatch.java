@@ -37,8 +37,6 @@ class S2DVertexBatch {
     protected int camXUniformLocation;
     protected float cameraY;
     protected int camYUniformLocation;
-    protected float cameraScale;
-    protected int camScaleUniformLocation;
     
     protected S2DVertexBatch(LinkedList<S2DQuad> qList, int vName, int cName, int tName, int rotBuff, int rotAtt, int shader) {
         updateList = new LinkedList<>();
@@ -56,11 +54,9 @@ class S2DVertexBatch {
         
         cameraX = 0;
         cameraY = 0;
-        cameraScale = 1;
         
         camXUniformLocation = gl.glGetUniformLocation(shader, "cameraX");
         camYUniformLocation = gl.glGetUniformLocation(shader, "cameraY");
-        camScaleUniformLocation = gl.glGetUniformLocation(shader, "cameraScale");
     }
     
     protected void insert(S2DQuad quad, int i) {    
@@ -86,14 +82,9 @@ class S2DVertexBatch {
         cameraY = y;
     }
     
-    protected void setScale(float s) {
-        cameraScale = s;
-    }
-    
     protected void updateShaderLocations(int shader) {
         camXUniformLocation = gl.glGetUniformLocation(shader, "cameraX");
         camYUniformLocation = gl.glGetUniformLocation(shader, "cameraY");
-        camScaleUniformLocation = gl.glGetUniformLocation(shader, "cameraScale");
     }
     
     protected void rebuild(LinkedList<S2DQuad> qList) {
@@ -211,7 +202,6 @@ class S2DVertexBatch {
         
         gl.glUniform1f(camXUniformLocation, cameraX);
         gl.glUniform1f(camYUniformLocation, cameraY);
-        gl.glUniform1f(camScaleUniformLocation, cameraScale);
         
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
