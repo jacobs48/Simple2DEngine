@@ -49,22 +49,14 @@ public class S2DLayer implements Comparable<S2DLayer> {
         return y;
     }
     
-    protected float getLayerX0() {
+    protected float getLayerXOrigin() {
         return 0;
     }
     
-    protected float getLayerX1() {
-        return S2DEngine.engine.getWindowWidth();
-    }
-    
-    protected float getLayerY0() {
+    protected float getLayerYOrigin() {
         return 0;
     }
-    
-    protected float getLayerY1() {
-        return S2DEngine.engine.getWindowHeight();
-    }
-    
+
     protected float getHeight() {
         return S2DEngine.engine.getWindowHeight();
     }

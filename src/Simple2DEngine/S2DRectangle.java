@@ -49,70 +49,70 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
         
         switch (alignment) {
             case LEFT_UPPER:
-                quad.X(layer.getLayerX0() + xOffset);
-                quad.Y(layer.getLayerY1() - quad.getHeight() + yOffset);
+                quad.X(xOffset);
+                quad.Y(layer.getHeight()- quad.getHeight() + yOffset);
                 break;
             case LEFT_LOWER:
-                quad.X(layer.getLayerX0() + xOffset);
-                quad.Y(layer.getLayerY0() + yOffset);
+                quad.X(xOffset);
+                quad.Y(yOffset);
                 break;
             case LEFT_CENTERED:
-                quad.X(layer.getLayerX0() + xOffset);
-                quad.Y(layer.getLayerY0() + (layer.getHeight() / 2) - (quad.getHeight() / 2) + yOffset);
+                quad.X(xOffset);
+                quad.Y((layer.getHeight() / 2) - (quad.getHeight() / 2) + yOffset);
                 break;
             case RIGHT_UPPER:
-                quad.X(layer.getLayerX1() - quad.getWidth() + xOffset);
-                quad.Y(layer.getLayerY1() - quad.getHeight() + yOffset);
+                quad.X(layer.getWidth()- quad.getWidth() + xOffset);
+                quad.Y(layer.getHeight()- quad.getHeight() + yOffset);
                 break;
             case RIGHT_LOWER:
-                quad.X(layer.getLayerX1() - quad.getWidth() + xOffset);
-                quad.Y(layer.getLayerY0() + yOffset);
+                quad.X(layer.getWidth()- quad.getWidth() + xOffset);
+                quad.Y( yOffset);
                 break;
             case RIGHT_CENTERED:
-                quad.X(layer.getLayerX1() - quad.getWidth() + xOffset);
-                quad.Y(layer.getLayerY0() + (layer.getHeight() / 2) - (quad.getHeight() / 2) + yOffset);
+                quad.X(layer.getWidth()- quad.getWidth() + xOffset);
+                quad.Y((layer.getHeight() / 2) - (quad.getHeight() / 2) + yOffset);
                 break;
             case TOP_CENTERED:
-                quad.X(layer.getLayerX0() + (layer.getWidth() / 2) - (quad.getWidth() / 2) + xOffset);
-                quad.Y(layer.getLayerY1() - quad.getHeight()+ yOffset);
+                quad.X((layer.getWidth() / 2) - (quad.getWidth() / 2) + xOffset);
+                quad.Y(layer.getHeight()- quad.getHeight()+ yOffset);
                 break;
             case BOTTOM_CENTERED:
-                quad.X(layer.getLayerX0() + (layer.getWidth() / 2) - (quad.getWidth() / 2) + xOffset);
-                quad.Y(layer.getLayerY0() + yOffset);
+                quad.X((layer.getWidth() / 2) - (quad.getWidth() / 2) + xOffset);
+                quad.Y(yOffset);
                 break;
             case CENTERED:
-                quad.X(layer.getLayerX0() + (layer.getWidth() / 2) - (quad.getWidth() / 2) + xOffset);
-                quad.Y(layer.getLayerY0() + (layer.getHeight() / 2) - (quad.getHeight() / 2) + yOffset);
+                quad.X((layer.getWidth() / 2) - (quad.getWidth() / 2) + xOffset);
+                quad.Y((layer.getHeight() / 2) - (quad.getHeight() / 2) + yOffset);
                 break;
             case FILL_STRETCHED:
-                quad.X(layer.getLayerX0());
-                quad.Y(layer.getLayerY0());
+                quad.X(0);
+                quad.Y(0);
                 quad.setHeight(layer.getHeight());
                 quad.setWidth(layer.getWidth());
                 break;
             case LEFT_STRETCHED:
-                quad.X(layer.getLayerX0());
-                quad.Y(layer.getLayerY0());
+                quad.X(0);
+                quad.Y(0);
                 quad.setHeight(layer.getHeight());
                 break;
             case RIGHT_STRETCHED:
-                quad.X(layer.getLayerX1() - quad.getWidth());
-                quad.Y(layer.getLayerY0());
+                quad.X(layer.getWidth()- quad.getWidth());
+                quad.Y(0);
                 quad.setHeight(layer.getHeight());
                 break;
             case TOP_STRETCHED:
-                quad.X(layer.getLayerX0());
-                quad.Y(layer.getLayerY0());
+                quad.X(0);
+                quad.Y(0);
                 quad.setWidth(layer.getWidth());
                 break;
             case BOTTOM_STRETCHED:
-                quad.X(layer.getLayerX0());
-                quad.Y(layer.getLayerY1() - quad.getHeight());
+                quad.X(0);
+                quad.Y(layer.getHeight()- quad.getHeight());
                 quad.setWidth(layer.getWidth());
                 break;
             case NONE:
-                quad.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
-                quad.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
+                quad.X(layer.translateX(xPos + xOffset));
+                quad.Y(layer.translateY(yPos + yOffset));
                 break;
             default:
                 break;
@@ -135,7 +135,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     public S2DRectangle X(float x) {
         xPos = x;
         if (alignment == WindowAlignment.NONE) {
-            quad.X(layer.getLayerX0() + layer.translateX(xPos + xOffset));
+            quad.X(layer.translateX(xPos + xOffset));
         }
         return this;
     }
@@ -150,7 +150,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     public S2DRectangle Y(float y) {
         yPos = y;
         if (alignment == WindowAlignment.NONE) {
-            quad.Y(layer.getLayerY0() + layer.translateY(yPos + yOffset));
+            quad.Y(layer.translateY(yPos + yOffset));
         }
         return this;
     }
@@ -189,7 +189,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     public S2DRectangle xOffset(float x) {
         xOffset = x;
         if (alignment == WindowAlignment.NONE) {
-            quad.X(layer.getLayerX0() + xPos + xOffset);
+            quad.X(xPos + xOffset);
         }
         else this.updateDrawable();
         
@@ -199,7 +199,7 @@ public class S2DRectangle extends S2DDrawable implements Comparable<S2DDrawable>
     public S2DRectangle yOffset(float y) {
         yOffset = y;
         if (alignment == WindowAlignment.NONE) {
-            quad.Y(layer.getLayerY0() + yPos + yOffset);
+            quad.Y(yPos + yOffset);
         }
         else this.updateDrawable();
         

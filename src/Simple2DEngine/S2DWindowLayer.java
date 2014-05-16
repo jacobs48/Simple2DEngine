@@ -47,28 +47,20 @@ public class S2DWindowLayer extends S2DLayer {
     }
 
     @Override
-    protected float getLayerX0() {
+    protected float getLayerXOrigin() {
         return xPos;
     }
     
     @Override
-    protected float getLayerX1() {
-        return xPos + width;
-    }
-    
-    protected float getLayerY0() {
+    protected float getLayerYOrigin() {
         return yPos;
     }
     
     @Override
-    protected float getLayerY1() {
-        return yPos + height;
-    }
-    
     public float getHeight() {
         return height;
     }
-    
+  
     @Override
     public float getWidth() {
         return width;
@@ -97,9 +89,7 @@ public class S2DWindowLayer extends S2DLayer {
     public void updatePosition(float x, float y) {
         xPos = x;
         yPos = y;
-        bgRect.X(xPos);
-        bgRect.Y(yPos);
-        this.updateAll();
+        if(vertexBatch != null) vertexBatch.setCamera(-xPos, -yPos);
     }
     
     public void resize(float w, float h) {

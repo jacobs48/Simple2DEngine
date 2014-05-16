@@ -108,7 +108,6 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
                 "vec4 tempPos;\n" +
                 "uniform float cameraX;\n" +
                 "uniform float cameraY;\n" +
-                "uniform float cameraScale;\n" +
                 "float PI = 3.14159265359;\n" +
                 "void main()\n" +
                 "{\n" +
@@ -118,10 +117,10 @@ public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
                 "   rads = rotation.x * PI / 180;\n" +
                 "   pos = gl_Vertex;\n" +
                 "   tempPos = pos;\n" +
-                "   tempPos.x = (tempPos.x - cameraX) * cameraScale;\n" +
-                "   tempPos.y = (tempPos.y - cameraY) * cameraScale;\n" +
-                "   rotation.y = (rotation.y - cameraX) * cameraScale;\n" +
-                "   rotation.z = (rotation.z - cameraY) * cameraScale;\n" +
+                "   tempPos.x -= cameraX;\n" +
+                "   tempPos.y -=cameraY;\n" +
+                "   rotation.y -= cameraX;\n" +
+                "   rotation.z -= cameraY;\n" +
                 "   pos.x = cos(rads) * (tempPos.x - rotation.y) - sin(rads) * (tempPos.y - rotation.z) + rotation.y;\n" +
                 "   pos.y = sin(rads) * (tempPos.x - rotation.y) + cos(rads) * (tempPos.y - rotation.z) + rotation.z;\n" +
                 "   pos = gl_ProjectionMatrix * pos;\n" +

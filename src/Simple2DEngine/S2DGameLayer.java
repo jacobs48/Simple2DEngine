@@ -36,17 +36,26 @@ public class S2DGameLayer extends S2DLayer {
     @Override
     protected void updateGameSpace(float g) {
         gameSpaceCoeff = g;
-        if(vertexBatch != null) vertexBatch.setScale(g);
     }
     
     @Override
     protected float translateX(float x) {
-        return ((x  - cameraX - initialX) * gameSpaceCoeff * scale);
+        return (x * gameSpaceCoeff * scale);
     }
     
     @Override
     protected float translateY(float y) {
-        return ((y  - cameraY - initialY) * gameSpaceCoeff * scale);
+        return (y * gameSpaceCoeff * scale);
+    }
+    
+    @Override
+    protected float getLayerXOrigin() {
+        return -cameraX * gameSpaceCoeff;
+    }
+    
+    @Override
+    protected float getLayerYOrigin() {
+        return -cameraY *  gameSpaceCoeff;
     }
     
     @Override

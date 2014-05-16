@@ -147,8 +147,7 @@ class S2DQuad {
     
     protected void draw() {
         
-        gl.glDisable(GL.GL_TEXTURE_2D);
-        gl.glLoadIdentity(); 
+        gl.glDisable(GL.GL_TEXTURE_2D); 
         if (rotation != 0) {
             gl.glTranslatef(xPos + rotXOffset, yPos + rotYOffset, 0);
             gl.glRotatef(rotation, 0, 0, 1);

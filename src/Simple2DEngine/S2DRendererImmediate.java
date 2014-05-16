@@ -49,14 +49,20 @@ class S2DRendererImmediate extends S2DRenderer {
     @Override
     protected void draw(LinkedList<S2DLayer> layers) {   
         LinkedList<S2DQuad> quadList;
+        float cameraX;
+        float cameraY;
    
         gl.glClearColor(bgR, bgG, bgB, 0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        
         for(S2DLayer layer : layers) {
             quadList = layer.getQuadList();
+            cameraX = layer.getLayerXOrigin();
+            cameraY = layer.getLayerYOrigin();
+            
+            gl.glMatrixMode(GL2.GL_MODELVIEW);
+
+            
             for(S2DQuad quad : quadList) {
                 if (!(quad.isHidden())) {
                     if (quad.isTextured() && (!boundTexture.equals(quad.getSuperTextureKey()))) {
@@ -64,7 +70,10 @@ class S2DRendererImmediate extends S2DRenderer {
                         boundTexture = quad.getSuperTextureKey();
                         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
                         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
-                    }
+                    }         
+                    
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(cameraX, cameraY, 0);
 
                     quad.draw();
                 }

@@ -91,9 +91,7 @@ class S2DTexturedQuad extends S2DQuad{
     }
 
     @Override
-    protected void draw() {
-        
-        gl.glLoadIdentity(); 
+    protected void draw() { 
         if (rotation != 0) {
             gl.glTranslatef(xPos + rotXOffset, yPos + rotYOffset, 0);
             gl.glRotatef(rotation, 0, 0, 1);
