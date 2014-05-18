@@ -135,7 +135,7 @@ class S2DVertexBatch {
     }
     
     protected void updateVBOs() {
-        if(quadList.size() >= bufferSize || quadList.size() < (bufferSize / 4)) {
+        if(!quadList.isEmpty() && quadList.size() >= bufferSize || quadList.size() < (bufferSize / 4)) {
             initBuffers();
         }
         else {

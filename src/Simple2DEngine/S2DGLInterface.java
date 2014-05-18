@@ -31,8 +31,7 @@ class S2DGLInterface implements GLEventListener {
         
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        gl.glOrtho(0.0, engine.getWindowWidth(), 0.0, engine.getWindowHeight(), -1, 1);
-        
+        gl.glOrtho(0.0, engine.getWindowWidth(), 0.0, engine.getWindowHeight(), -1, 1);      
         
         gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);

@@ -41,7 +41,7 @@ public class S2DVertexBatchAdv extends S2DVertexBatch {
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, texIndexBuffName);
         gl.glBufferData(GL.GL_ARRAY_BUFFER, size * 4 * Buffers.SIZEOF_FLOAT * 2, null, GL.GL_DYNAMIC_DRAW);
-        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, size * 12 * Buffers.SIZEOF_FLOAT, texIndexBuffer);
+        gl.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, size * 4 * Buffers.SIZEOF_FLOAT, texIndexBuffer);
     }
     
     @Override
