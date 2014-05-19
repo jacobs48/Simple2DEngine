@@ -48,6 +48,8 @@ public class S2DEngine {
     
     private S2DBatchLoader batchLoader;
     
+    protected static S2DTemplateBuilder templateBuilder;
+    
     protected static S2DEngine engine;
     
     /**
@@ -65,6 +67,9 @@ public class S2DEngine {
      */
     protected static S2DTextureLoader textureLoader;
     
+    /**
+     * Provides static reference for the engine's animator
+     */
     protected static S2DAnimator animator;
     
     /**
@@ -90,22 +95,11 @@ public class S2DEngine {
         engine = this;
     }
     
-    /**
-     * Initializes engine and begins execution of game.
-     * Specified S2DInterface method init(S2DEngine e)
-     * will run after engine initializes and then 
-     * update(S2DEngine e) runs at specified framerate.
-     */
     public void runGame() {
         profile = GLProfile.getDefault();
         capabilities = new GLCapabilities(profile);
         window = GLWindow.create(capabilities);
         window.addGLEventListener(new S2DGLInterface(updater, this));
-        
-        animator = new S2DAnimator();
-        batchLoader = new S2DBatchLoader();
-        prevTime = System.nanoTime();
-        curTime = System.nanoTime();
         
         FPSAnim = new FPSAnimator(window, FPS);
         
@@ -117,7 +111,7 @@ public class S2DEngine {
         window.addWindowListener(new WindowAdapter() {
             @Override
             public void windowDestroyNotify(WindowEvent arg0) {
-                System.exit(sizeX);
+                System.exit(0);
             };
         });
         
@@ -141,6 +135,12 @@ public class S2DEngine {
                 render = new S2DRendererVBOAdvanced();
                 break;
         }
+        
+        batchLoader = new S2DBatchLoader();
+        animator = new S2DAnimator();
+        templateBuilder = new S2DTemplateBuilder();
+        prevTime = System.nanoTime();
+        curTime = System.nanoTime();   
     }
     
     protected void update() {
@@ -153,20 +153,10 @@ public class S2DEngine {
         render.draw(layerList);
     }
     
-    /**
-     * Returns X dimension of the engine window
-     * 
-     * @return X dimension of engine window
-     */
     public int getWindowWidth() {
         return sizeX;
     }
     
-    /**
-     * Returns Y dimension of the engine window
-     * 
-     * @return Y dimension of engine window
-     */
     public int getWindowHeight() {
         return sizeY;
     }
@@ -190,13 +180,6 @@ public class S2DEngine {
         }
     }
     
-    /**
-     * Generates a new S2DLayer
-     * 
-     * @param depth Specifies depth of layer
-     * @param m Specifies how S2DRectangles in layer should be sorted
-     * @return Newly generated layer
-     */
     public S2DLayer newS2DLayer(float depth, SortMode m) {
         S2DLayer tempLayer = new S2DLayer(depth, m);
         layerList.add(tempLayer);
@@ -223,15 +206,6 @@ public class S2DEngine {
         Collections.sort(layerList);
     }
     
-    /**
-     * Loads specified image file into current S2DTextureLoader
-     * and assigns it with provided key name. Returns false if 
-     * specified key is already in use.
-     * 
-     * @param path Path of file to be loaded
-     * @param name Key name used to access loaded image
-     * @return Returns true if successful, false if file fails to load
-     */
     public boolean loadTexture(String path, String name) {
         return textureLoader.loadTexture(path, name);
     }
@@ -248,33 +222,15 @@ public class S2DEngine {
         return batchLoader.parseFile(fileName);
     }
 
-    /**
-     * Unloads texture from memory using specified key
-     *
-     * @param key Key value of texture to be unloaded
-     */
     public void unloadTexture(String key) {
         textureLoader.unloadGraphic(key);
     }
     
-    /**
-     * Unloads texture and removes all graphics using
-     * specified texture from renderer
-     * 
-     * @param key Key value of texture to be unloaded
-     */
     public void unloadTextureSafe(String key) {
         textureLoader.unloadGraphic(key);
         //render.removeAllTex(key);
     }
     
-    /**
-     * Provides new instance of S2DRectangle from specified texture.
-     * Returns null if texture doesn't exist
-     *
-     * @param name Key name of texture to be used by S2DRectangle
-     * @return S2DRectangle created using specified texture
-     */
     public S2DRectangle newS2DRectangle(float w, float h) {
         S2DQuad quad = new S2DQuad(w, h);
         S2DRectangle rect = new S2DRectangle(quad, defaultLayer);
@@ -293,6 +249,14 @@ public class S2DEngine {
         if (tQuad == null) return null;
         S2DAnimatedGraphic g = new S2DAnimatedGraphic(tQuad, defaultLayer, defaultTex);
         return g;
+    }
+    
+    public S2DAnimatedGraphic newGraphicFromTemplate(String templateName) {
+        return templateBuilder.generateGraphic(templateName);
+    }
+    
+    public void newS2DGraphicTemplate(String name, String defaultTexture) {
+        templateBuilder.buildTemplate(name, defaultTexture);
     }
     
     protected void updateLayers() {

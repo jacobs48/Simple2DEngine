@@ -6,7 +6,6 @@
 
 package Simple2DEngine;
 
-import java.util.LinkedList;
 import java.util.TreeMap;
 
 /**
@@ -80,6 +79,10 @@ public class S2DAnimatedGraphic extends S2DGraphic {
     
     protected void updateFrame(S2DSubTexture s) {
         ((S2DTexturedQuad) quad).setTexture(s);
+    }
+    
+    protected void addAnimationTree(TreeMap<String, S2DAnimation> tree) {
+        animationTree.putAll(tree);
     }
     
 }

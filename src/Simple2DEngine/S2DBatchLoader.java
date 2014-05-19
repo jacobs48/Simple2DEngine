@@ -60,10 +60,14 @@ class S2DBatchLoader {
                         this.parseFile(currentLine);
                         currentLine = reader.readLine();
                         break;
+                    case "template":
+                        currentLine = this.loadTemplate(tokenList.getFirst(), reader);
+                        break;
                     default:
                         currentLine = reader.readLine();
                         break;
                 }
+                tokenList.clear();
             }
         }
         catch(IOException e) {
@@ -92,6 +96,47 @@ class S2DBatchLoader {
                 lastLine = reader.readLine();
                 if(lastLine != null) tokenizer = new StringTokenizer(lastLine, ", ", false);
             }
+        }
+        
+        return lastLine;
+    }
+    
+    protected String loadTemplate(String templateName, BufferedReader reader) throws IOException{
+        String lastLine = reader.readLine();
+        String animationName;
+        LinkedList<String> tokens = new LinkedList<>();
+        StringTokenizer tokenizer;
+        int size;
+        
+        S2DEngine.engine.newS2DGraphicTemplate(templateName, lastLine);
+        
+        lastLine = reader.readLine();
+        tokenizer = new StringTokenizer(lastLine, ".", false);
+        size = tokenizer.countTokens();
+
+        for(int i = 0; i < size; i++) tokens.add(tokenizer.nextToken());
+        
+        while(tokens.size() > 0 && tokens.getLast().equals("animation")) {
+            animationName = tokens.getFirst();
+            S2DEngine.templateBuilder.newAnimation(templateName, animationName);
+            
+            lastLine = reader.readLine();
+            tokenizer = new StringTokenizer(lastLine, ", ", false);
+            
+            while(tokenizer.countTokens() == 2) {
+                S2DEngine.templateBuilder.addAnimationFrame(templateName,
+                                                            animationName,
+                                                            tokenizer.nextToken(),
+                                                            Float.parseFloat(tokenizer.nextToken()));
+                
+                lastLine = reader.readLine();
+                if(lastLine != null) tokenizer = new StringTokenizer(lastLine, ", ", false);
+            }
+            
+            tokens.clear();
+            if(lastLine != null) tokenizer = new StringTokenizer(lastLine, ".", false);
+            size = tokenizer.countTokens();
+            for(int i = 0; i < size; i++) tokens.add(tokenizer.nextToken());
         }
         
         return lastLine;
