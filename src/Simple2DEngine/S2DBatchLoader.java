@@ -35,13 +35,10 @@ class S2DBatchLoader {
             
             while(currentLine != null) {
                 tokenizer = new StringTokenizer(currentLine, ",. ", false);
-                int size = tokenizer.countTokens();
+                int size;
                 String tempString;
-                
-                for(int i = 0; i < size; i++) {
-                    tokenList.add(tokenizer.nextToken());
-                }
-                
+                tokenList = getTokenList(currentLine, ",. ");
+                size = tokenList.size();
                 tempString = tokenList.getLast();
                 
                 switch(tempString.toLowerCase()) {
@@ -67,7 +64,6 @@ class S2DBatchLoader {
                         currentLine = reader.readLine();
                         break;
                 }
-                tokenList.clear();
             }
         }
         catch(IOException e) {
@@ -102,22 +98,19 @@ class S2DBatchLoader {
     }
     
     protected String loadTemplate(String templateName, BufferedReader reader) throws IOException{
-        String lastLine = reader.readLine();
+        String lastLine;
         String animationName;
-        LinkedList<String> tokens = new LinkedList<>();
+        LinkedList<String> tokenList;
         StringTokenizer tokenizer;
-        int size;
         
+        lastLine = reader.readLine();
         S2DEngine.engine.newS2DGraphicTemplate(templateName, lastLine);
         
         lastLine = reader.readLine();
-        tokenizer = new StringTokenizer(lastLine, ".", false);
-        size = tokenizer.countTokens();
-
-        for(int i = 0; i < size; i++) tokens.add(tokenizer.nextToken());
+        tokenList = getTokenList(lastLine, ".");
         
-        while(tokens.size() > 0 && tokens.getLast().equals("animation")) {
-            animationName = tokens.getFirst();
+        while(tokenList.size() > 0 && tokenList.getLast().equals("animation")) {
+            animationName = tokenList.getFirst();
             S2DEngine.templateBuilder.newAnimation(templateName, animationName);
             
             lastLine = reader.readLine();
@@ -133,13 +126,22 @@ class S2DBatchLoader {
                 if(lastLine != null) tokenizer = new StringTokenizer(lastLine, ", ", false);
             }
             
-            tokens.clear();
-            if(lastLine != null) tokenizer = new StringTokenizer(lastLine, ".", false);
-            size = tokenizer.countTokens();
-            for(int i = 0; i < size; i++) tokens.add(tokenizer.nextToken());
+            tokenList = getTokenList(lastLine, ".");
         }
         
         return lastLine;
     }
 
+    private LinkedList<String> getTokenList(String s, String delim) {
+        LinkedList<String> tempList = new LinkedList<>();
+        StringTokenizer tokenizer;
+        if(s != null) {
+            tokenizer = new StringTokenizer(s, delim, false);
+            int size = tokenizer.countTokens();
+            for(int i = 0; i < size; i++) {
+                tempList.add(tokenizer.nextToken());
+            }
+         }
+        return tempList;
+    }
 }

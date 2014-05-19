@@ -5,6 +5,7 @@ import javax.media.opengl.*;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.*;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.Animator;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -45,6 +46,7 @@ public class S2DEngine {
     private float gameSpaceCoeff = 1;
     private long prevTime;
     private long curTime;
+    private float timeDif;
     
     private S2DBatchLoader batchLoader;
     
@@ -102,7 +104,7 @@ public class S2DEngine {
         window.addGLEventListener(new S2DGLInterface(updater, this));
         
         FPSAnim = new FPSAnimator(window, FPS);
-        
+
         window.setSize(sizeX, sizeY);
         window.setFullscreen(fullscreen);
         window.setTitle(title);
@@ -145,7 +147,7 @@ public class S2DEngine {
     
     protected void update() {
         curTime = System.nanoTime();
-        float timeDif = (float) ((curTime - prevTime) / 1000000000.0);
+        timeDif = (float) ((curTime - prevTime) / 1000000000.0);
         animator.update(timeDif);
         prevTime = curTime;
         
