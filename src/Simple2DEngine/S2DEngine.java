@@ -245,7 +245,7 @@ public class S2DEngine {
     }
     
     public boolean batchLoad(String fileName) {
-        return batchLoader.loadFile(fileName);
+        return batchLoader.parseFile(fileName);
     }
 
     /**

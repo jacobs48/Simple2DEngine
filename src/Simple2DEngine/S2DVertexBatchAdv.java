@@ -16,7 +16,7 @@ import javax.media.opengl.GL2;
  *
  * @author michael.jacobs.adm
  */
-public class S2DVertexBatchAdv extends S2DVertexBatch {
+class S2DVertexBatchAdv extends S2DVertexBatch {
     
     protected int texIndexAttName;
     protected int texIndexBuffName;

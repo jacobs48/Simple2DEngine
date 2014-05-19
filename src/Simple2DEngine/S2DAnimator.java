@@ -12,7 +12,7 @@ import java.util.LinkedList;
  *
  * @author michael.jacobs.adm
  */
-public class S2DAnimator {
+class S2DAnimator {
     
     protected LinkedList<S2DDrawable> animationList;
     

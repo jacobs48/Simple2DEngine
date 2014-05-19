@@ -12,7 +12,7 @@ import java.util.LinkedList;
  *
  * @author michael.jacobs.adm
  */
-public class S2DAnimation {
+class S2DAnimation {
     
     private LinkedList<S2DQueueable> frameList;
     private float duration;

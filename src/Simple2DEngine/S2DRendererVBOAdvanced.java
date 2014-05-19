@@ -14,7 +14,7 @@ import javax.media.opengl.GL2;
  *
  * @author michael.jacobs.adm
  */
-public class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
+class S2DRendererVBOAdvanced extends S2DRendererVertexBuffer{
     
     protected int sampler[];
     

@@ -10,7 +10,7 @@ package Simple2DEngine;
  *
  * @author michael.jacobs.adm
  */
-public class S2DAnimationFrame implements S2DQueueable {
+class S2DAnimationFrame implements S2DQueueable {
     
     private S2DSubTexture subText;
     private float duration;
