@@ -41,6 +41,7 @@ class S2DTextureLoader {
                 Texture newText = TextureIO.newTexture(new File(path), false);
                 textureTree.put(key, newText);
                 subTextTree.put(key, new S2DSubTexture(newText, key));
+                hasUpdated = true;
                 return true;
             }
             else return false;
