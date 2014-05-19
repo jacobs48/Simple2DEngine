@@ -50,6 +50,11 @@ public class S2DAnimatedGraphic extends S2DGraphic {
         animationQueue.getFirst().initialize(this);
     }
     
+    public void repeatAnimation(String s) {
+        this.playAnimation(s);
+        animationQueue.add(new S2DRepeatAnimation(s));
+    }
+    
     public void queueAnimation(String s) {
         if (animationQueue.size() == 0) {
             S2DEngine.animator.register(this);
@@ -59,6 +64,10 @@ public class S2DAnimatedGraphic extends S2DGraphic {
         else {
             animationQueue.addAll(animationTree.get(s).getFrames());
         }
+    }
+    
+    protected void queueAnimation(S2DQueueable a) {
+        animationQueue.add(a);
     }
     
     @Override

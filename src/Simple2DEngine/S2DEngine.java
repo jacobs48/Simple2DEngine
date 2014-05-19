@@ -46,6 +46,8 @@ public class S2DEngine {
     private long prevTime;
     private long curTime;
     
+    private S2DBatchLoader batchLoader;
+    
     protected static S2DEngine engine;
     
     /**
@@ -101,6 +103,7 @@ public class S2DEngine {
         window.addGLEventListener(new S2DGLInterface(updater, this));
         
         animator = new S2DAnimator();
+        batchLoader = new S2DBatchLoader();
         prevTime = System.nanoTime();
         curTime = System.nanoTime();
         
@@ -239,6 +242,10 @@ public class S2DEngine {
     
     public boolean loadSubTextureF(String superKey, String subKey, float x0, float x1, float y0, float y1) {
         return textureLoader.loadSubTextureF(superKey, subKey, x0, x1, y0, y1);
+    }
+    
+    public boolean batchLoad(String fileName) {
+        return batchLoader.loadFile(fileName);
     }
 
     /**
