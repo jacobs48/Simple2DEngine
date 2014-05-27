@@ -5,7 +5,6 @@ import javax.media.opengl.*;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.*;
 import com.jogamp.opengl.util.FPSAnimator;
-import com.jogamp.opengl.util.Animator;
 import java.util.Collections;
 import java.util.LinkedList;
 
